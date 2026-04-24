@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CineRent — Admin Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎬</text></svg>" />
+</head>
+<body>
+
+<div id="toast-container" class="toast-container"></div>
+
+<!-- ══════════════════════════════════════
+     APP LAYOUT
+══════════════════════════════════════ -->
+<div class="app-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🎬</div>
+      <div class="logo-title">CINERENT</div>
+      <div class="logo-sub">Movie Rental & Reviews</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <div class="nav-item active" data-page="dashboard">
+        <span class="nav-icon">📊</span>
+        <span>Dashboard</span>
+      </div>
+
+      <div class="nav-section-label">Management</div>
+      <div class="nav-item" data-page="users">
+        <span class="nav-icon">👤</span>
+        <span>Users</span>
+      </div>
+      <div class="nav-item" data-page="movies">
+        <span class="nav-icon">🎬</span>
+        <span>Movies</span>
+      </div>
+      <div class="nav-item" data-page="rentals">
+        <span class="nav-icon">📼</span>
+        <span>Rentals</span>
+      </div>
+      <div class="nav-item" data-page="reviews">
+        <span class="nav-icon">⭐</span>
+        <span>Reviews</span>
+      </div>
+
+      <div class="nav-section-label">Finance & System</div>
+      <div class="nav-item" data-page="payments">
+        <span class="nav-icon">💳</span>
+        <span>Payments & Fines</span>
+      </div>
+      <div class="nav-item" data-page="admins">
+        <span class="nav-icon">🛡️</span>
+        <span>Admin Panel</span>
+      </div>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-user">
+        <div class="user-avatar">S</div>
+        <div class="user-info">
+          <div class="user-name">System Admin</div>
+          <div class="user-role">SuperAdmin</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <div class="main-content">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="hamburger" id="hamburger">☰</button>
+        <div class="page-breadcrumb">
+          <span>CineRent</span>
+          <span class="breadcrumb-sep">›</span>
+          <span id="breadcrumb-section">Overview</span>
+          <span class="breadcrumb-sep">›</span>
+          <span class="current" id="breadcrumb-page">Dashboard</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-search">
+          <span style="color:var(--white-30);font-size:14px">🔍</span>
+          <input type="text" id="global-search" placeholder="Search movies, users…" />
+        </div>
+        <button class="topbar-btn" title="Notifications">
+          🔔
+          <span class="dot"></span>
+        </button>
+        <button class="topbar-btn" title="Settings">⚙️</button>
+      </div>
+    </header>
+
+    <!-- PAGE VIEWS -->
+    <main class="page-content">
+
+      <!-- ── DASHBOARD ─────────────────────── -->
+      <div class="page-view active" id="page-dashboard">
+        <div class="page-header">
+          <div class="page-title-group">
+            <div class="page-label">Overview</div>
+            <h1>Dashboard</h1>
+          </div>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-card-top">
+              <div class="stat-label">Total Users</div>
+              <div class="stat-icon">👤</div>
+            </div>
+            <div class="stat-value" id="dash-stat-users">0</div>
+            <div class="stat-change up">↑ Registered members</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-top">
+              <div class="stat-label">Movies in Catalog</div>
+              <div class="stat-icon">🎬</div>
+            </div>
+            <div class="stat-value" id="dash-stat-movies">0</div>
+            <div class="stat-change">DVD & Digital titles</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-top">
+              <div class="stat-label">Active Rentals</div>
+              <div class="stat-icon">📼</div>
+            </div>
+            <div class="stat-value" id="dash-stat-rentals">0</div>
+            <div class="stat-change">Currently borrowed</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-top">
+              <div class="stat-label">Total Revenue</div>
+              <div class="stat-icon">💰</div>
+            </div>
+            <div class="stat-value" id="dash-stat-revenue">$0</div>
+            <div class="stat-change up">↑ All-time collected</div>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><span class="card-title-dot"></span>Top Rented Movies</div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr>
+                  <th>Title</th><th>Genre</th><th>Rentals</th><th>Status</th>
+                </tr></thead>
+                <tbody id="top-movies"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title"><span class="card-title-dot"></span>Pending Fines</div>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr>
+                  <th>User</th><th>Type</th><th>Amount</th><th>Status</th>
+                </tr></thead>
+                <tbody id="pending-fines"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title"><span class="card-title-dot"></span>Recent Activity</div>
+          </div>
+          <div class="card-body">
+            <div class="activity-list" id="activity-feed"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── USERS ─────────────────────────── -->
+      <div class="page-view" id="page-users">
+        <div class="page-header">
+          <div class="page-title-group">
+            <div class="page-label">Component 01</div>
+            <h1>User Management</h1>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" id="btn-add-user">＋ Add User</button>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <div class="search-input-wrap">
+            <span class="search-icon">🔍</span>
+            <input class="form-control" id="user-search" type="text" placeholder="Search users…" />
+          </div>
+          <span id="users-count" style="font-family:var(--font-condensed);font-size:12px;color:var(--white-30);letter-spacing:1px;text-transform:uppercase"></span>
+        </div>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th>Name</th><th>ID</th><th>Email</th><th>Membership</th><th>Status</th><th>Joined</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="users-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── MOVIES ────────────────────────── -->
+      <div class="page-view" id="page-movies">
+        <div class="page-header">
+          <div class="page-title-group">
+            <div class="page-label">Component 02</div>
+            <h1>Movie Management</h1>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" id="btn-add-movie">＋ Add Movie</button>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <div class="search-input-wrap">
+            <span class="search-icon">🔍</span>
+            <input class="form-control" id="movie-search" type="text" placeholder="Search title, director…" />
+          </div>
+          <select class="form-control" id="movie-genre-filter" style="max-width:160px">
+            <option value="">All Genres</option>
+            <option>Sci-Fi</option><option>Action</option><option>Crime</option>
+            <option>Thriller</option><option>Drama</option><option>Comedy</option>
+            <option>Horror</option><option>Romance</option>
+          </select>
+          <span id="movies-count" style="font-family:var(--font-condensed);font-size:12px;color:var(--white-30);letter-spacing:1px;text-transform:uppercase"></span>
+        </div>
+
+        <div class="movies-grid" id="movies-grid"></div>
+      </div>
+
+      <!-- ── RENTALS ───────────────────────── -->
+      <div class="page-view" id="page-rentals">
+        <div class="page-header">
+          <div class="page-title-group">
+            <div class="page-label">Component 03</div>
+            <h1>Rental Management</h1>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" id="btn-add-rental">＋ New Rental</button>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <div class="tabs" style="margin-bottom:0">
+            <button class="tab-btn active" data-rental-filter="">All</button>
+            <button class="tab-btn" data-rental-filter="Active">Active</button>
+            <button class="tab-btn" data-rental-filter="Overdue">Overdue</button>
+            <button class="tab-btn" data-rental-filter="Returned">Returned</button>
+          </div>
+          <span id="rentals-count" style="font-family:var(--font-condensed);font-size:12px;color:var(--white-30);letter-spacing:1px;text-transform:uppercase;margin-left:auto"></span>
+        </div>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th>ID</th><th>User</th><th>Movie</th><th>Type</th>
+                <th>Rental Date</th><th>Due Date</th><th>Return Date</th><th>Status</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="rentals-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── REVIEWS ───────────────────────── -->
+      <div class="page-view" id="page-reviews">
+        <div class="page-header">
+          <div class="page-title-group">
+            <div class="page-label">Component 04</div>
+            <h1>Review &amp; Ratings</h1>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" id="btn-add-review">＋ Add Review</button>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <div class="tabs" style="margin-bottom:0">
+            <button class="tab-btn active" data-review-filter="">All</button>
+            <button class="tab-btn" data-review-filter="Pending">Pending</button>
+            <button class="tab-btn" data-review-filter="Approved">Approved</button>
+          </div>
+          <span id="reviews-count" style="font-family:var(--font-condensed);font-size:12px;color:var(--white-30);letter-spacing:1px;text-transform:uppercase;margin-left:auto"></span>
+        </div>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th>ID</th><th>User</th><th>Movie</th><th>Rating</th><th>Comment</th>
+                <th>Type</th><th>Status</th><th>Date</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="reviews-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── PAYMENTS ──────────────────────── -->
+      <div class="page-view" id="page-payments">
+        <div class="page-header">
+          <div class="page-title-group">
+            <div class="page-label">Component 06</div>
+            <h1>Payments &amp; Fines</h1>
+          </div>
+        </div>
+
+        <div class="stats-grid" style="grid-template-columns:repeat(2,1fr);max-width:480px;margin-bottom:24px">
+          <div class="stat-card">
+            <div class="stat-card-top"><div class="stat-label">Total Revenue</div><div class="stat-icon">💰</div></div>
+            <div class="stat-value" id="pay-total-revenue">$0</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card-top"><div class="stat-label">Pending Fines</div><div class="stat-icon">⚠️</div></div>
+            <div class="stat-value" id="pay-pending-total" style="color:var(--red)">$0</div>
+          </div>
+        </div>
+
+        <div class="filter-bar">
+          <div class="tabs" style="margin-bottom:0">
+            <button class="tab-btn active" data-pay-filter="">All</button>
+            <button class="tab-btn" data-pay-filter="Rental">Rentals</button>
+            <button class="tab-btn" data-pay-filter="Fine">Fines</button>
+            <button class="tab-btn" data-pay-filter="Pending">Pending</button>
+            <button class="tab-btn" data-pay-filter="Paid">Paid</button>
+          </div>
+          <span id="payments-count" style="font-family:var(--font-condensed);font-size:12px;color:var(--white-30);letter-spacing:1px;text-transform:uppercase;margin-left:auto"></span>
+        </div>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th>ID</th><th>User</th><th>Rental ID</th><th>Type</th>
+                <th>Amount</th><th>Status</th><th>Date</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="payments-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ADMINS ────────────────────────── -->
+      <div class="page-view" id="page-admins">
+        <div class="page-header">
+          <div class="page-title-group">
+            <div class="page-label">Component 05</div>
+            <h1>Admin Management</h1>
+          </div>
+          <div class="page-actions">
+            <button class="btn btn-primary" id="btn-add-admin">＋ Add Admin</button>
+          </div>
+        </div>
+
+        <div class="alert alert-warn">
+          <span>⚠️</span>
+          <span>Admin creation and deletion is restricted to <strong>SuperAdmin</strong> accounts only.</span>
+        </div>
+
+        <div class="filter-bar">
+          <div class="search-input-wrap">
+            <span class="search-icon">🔍</span>
+            <input class="form-control" id="admin-search" type="text" placeholder="Search admins…" />
+          </div>
+          <span id="admins-count" style="font-family:var(--font-condensed);font-size:12px;color:var(--white-30);letter-spacing:1px;text-transform:uppercase"></span>
+        </div>
+
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th>Name</th><th>ID</th><th>Email</th><th>Role</th><th>Region</th><th>Status</th><th>Last Login</th><th>Actions</th>
+              </tr></thead>
+              <tbody id="admins-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main><!-- /page-content -->
+  </div><!-- /main-content -->
+</div><!-- /app-layout -->
+
+
+<!-- ══════════════════════════════════════
+     MODALS
+══════════════════════════════════════ -->
+
+<!-- User Modal -->
+<div class="modal-overlay" id="modal-user">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="user-form-title">Add User</div>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="user-form" onsubmit="return false">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input class="form-control" id="uf-name" type="text" placeholder="e.g. Alex Morgan" required />
+          </div>
+          <div class="form-group">
+            <label>Email Address *</label>
+            <input class="form-control" id="uf-email" type="email" placeholder="user@email.com" required />
+          </div>
+          <div class="form-group">
+            <label>Membership Type</label>
+            <select class="form-control" id="uf-membership">
+              <option value="Regular">Regular</option>
+              <option value="Premium">Premium</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select class="form-control" id="uf-status">
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeAllModals()">Cancel</button>
+      <button class="btn btn-primary" id="save-user">Save User</button>
+    </div>
+  </div>
+</div>
+
+<!-- Movie Modal -->
+<div class="modal-overlay" id="modal-movie">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="movie-form-title">Add Movie</div>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="movie-form" onsubmit="return false">
+        <div class="form-grid">
+          <div class="form-group full">
+            <label>Movie Title *</label>
+            <input class="form-control" id="mf-title" type="text" placeholder="e.g. Inception" required />
+          </div>
+          <div class="form-group">
+            <label>Genre</label>
+            <select class="form-control" id="mf-genre">
+              <option>Sci-Fi</option><option>Action</option><option>Crime</option>
+              <option>Thriller</option><option>Drama</option><option>Comedy</option>
+              <option>Horror</option><option>Romance</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Director *</label>
+            <input class="form-control" id="mf-director" type="text" placeholder="Director name" required />
+          </div>
+          <div class="form-group">
+            <label>Release Year *</label>
+            <input class="form-control" id="mf-year" type="number" placeholder="e.g. 2010" min="1900" max="2099" required />
+          </div>
+          <div class="form-group">
+            <label>Format</label>
+            <select class="form-control" id="mf-format">
+              <option value="DVD">DVD (Physical)</option>
+              <option value="Digital">Digital (Streaming)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Availability</label>
+            <select class="form-control" id="mf-available">
+              <option value="true">Available</option>
+              <option value="false">Not Available</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeAllModals()">Cancel</button>
+      <button class="btn btn-primary" id="save-movie">Save Movie</button>
+    </div>
+  </div>
+</div>
+
+<!-- Rental Modal -->
+<div class="modal-overlay" id="modal-rental">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">New Rental</div>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="alert alert-info">
+        <span>ℹ️</span>
+        <span>Regular members get <strong>7 days</strong>, Premium members get <strong>14 days</strong>.</span>
+      </div>
+      <form id="rental-form" onsubmit="return false">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Select User *</label>
+            <select class="form-control" id="rf-user"><option value="">Loading…</option></select>
+          </div>
+          <div class="form-group">
+            <label>Select Movie *</label>
+            <select class="form-control" id="rf-movie"><option value="">Loading…</option></select>
+          </div>
+          <div class="form-group">
+            <label>Rental Type</label>
+            <select class="form-control" id="rf-type">
+              <option value="Regular">Regular (7 days)</option>
+              <option value="Premium">Premium (14 days)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Rental Date</label>
+            <input class="form-control" id="rf-date" type="date" />
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeAllModals()">Cancel</button>
+      <button class="btn btn-primary" id="save-rental">Record Rental</button>
+    </div>
+  </div>
+</div>
+
+<!-- Review Modal -->
+<div class="modal-overlay" id="modal-review">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">Submit Review</div>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="review-form" onsubmit="return false">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>User *</label>
+            <select class="form-control" id="rv-user"><option value="">Select User</option></select>
+          </div>
+          <div class="form-group">
+            <label>Movie *</label>
+            <select class="form-control" id="rv-movie"><option value="">Select Movie</option></select>
+          </div>
+          <div class="form-group full">
+            <label>Your Rating *</label>
+            <div class="star-input" id="star-input">
+              <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
+            </div>
+          </div>
+          <div class="form-group full">
+            <label>Comment *</label>
+            <textarea class="form-control" id="rv-comment" placeholder="Share your thoughts about this movie…" rows="4"></textarea>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeAllModals()">Cancel</button>
+      <button class="btn btn-primary" id="save-review">Submit Review</button>
+    </div>
+  </div>
+</div>
+
+<!-- Admin Modal -->
+<div class="modal-overlay" id="modal-admin">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="admin-form-title">Add Admin</div>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <form id="admin-form" onsubmit="return false">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Full Name *</label>
+            <input class="form-control" id="af-name" type="text" placeholder="Admin name" required />
+          </div>
+          <div class="form-group">
+            <label>Email *</label>
+            <input class="form-control" id="af-email" type="email" placeholder="admin@cinerent.com" required />
+          </div>
+          <div class="form-group">
+            <label>Role</label>
+            <select class="form-control" id="af-role">
+              <option value="ModeratorAdmin">Moderator Admin</option>
+              <option value="SuperAdmin">Super Admin</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Assigned Region</label>
+            <input class="form-control" id="af-region" type="text" placeholder="e.g. Asia, Global" />
+          </div>
+          <div class="form-group">
+            <label>Status</label>
+            <select class="form-control" id="af-status">
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeAllModals()">Cancel</button>
+      <button class="btn btn-primary" id="save-admin">Save Admin</button>
+    </div>
+  </div>
+</div>
+
+<!-- Receipt Modal -->
+<div class="modal-overlay" id="modal-receipt">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-header">
+      <div class="modal-title">Payment Receipt</div>
+      <button class="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div id="receipt-content"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeAllModals()">Close</button>
+      <button class="btn btn-primary" onclick="window.print()">🖨️ Print</button>
+    </div>
+  </div>
+</div>
+
+<!-- Confirm Delete Modal -->
+<div class="modal-overlay" id="modal-confirm">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-body" style="padding:32px;text-align:center">
+      <div class="confirm-icon">🗑️</div>
+      <div class="confirm-title">Delete Record?</div>
+      <div class="confirm-desc">This action cannot be undone. The record will be permanently removed.</div>
+    </div>
+    <div class="modal-footer" style="justify-content:center;gap:12px">
+      <button class="btn btn-outline" id="confirm-no">Cancel</button>
+      <button class="btn btn-danger" id="confirm-yes">Yes, Delete</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
+
