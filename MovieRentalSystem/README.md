@@ -1,44 +1,6 @@
 # 🎬 CineRent — Movie Rental & Review System
 ### SE1020 Object Oriented Programming — Group Project
 
----
-
-## Project Structure
-
-```
-MovieRentalSystem/
-├── frontend/                  ← HTML/CSS/JS Frontend
-│   ├── index.html             ← Main single-page application
-│   ├── css/
-│   │   └── style.css          ← All styles (cinema-noir theme)
-│   └── js/
-│       └── app.js             ← All frontend logic
-│
-├── backend/                   ← Java Spring Boot Backend (to be built)
-│   └── src/main/java/com/cinerent/
-│       ├── model/             ← Java model classes
-│       ├── filehandler/       ← File I/O handlers
-│       └── servlet/           ← JSP Servlets
-│
-└── data/                      ← Flat-file data storage
-    ├── users.txt
-    ├── movies.txt
-    ├── rentals.txt
-    ├── reviews.txt
-    ├── payments.txt
-    └── admins.txt
-```
-
----
-
-## How to Run Frontend
-
-1. Open `frontend/index.html` in any modern browser
-2. No server required — runs entirely in the browser
-3. Data persists via `localStorage` (simulating .txt file storage)
-
----
-
 ## Modules / Components
 
 | # | Component | Member | Data File |
