@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLIXGO - Movie Rental and Review Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            overflow: hidden;
+            height: 100vh;
+            color: white;
+        }
+
+        #video-background {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+            object-fit: cover;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 0;
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .logo {
+            font-size: 5rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #e50914;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            max-width: 800px;
+        }
+
+        .cta-button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            background-color: #e50914;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .cta-button:hover {
+            background-color: #f40612;
+            transform: scale(1.05);
+        }
+
+        .nav {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .nav a:hover {
+            color: #e50914;
+        }
+
+        /* Fallback if video doesn't load */
+        .no-video #video-background {
+            display: none;
+        }
+        .no-video .fallback-image {
+            display: block;
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+<!-- Background Video -->
+<video autoplay muted loop id="video-background">
+    <source src="assets/Video/Trailer.mp4" type="video/mp4">
+    Your browser does not support HTML5 video.
+</video>
+
+<!-- Fallback image (hidden by default) -->
+<img src="assets/images/fallback.jpg" alt="FLIXGO Background" class="fallback-image" style="display: none;">
+
+<!-- Dark overlay -->
+<div class="overlay"></div>
+
+<!-- Main content -->
+<div class="content">
+    <div class="nav">
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
+    </div>
+
+    <h1 class="logo">FLIXGO</h1>
+    <p class="tagline">Your ultimate movie rental and review platform. Discover, rent, and review thousands of movies from classics to the latest releases.</p>
+    <a href="login.html" class="cta-button">Get Started</a>
+</div>
+
+<script>
+    // Check if video can play, if not show fallback
+    document.addEventListener('DOMContentLoaded', function() {
+        const video = document.getElementById('video-background');
+
+        video.play().catch(error => {
+            document.body.classList.add('no-video');
+            console.log("Video playback failed, using fallback image");
+        });
+
+        // Alternative check for mobile devices
+        if (video.readyState < 3) {
+            video.addEventListener('error', function() {
+                document.body.classList.add('no-video');
+            });
+        }
+    });
+</script>
+</body>
+</html>
