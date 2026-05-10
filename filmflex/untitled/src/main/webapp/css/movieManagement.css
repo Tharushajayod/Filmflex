@@ -7,12 +7,12 @@
 
 body {
     color: white;
-    background-color: #0b1f3a;
+    background-color: #141414;
     min-height: 100vh;
 }
 
 .header {
-    background-color: rgba(8, 20, 40, 0.94);
+    background-color: rgba(0, 0, 0, 0.9);
     padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
@@ -26,7 +26,7 @@ body {
 .logo {
     font-size: 2rem;
     font-weight: bold;
-    color: #4da3ff;
+    color: #e50914;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     text-decoration: none;
 }
@@ -48,8 +48,8 @@ body {
 }
 
 .logout-btn:hover {
-    background-color: #4da3ff;
-    border-color: #4da3ff;
+    background-color: #e50914;
+    border-color: #e50914;
 }
 
 .container {
@@ -62,7 +62,7 @@ body {
     font-size: 2rem;
     margin-bottom: 2rem;
     padding-bottom: 0.5rem;
-    border-bottom: 2px solid #4da3ff;
+    border-bottom: 2px solid #e50914;
 }
 
 .dashboard-grid {
@@ -72,7 +72,7 @@ body {
 }
 
 .sidebar {
-    background-color: rgba(10, 25, 50, 0.72);
+    background-color: rgba(0, 0, 0, 0.6);
     border-radius: 8px;
     padding: 1.5rem;
     height: fit-content;
@@ -96,16 +96,16 @@ body {
 }
 
 .sidebar-menu a:hover, .sidebar-menu a.active {
-    background-color: rgba(77, 163, 255, 0.3);
-    color: #4da3ff;
+    background-color: rgba(229, 9, 20, 0.3);
+    color: #e50914;
 }
 
 .sidebar-menu a.active {
-    border-left: 3px solid #4da3ff;
+    border-left: 3px solid #e50914;
 }
 
 .content-area {
-    background-color: rgba(10, 25, 50, 0.72);
+    background-color: rgba(0, 0, 0, 0.6);
     border-radius: 8px;
     padding: 2rem;
 }
@@ -113,7 +113,7 @@ body {
 .section-title {
     margin-bottom: 1.5rem;
     font-size: 1.5rem;
-    color: #4da3ff;
+    color: #e50914;
 }
 
 /* Table Styles */
@@ -130,8 +130,8 @@ body {
 }
 
 .data-table th {
-    background-color: rgba(77, 163, 255, 0.3);
-    color: #4da3ff;
+    background-color: rgba(229, 9, 20, 0.3);
+    color: #e50914;
     font-weight: 600;
 }
 
@@ -191,7 +191,7 @@ body {
 
 .btn {
     padding: 0.75rem 1.5rem;
-    background-color: #4da3ff;
+    background-color: #e50914;
     color: white;
     border: none;
     border-radius: 4px;
@@ -202,7 +202,7 @@ body {
 }
 
 .btn:hover {
-    background-color: #74b9ff;
+    background-color: #f40612;
 }
 
 /* Movie-specific styles */
@@ -236,15 +236,11 @@ body {
 
 .search-btn {
     padding: 8px 16px;
-    background-color: #4da3ff;
+    background-color: #e50914;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-}
-
-.search-btn:hover {
-    background-color: #74b9ff;
 }
 
 /* Modal Styles */
@@ -256,11 +252,11 @@ body {
     top: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(8, 20, 40, 0.88);
+    background-color: rgba(0, 0, 0, 0.8);
 }
 
 .modal-content {
-    background-color: #0b1f3a;
+    background-color: #141414;
     margin: 5% auto;
     padding: 30px;
     border-radius: 8px;
