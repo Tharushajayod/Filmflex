@@ -123,14 +123,7 @@
         logoutBtn.addEventListener('click', function() {
             logoutUser();
         });
-
         // Delete account button handler
-        deleteAccountBtn.addEventListener('click', function() {
-            if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
-                deleteAccount();
-            }
-        })
-
         deleteAccountBtn.addEventListener('click', async function() {
             if (confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
                 try {
