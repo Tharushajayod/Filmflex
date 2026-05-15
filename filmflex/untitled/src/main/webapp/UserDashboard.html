@@ -1,0 +1,72 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FILMFLEX- User Dashboard</title>
+    <link rel="stylesheet" href="css/UserDashboard.css">
+</head>
+<body>
+<!-- Header -->
+<header class="header">
+    <a href="index.html" class="logo">FILMFLEX</a>
+
+    <nav class="nav-links">
+        <a href="UserDashboard.html">Home</a>
+        <a href="movie.html">Movies</a>
+    </nav>
+
+    <div class="user-actions">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+</header>
+
+<!-- Main Content -->
+<div class="container">
+    <h1 class="dashboard-title">My Account</h1>
+
+    <div class="dashboard-grid">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="#" class="active">Account Details</a></li>
+                <li><a href="#watchedHistoryTab">Watched History</a></li>
+                <li><a href="#myReviewsTab">My Reviews</a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Account Details Section -->
+            <div class="section" id="accountDetails">
+                <h2>Account Details</h2>
+                <div class="account-info">
+                    <p>Full Name: <span id="fullName">admin123</span></p>
+                    <p>Email: <span id="userEmail">admin123@example.com</span></p>
+                </div>
+            </div>
+
+            <!-- Watched History Section -->
+            <div class="section" id="watchedHistoryTab">
+                <h2>Watched History</h2>
+                <div id="watchedMovies">
+                    <!-- Placeholder for Watched Movies -->
+                </div>
+            </div>
+
+            <!-- My Reviews Section -->
+            <div class="section" id="myReviewsTab">
+                <h2>My Reviews</h2>
+                <div id="userReviews">
+                    <!-- Placeholder for User Reviews -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="js/user_dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FILMFLEX- Movies</title>
+    <link rel="stylesheet" href="css/UserDashboard.css">
+    <style>
+        /* Movie page styles */
+        .movies-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .featured-show {
+            grid-column: 1 / -1;
+            position: relative;
+            height: 500px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .featured-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            z-index: 1;
+        }
+
+        .featured-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0.1) 100%);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 40px;
+        }
+
+        .featured-title {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .featured-description {
+            color: #ccc;
+            margin-bottom: 20px;
+            max-width: 600px;
+            line-height: 1.5;
+        }
+
+        .movie-card {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            aspect-ratio: 2/3;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.05);
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .movie-title {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 15px;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+            color: white;
+            font-weight: 500;
+        }
+
+        .section-header {
+            font-size: 1.5rem;
+            margin: 30px 0 15px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .view-all {
+            color: #e50914;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        /* Admin mode styles */
+        .admin-badge {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #e50914;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            z-index: 1000;
+            display: none;
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .featured-show {
+                height: 400px;
+            }
+
+            .featured-title {
+                font-size: 2rem;
+            }
+
+            .movies-container {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div>
+        <div class="spinner"></div>
+        <span id="loadingText">Checking access...</span>
+    </div>
+</div>
+
+<!-- Admin Badge -->
+<div class="admin-badge" id="adminBadge">Admin Mode</div>
+
+<!-- Header -->
+<header class="header">
+    <a href="index.html" class="logo">FILMFLEX</a>
+    <nav class="nav-links">
+        <a href="UserDashboard.html" id="homeLink">Home</a>
+        <a href="movie.html" class="active">Movies</a>
+    </nav>
+    <div class="user-actions">
+        <div class="user-avatar" id="userAvatar">U</div>
+        <button class="logout-btn" id="logoutBtn">Logout</button>
+    </div>
+</header>
+
+<!-- Main Content -->
+<div class="container" id="mainContent" style="display: none;">
+    <!-- Featured Show -->
+    <div class="featured-show">
+        <div class="featured-background" style="background-image: url('assets/image/')"></div>
+        <div class="featured-overlay">
+            <h1 class="featured-title">THE WITCHER</h1>
+            <p class="featured-description">Geralt of Rivia, a solitary monster hunter, struggles to find his place in a world where people often prove more wicked than beasts.</p>
+            <div>
+                <button class="btn">Watch Now</button>
+                <button class="btn btn-secondary">+ My List</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popular on FILMFLEX-->
+    <h2 class="section-header">
+        Popular on FILMFLEX
+        <a href="#" class="view-all">View All</a>
+    </h2>
+    <div class="movies-container">
+        <div class="movie-card">
+            <img src="assets/image/" alt="The Witcher" class="movie-poster">
+            <div class="movie-title">The Witcher</div>
+        </div>
+        <div class="movie-card">
+            <img src="assets/image/" alt="Narcos" class="movie-poster">
+            <div class="movie-title">Narcos</div>
+        </div>
+        <div class="movie-card">
+            <img src="assets/image/" alt="Jessica Jones" class="movie-poster">
+            <div class="movie-title">Jessica Jones</div>
+        </div>
+        <div class="movie-card">
+            <img src="assets/image/" alt="Lucifer" class="movie-poster">
+            <div class="movie-title">Lucifer</div>
+        </div>
+        <div class="movie-card">
+            <img src="assets/image/" alt="You" class="movie-poster">
+            <div class="movie-title">You</div>
+        </div>
+        <div class="movie-card">
+            <img src="assets/image/" alt="The Crown" class="movie-poster">
+            <div class="movie-title">The Crown</div>
+        </div>
+        <div class="movie-card">
+            <img src="assets/image/" alt="The Rain" class="movie-poster">
+            <div class="movie-title">The Rain</div>
+        </div>
+    </div>
+
+    <!-- Continue Watching -->
+    <h2 class="section-header">
+        Continue Watching
+        <a href="#" class="view-all">View All</a>
+    </h2>
+    <div class="movies-container">
+        <div class="movie-card">
+            <img src="assets/image/" alt="Stranger Things" class="movie-poster">
+            <div class="movie-title">Stranger Things</div>
+        </div>
+        <div class="movie-card">
+            <img src="assets/image/" alt="Dark" class="movie-poster">
+            <div class="movie-title">Dark</div>
+        </div>
+        <div class="movie-card">
+            <img src="assets/image/" alt="Money Heist" class="movie-poster">
+            <div class="movie-title">Money Heist</div>
+        </div>
+        <div class="movie-card">
+            <img src="assets/image/" alt="The Queen's Gambit" class="movie-poster">
+            <div class="movie-title">The Queen's Gambit</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // DOM Elements
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const loadingText = document.getElementById('loadingText');
+        const mainContent = document.getElementById('mainContent');
+        const adminBadge = document.getElementById('adminBadge');
+        const homeLink = document.getElementById('homeLink');
+        const userAvatar = document.getElementById('userAvatar');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        // Check URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const adminAccess = urlParams.get('adminAccess') === 'true';
+
+        // Initialize admin mode if needed
+        if (adminAccess) {
+            initializeAdminMode();
+        } else {
+            initializeUserMode();
+        }
+
+        function initializeAdminMode() {
+            console.log('Initializing admin mode');
+            adminBadge.style.display = 'block';
+            homeLink.style.display = 'none'; // Hide Home button
+            userAvatar.textContent = 'A'; // Set admin avatar
+
+            // Bypass normal loading for admin
+            loadingOverlay.style.display = 'none';
+            mainContent.style.display = 'block';
+
+            // Set up admin-specific logout
+            logoutBtn.addEventListener('click', function() {
+                window.location.href = 'adminDashboard.html';
+            });
+        }
+
+        function initializeUserMode() {
+            console.log('Initializing user mode');
+            loadingText.textContent = "Loading your information...";
+
+            fetch('user-data', {
+                method: 'GET',
+                credentials: 'include'
+            })
+                .then(response => {
+                    if (!response.ok) throw new Error('Failed to fetch user data');
+                    return response.json();
+                })
+                .then(userData => {
+                    userAvatar.textContent = userData.fullName.charAt(0).toUpperCase();
+                    return checkTicketAccess(userData.email);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    window.location.href = 'login.html';
+                });
+        }
+
+        function checkTicketAccess(email) {
+            loadingText.textContent = "Verifying your access...";
+
+            return fetch('purchase-ticket?email=' + encodeURIComponent(email), {
+                method: 'GET',
+                credentials: 'include'
+            })
+                .then(response => {
+                    if (response.ok) {
+                        loadingOverlay.style.display = 'none';
+                        mainContent.style.display = 'block';
+                    } else if (response.status === 404) {
+                        window.location.href = 'Ticketpage.html';
+                    } else {
+                        throw new Error('Failed to verify ticket');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    window.location.href = 'Ticketpage.html';
+                });
+        }
+
+        // Set up user logout if not in admin mode
+        if (!adminAccess) {
+            logoutBtn.addEventListener('click', function() {
+                fetch('logout', {
+                    method: 'POST',
+                    credentials: 'include'
+                })
+                    .then(() => {
+                        window.location.href = 'login.html?logout=success';
+                    })
+                    .catch(error => {
+                        console.error('Logout failed:', error);
+                        alert('Logout failed. Please try again.');
+                    });
+            });
+        }
+    });
+</script>
+</body>
+</html>
