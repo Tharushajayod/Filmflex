@@ -1,0 +1,6 @@
+PAY1746433075440, Introduction to Algebra, 25.0, creditCard, Pending, user
+PAY1746433106870, Introduction to Poetry, 22.0, paypal, Pending, user
+PAY1746433161838, Basic Mechanics, 25.0, paypal, Pending, user1
+PAY1746433183437, Atomic Structure, 20.0, creditCard, Completed, user1
+PAY1746433209598, Introduction to Environmental Science, 25.0, creditCard, Pending, user1
+PAY1746810402479, Introduction to Algebra, 25.0, creditCard, Pending, user
