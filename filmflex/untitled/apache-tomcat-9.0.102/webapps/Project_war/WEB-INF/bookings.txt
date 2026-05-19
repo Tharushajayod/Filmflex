@@ -1,0 +1,7 @@
+user, Mathematics, Introduction to Algebra, 2025-05-22, 07:30, creditCard
+user, English Literature, Introduction to Poetry, 2025-05-15, 10:00, paypal
+user1, Physics, Basic Mechanics, 2025-05-28, 20:00, paypal
+user1, Chemistry, Atomic Structure, 2025-05-14, 19:00, creditCard
+user1, Environmental Science, Introduction to Environmental Science, 2025-05-30, 09:00, creditCard
+user, Mathematics, Introduction to Algebra, 2025-05-30, 03:40, creditCard
+user, English, aBC, 2025-05-24, 13:50, paypal
