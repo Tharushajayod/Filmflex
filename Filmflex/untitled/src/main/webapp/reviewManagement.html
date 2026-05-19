@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FILMFLEX — Review Management</title>
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/UserDashboard.css">
+    <style>
+        /* ── FIXED NAV BAR GAP ENFORCEMENT RULES ── */
+        .page-body {
+            display: flex !important;
+            gap: 30px !important;
+            max-width: 1400px !important;
+            margin: 100px auto 40px auto !important;
+            padding: 0 2rem !important;
+            align-items: flex-start !important;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .sidebar {
+            width: 280px !important;
+            background: #121212 !important; /* Premium Dark */
+            border: 1px solid #222 !important;
+            border-radius: 12px !important;
+            padding: 16px !important;
+        }
+
+        .sidebar-menu a {
+            padding: 12px 16px !important;
+            color: #aaa !important;
+            text-decoration: none;
+            border-radius: 8px !important;
+            display: flex !important;
+            transition: 0.3s;
+        }
+
+        .sidebar-menu a:hover {
+            background: #1c1c1c !important;
+            color: white !important;
+        }
+
+        .sidebar-menu a.active {
+            background: #e50914 !important; /* FILMFLEX Red */
+            color: white !important;
+            font-weight: bold;
+        }
+
+        .main { flex: 1 !important; min-width: 0 !important; }
+        .content-area { width: 100% !important; }
+
+        #reviewMgmtPanel { position: relative !important; padding-top: 20px !important; }
+        .review-mgmt-toolbar { display: block !important; width: 100% !important; margin-bottom: 30px !important; }
+
+        /* Absolute Search Box mapped exactly under logout btn line */
+        .search-box {
+            position: absolute !important;
+            top: -55px !important;
+            right: 0 !important;
+            display: flex !important;
+            gap: 10px !important;
+            width: 380px !important;
+            z-index: 99;
+        }
+
+        /* ── PREMIUM REVIEWS STATS CARDS ── */
+        .review-stats {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)) !important;
+            gap: 20px !important;
+            margin-bottom: 30px !important;
+            width: 100% !important;
+        }
+
+        .rev-stat-card {
+            background: rgba(255, 255, 255, 0.02) !important;
+            border: 1px solid #222 !important;
+            border-radius: 12px !important;
+            padding: 20px !important;
+            position: relative !important;
+            overflow: hidden !important;
+            text-align: left !important;
+        }
+
+        .rev-stat-card::before { content: '' !important; position: absolute !important; top: 0; left: 0; width: 4px; height: 100%; background: #e50914 !important; }
+        .rev-stat-num { font-size: 2.2rem !important; font-weight: 900 !important; color: white !important; line-height: 1.2; }
+        .rev-stat-lbl { font-size: 0.78rem !important; color: #888 !important; text-transform: uppercase !important; margin-top: 4px !important; letter-spacing: 0.5px; }
+
+        /* ── PREMIUM DARK THEME DATA TABLES ── */
+        .data-table {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            margin: 20px 0 35px !important;
+            background: #141414 !important;
+            border: 1px solid #222 !important;
+            border-radius: 12px !important;
+            overflow: hidden !important;
+        }
+
+        .data-table th {
+            background: #1c1c1c !important;
+            color: white !important;
+            padding: 16px 20px !important;
+            font-size: 0.9rem !important;
+            font-weight: bold !important;
+            text-align: left !important;
+            border-bottom: 1px solid #2c2c2c !important;
+        }
+
+        .data-table td {
+            padding: 16px 20px !important;
+            color: #ccc !important;
+            font-size: 0.88rem !important;
+            border-bottom: 1px solid #222 !important;
+            text-align: left !important;
+            vertical-align: middle !important;
+        }
+
+        .data-table tr:hover td { background: rgba(255, 255, 255, 0.01) !important; }
+        .review-preview { max-width: 250px !important; white-space: nowrap !important; overflow: hidden !important; text-overflow: ellipsis !important; color: #aaa !important; }
+
+        .review-search {
+            width: 100%; background: #1c1c1c !important; border: 1px solid #333 !important; border-radius: 6px !important; color: white !important; padding: 12px 16px !important; font-size: 0.92rem !important; outline: none !important; box-sizing: border-box !important;
+        }
+        .review-search:focus { border-color: #e50914 !important; background: #222 !important; }
+
+        .status-badge { padding: 4px 12px !important; border-radius: 20px !important; font-size: 0.76rem !important; font-weight: bold !important; display: inline-block; }
+        .status-pending { background: rgba(243,156,18,0.15) !important; color: #f39c12 !important; }
+        .status-approved { background: rgba(46,204,113,0.15) !important; color: #2ecc71 !important; }
+        .status-rejected { background: rgba(231,76,60,0.15) !important; color: #e74c3c !important; }
+
+        .rev-status-tabs { display: flex !important; gap: 8px !important; }
+        .rev-tab { background: transparent !important; border: 1px solid #333 !important; color: #aaa !important; padding: 8px 16px !important; border-radius: 20px !important; cursor: pointer !important; font-size: 0.85rem !important; transition: all 0.3s !important;}
+        .rev-tab.active, .rev-tab:hover { background: #e50914 !important; border-color: #e50914 !important; color: white !important; }
+
+        .action-btn { border: none !important; padding: 8px 14px !important; border-radius: 6px !important; font-size: 0.82rem !important; font-weight: bold !important; cursor: pointer !important; display: inline-flex; align-items: center; justify-content: center; }
+        .view-btn { background: #3498db !important; color: white !important; }
+        .delete-btn { background: #e74c3c !important; color: white !important; }
+        .approve-btn { background: #27ae60 !important; color: white !important; }
+        .crud-btn-group { display: flex; gap: 8px; }
+        .bulk-action-bar { display: flex !important; gap: 12px !important; margin-top: 20px !important; }
+
+        /* ── MODAL CENTERING ── */
+        .modal {
+            display: none; position: fixed !important; inset: 0 !important; background: rgba(0,0,0,0.85) !important; z-index: 3000 !important; align-items: center !important; justify-content: center !important; padding: 20px !important;
+        }
+        .modal-content {
+            background: #141414 !important; border: 1px solid #262626 !important; padding: 35px !important; border-radius: 14px !important; width: 100% !important; max-width: 580px !important; position: relative !important; box-sizing: border-box !important; text-align: left !important;
+        }
+        .close-btn { position: absolute !important; top: 20px !important; right: 20px !important; color: #666 !important; font-size: 1.6rem !important; cursor: pointer !important; }
+        .close-btn:hover { color: white !important; }
+
+        .header { z-index: 1000 !important; }
+        body { display: flex; flex-direction: column; min-height: 100vh; }
+    </style>
+</head>
+<body>
+
+<header class="header" id="mainHeader">
+    <a href="adminDashboard.html" class="logo">FILM<span>FLEX</span>ADMIN</a>
+    <div class="header-right">
+        <button class="logout-btn" id="logoutBtn" style="background:#e50914; color:white; border:none; padding:8px 18px; border-radius:6px; font-weight:bold; cursor:pointer;">Logout</button>
+    </div>
+</header>
+
+<div class="page-body">
+    <aside class="sidebar">
+        <ul class="sidebar-menu">
+            <li><a href="adminDashboard.html" class="sb-link">Dashboard Overview</a></li>
+            <li><a href="adminDashboard.html?section=users" class="sb-link">User Management</a></li>
+            <li><a href="adminDashboard.html?section=admins" class="sb-link">Admin Management</a></li>
+            <li><a href="movieManagement.html" class="sb-link ">Movie Management</a></li>
+            <li><a href="reviewManagement.html" class="sb-link active">Review Management</a></li>
+            <li><a href="paymentManagement.html" class="sb-link">Payment Management</a></li>
+        </ul>
+    </aside>
+
+    <main class="main">
+        <div class="content-area" id="reviewMgmtPanel">
+            <div class="panel-header"><h2 class="panel-title">Review Management</h2></div>
+
+            <div class="review-stats">
+                <div class="rev-stat-card"><div class="rev-stat-num" id="totalRevCount">0</div><div class="rev-stat-lbl">Total Reviews</div></div>
+                <div class="rev-stat-card"><div class="rev-stat-num" style="color:#f39c12;" id="pendingRevCount">0</div><div class="rev-stat-lbl">Pending</div></div>
+                <div class="rev-stat-card"><div class="rev-stat-num" style="color:#2ecc71;" id="approvedRevCount">0</div><div class="rev-stat-lbl">Approved</div></div>
+                <div class="rev-stat-card"><div class="rev-stat-num" style="color:#e74c3c;" id="rejectedRevCount">0</div><div class="rev-stat-lbl">Rejected</div></div>
+            </div>
+
+            <div class="review-mgmt-toolbar">
+                <div class="rev-status-tabs">
+                    <button class="rev-tab active" data-status="all">All</button>
+                    <button class="rev-tab" data-status="Pending">Pending</button>
+                    <button class="rev-tab" data-status="Approved">Approved</button>
+                    <button class="rev-tab" data-status="Rejected">Rejected</button>
+                </div>
+                <div class="search-box">
+                    <input type="text" id="reviewSearchInput" class="review-search" placeholder="Search reviews...">
+                    <button class="btn-primary" id="reviewSearchBtn" style="padding: 0 24px; height: 44px; background:#e50914; border:none;">Search</button>
+                </div>
+            </div>
+
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th style="width: 40px;"><input type="checkbox" id="selectAllReviews"></th>
+                    <th>Subscriber</th>
+                    <th>Movie Title</th>
+                    <th>Rating</th>
+                    <th>Review (Preview)</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th style="width: 160px; text-align: right;">Actions</th>
+                </tr>
+                </thead>
+                <tbody id="reviewsMgmtBody"></tbody>
+            </table>
+
+            <div class="bulk-action-bar">
+                <button class="btn-primary" style="background:#27ae60;" id="bulkApproveBtn">✓ Approve All Pending</button>
+                <button class="btn-primary" style="background:#e74c3c;" id="bulkDeleteBtn">🗑 Delete Selected</button>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div class="modal" id="reviewDetailModal">
+    <div class="modal-content">
+        <span class="close-btn" id="closeReviewModal">&times;</span>
+        <h2 class="section-title" style="margin-top:0;">Review Details Panel</h2>
+        <div id="reviewDetailContent"></div>
+        <div class="form-actions" style="margin-top:25px; gap:10px;">
+            <button class="btn-primary" style="background:#27ae60;" id="modalApproveBtn">✓ Approve Row</button>
+            <button class="btn-primary" style="background:#e67e22;" id="modalRejectBtn">✕ Reject Row</button>
+            <button class="btn-ghost" id="closeReviewModalBtn">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<footer class="footer" style="background: #0d0d0d; border-top: 1px solid rgba(255,255,255,0.06); margin-top: auto; padding: 20px 0; text-align: center; font-size: 0.85rem; color: #555;">
+    <div>© 2026 FILMFLEX Admin Panel. All rights reserved.</div>
+</footer>
+
+<script>
+    let ACTIVE_REVIEWS_CACHE = [];
+    let currentReviewFilter = 'all';
+    let currentDetailId = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        fetchReviewsFromServer();
+        setupEventListeners();
+    });
+
+    function setupEventListeners() {
+        document.getElementById('reviewSearchInput')?.addEventListener('input', function() { renderReviewsTable(currentReviewFilter, this.value); });
+        document.getElementById('selectAllReviews')?.addEventListener('change', function() { document.querySelectorAll('.rev-checkbox').forEach(cb => cb.checked = this.checked); });
+        document.getElementById('logoutBtn').addEventListener('click', logoutAdmin);
+
+        document.getElementById('bulkApproveBtn')?.addEventListener('click', () => {
+            const pendingReviews = ACTIVE_REVIEWS_CACHE.filter(r => r.status === 'Pending');
+            if(pendingReviews.length === 0) return;
+            let completed = 0;
+            pendingReviews.forEach(r => {
+                fetch(`api/reviews/${r.id}/approve`, { method: 'POST', credentials: 'include' }).then(() => {
+                    completed++; if(completed === pendingReviews.length) fetchReviewsFromServer();
+                });
+            });
+        });
+
+        document.getElementById('bulkDeleteBtn')?.addEventListener('click', () => {
+            const selected = [...document.querySelectorAll('.rev-checkbox:checked')].map(cb => cb.dataset.id);
+            if (selected.length === 0 || !confirm(`Purge selected ${selected.length} review data entries?`)) return;
+            let completed = 0;
+            selected.forEach(id => {
+                fetch(`api/reviews/${id}`, { method: 'DELETE', credentials: 'include' }).then(() => {
+                    completed++; if(completed === selected.length) fetchReviewsFromServer();
+                });
+            });
+        });
+
+        document.getElementById('modalApproveBtn')?.addEventListener('click', () => changeReviewStatus(currentDetailId, 'approve'));
+        document.getElementById('modalRejectBtn')?.addEventListener('click',  () => changeReviewStatus(currentDetailId, 'reject'));
+        ['closeReviewModal','closeReviewModalBtn'].forEach(id => { document.getElementById(id)?.addEventListener('click', () => document.getElementById('reviewDetailModal').style.display = 'none'); });
+
+        document.querySelectorAll('.rev-tab').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.rev-tab').forEach(b => b.classList.remove('active')); this.classList.add('active');
+                currentReviewFilter = this.dataset.status; renderReviewsTable(currentReviewFilter, document.getElementById('reviewSearchInput')?.value);
+            });
+        });
+    }
+
+    function fetchReviewsFromServer() {
+        fetch('api/reviews/all', { method: 'GET', credentials: 'include' })
+            .then(res => res.json())
+            .then(data => {
+                ACTIVE_REVIEWS_CACHE = data; updateReviewStats(); renderReviewsTable(currentReviewFilter, document.getElementById('reviewSearchInput')?.value);
+            }).catch(() => {
+            document.getElementById('reviewsMgmtBody').innerHTML = `<tr><td colspan="8" style="text-align:center; color:#e74c3c;">Failed to sync with active reviews.txt dataset.</td></tr>`;
+        });
+    }
+
+    function updateReviewStats() {
+        document.getElementById('totalRevCount').textContent   = ACTIVE_REVIEWS_CACHE.length;
+        document.getElementById('pendingRevCount').textContent  = ACTIVE_REVIEWS_CACHE.filter(r => r.status === 'Pending').length;
+        document.getElementById('approvedRevCount').textContent = ACTIVE_REVIEWS_CACHE.filter(r => r.status === 'Approved').length;
+        document.getElementById('rejectedRevCount').textContent = ACTIVE_REVIEWS_CACHE.filter(r => r.status === 'Rejected').length;
+    }
+
+    function renderReviewsTable(filter, search) {
+        const tbody = document.getElementById('reviewsMgmtBody'); if (!tbody) return;
+        let data = [...ACTIVE_REVIEWS_CACHE];
+        if (filter && filter !== 'all') data = data.filter(r => r.status === filter);
+        if (search) {
+            const q = search.toLowerCase();
+            data = data.filter(r => r.userId.toLowerCase().includes(q) || r.movieId.toLowerCase().includes(q));
+        }
+        if (data.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:#666;">No review logs found matching criteria.</td></tr>`; return;
+        }
+        tbody.innerHTML = data.map(r => {
+            const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+            return `<tr data-id="${r.id}">
+                <td><input type="checkbox" class="rev-checkbox" data-id="${r.id}"></td>
+                <td style="font-weight:bold; color:white;">${r.userId}</td>
+                <td>${r.movieId}</td>
+                <td style="color:#ffd700;">${stars}</td>
+                <td><div class="review-preview">${r.reviewText}</div></td>
+                <td style="color:#888; font-size:0.82rem;">${r.createdAt}</td>
+                <td><span class="status-badge status-${r.status.toLowerCase()}">${r.status}</span></td>
+                <td style="text-align: right;">
+                    <div class="crud-btn-group" style="justify-content: flex-end;">
+                        <button class="action-btn view-btn" onclick="viewReviewDetail('${r.id}')">View</button>
+                        ${r.status !== 'Approved' ? `<button class="action-btn approve-btn" onclick="changeReviewStatus('${r.id}','approve')">✓</button>` : ''}
+                        ${r.status !== 'Rejected' ? `<button class="action-btn reject-btn"  onclick="changeReviewStatus('${r.id}','reject')">✕</button>` : ''}
+                        <button class="action-btn delete-btn" onclick="deleteReview('${r.id}')">🗑</button>
+                    </div>
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    function changeReviewStatus(id, actionKeyword) {
+        fetch(`api/reviews/${id}/${actionKeyword}`, { method: 'POST', credentials: 'include' }).then(() => {
+            fetchReviewsFromServer(); if (currentDetailId === id) document.getElementById('reviewDetailModal').style.display = 'none';
+        });
+    }
+
+    function deleteReview(id) {
+        if (!confirm('Permanently purge this review entry from reviews.txt file lines?')) return;
+        fetch(`api/reviews/${id}`, { method: 'DELETE', credentials: 'include' }).then(() => fetchReviewsFromServer());
+    }
+
+    function viewReviewDetail(id) {
+        currentDetailId = id; const rev = ACTIVE_REVIEWS_CACHE.find(r => r.id === id); if (!rev) return;
+        const stars = '★'.repeat(rev.rating) + '☆'.repeat(5 - rev.rating);
+        document.getElementById('reviewDetailContent').innerHTML = `
+            <div style="display:grid; gap:12px; margin-top:15px; text-align:left;">
+                <div style="font-size:0.9rem; color:#aaa;">Subscriber: <strong style="color:white;">${rev.userId}</strong> | Movie: <strong style="color:white;">${rev.movieId}</strong> | Metrics: <span style="color:#ffd700;">${stars}</span></div>
+                <div style="background:#141414; border:1px solid #333; border-radius:8px; padding:15px; color:#ccc; line-height:1.6;">${rev.reviewText}</div>
+            </div>`;
+        document.getElementById('reviewDetailModal').style.display = 'flex';
+    }
+
+    function logoutAdmin() {
+        if (confirm("Logout from operations workspace matrix?")) {
+            fetch('admin-logout', { method: 'POST', credentials: 'include' }).then(() => window.location.href = 'index.html');
+        }
+    }
+</script>
+</body>
+</html>

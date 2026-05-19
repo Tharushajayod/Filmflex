@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FILMFLEX — Home</title>
+    <link rel="stylesheet" href="css/home.css">
+</head>
+<body>
+
+<header class="header" id="mainHeader">
+    <a href="home.html" class="logo">FILM<span>FLEX</span></a>
+
+    <nav class="nav">
+        <a href="home.html" class="nav-link active">Home</a>
+        <a href="movie.html" class="nav-link">Movies</a>
+        <a href="UserDashboard.html" class="nav-link">Account</a>
+        <a href="Ticketpage.html" class="nav-link">Tickets</a>
+    </nav>
+
+    <div class="header-right">
+        <div class="search-wrap" id="searchWrap">
+            <button class="icon-btn" id="searchToggle" aria-label="Search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            </button>
+            <div class="search-box" id="searchBox">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                <input type="text" id="searchInput" placeholder="Search movies, genres…" autocomplete="off">
+                <button class="search-close" id="searchClose">✕</button>
+            </div>
+        </div>
+
+        <button class="icon-btn notif-btn" aria-label="Notifications">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="notif-dot"></span>
+        </button>
+
+        <div class="avatar-wrap">
+            <button class="avatar" id="avatarBtn" aria-label="Profile">U</button>
+            <div class="dropdown" id="dropdown">
+                <div class="dropdown-profile">
+                    <div class="dropdown-avatar" id="dropdownAvatar">U</div>
+                    <div>
+                        <div class="dropdown-name" id="dropdownName">Loading…</div>
+                        <div class="dropdown-email" id="dropdownEmail"></div>
+                    </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <a href="UserDashboard.html" class="dropdown-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>My Account
+                </a>
+                <a href="movie.html" class="dropdown-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>Browse Movies
+                </a>
+                <a href="Ticketpage.html" class="dropdown-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0"/><path d="M12 8v4l3 3"/></svg>My Tickets
+                </a>
+                <div class="dropdown-divider"></div>
+                <button class="dropdown-link dropdown-logout" id="logoutBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<section class="hero" id="hero">
+    <div class="hero-bg">
+        <div id="heroBgImage" class="hero-bg-image"></div>
+        <div class="hero-bg-layer l3"></div>
+    </div>
+    <div class="hero-overlay"></div>
+
+    <div class="hero-body">
+        <div class="hero-eyebrow">
+            <span class="live-dot"></span>NOW STREAMING
+        </div>
+        <h1 class="hero-title" id="heroTitle">Interstellar</h1>
+        <div class="hero-tags" id="heroTags">
+            <span class="tag tag-gold">⭐ 8.7</span>
+            <span class="tag">2014</span>
+            <span class="tag tag-red">Sci-Fi</span>
+            <span class="tag">2h 49m</span>
+            <span class="tag">PG-13</span>
+        </div>
+        <p class="hero-desc" id="heroDesc">A team of explorers travel through a wormhole in space in an attempt to ensure humanity's survival. An epic journey across dimensions of time and gravity.</p>
+        <div class="hero-cta">
+            <button class="btn-primary" id="heroWatchNow">
+                <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                Watch Now
+            </button>
+            <button class="btn-ghost" id="heroMoreInfo">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                More Info
+            </button>
+            <button class="btn-icon" id="heroWishlist" title="Add to Wishlist">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="hero-dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+</section>
+
+
+<div class="welcome-ribbon">
+    <div class="welcome-ribbon-inner">
+        <span class="wave-emoji">👋</span>
+        <span>Welcome back, <strong id="welcomeName">there</strong>! What are we watching tonight?</span>
+        <a href="movie.html" class="ribbon-link">Browse All Movies →</a>
+    </div>
+</div>
+
+
+<section class="stats-bar">
+    <div class="stat-item">
+        <div class="stat-icon">🎬</div>
+        <div><div class="stat-val">1,200+</div><div class="stat-key">Movies</div></div>
+    </div>
+    <div class="stat-sep"></div>
+    <div class="stat-item">
+        <div class="stat-icon">⭐</div>
+        <div><div class="stat-val">4.8</div><div class="stat-key">Avg Rating</div></div>
+    </div>
+    <div class="stat-sep"></div>
+    <div class="stat-item">
+        <div class="stat-icon">🌍</div>
+        <div><div class="stat-val">50+</div><div class="stat-key">Genres</div></div>
+    </div>
+    <div class="stat-sep"></div>
+    <div class="stat-item">
+        <div class="stat-icon">🔥</div>
+        <div><div class="stat-val">Weekly</div><div class="stat-key">New Drops</div></div>
+    </div>
+    <div class="stat-sep"></div>
+    <div class="stat-item">
+        <div class="stat-icon">💬</div>
+        <div><div class="stat-val">10K+</div><div class="stat-key">Reviews</div></div>
+    </div>
+</section>
+
+
+<main class="main">
+
+    <section class="row-section">
+        <div class="row-header">
+            <h2><span class="row-icon">🔥</span> Trending Now</h2>
+            <a href="movie.html" class="see-all">See All →</a>
+        </div>
+        <div class="movie-grid" id="trendingGrid"></div>
+    </section>
+
+    <section class="row-section">
+        <div class="row-header">
+            <h2><span class="row-icon">▶</span> Continue Watching</h2>
+            <a href="movie.html" class="see-all">See All →</a>
+        </div>
+        <div class="movie-grid" id="continueGrid"></div>
+    </section>
+
+    <section class="row-section">
+        <div class="row-header">
+            <h2><span class="row-icon">⭐</span> Top Rated</h2>
+            <a href="movie.html" class="see-all">See All →</a>
+        </div>
+        <div class="movie-grid" id="topGrid"></div>
+    </section>
+
+
+    <section class="row-section">
+        <div class="row-header">
+            <h2><span class="row-icon">🎭</span> Browse by Genre</h2>
+        </div>
+        <div class="genre-grid">
+            <a href="movie.html" class="genre-tile" style="--gc1:#e50914;--gc2:#8b0000;">
+                <span class="genre-emoji">💥</span><span>Action</span>
+            </a>
+            <a href="movie.html" class="genre-tile" style="--gc1:#f39c12;--gc2:#b7770d;">
+                <span class="genre-emoji">😂</span><span>Comedy</span>
+            </a>
+            <a href="movie.html" class="genre-tile" style="--gc1:#8e44ad;--gc2:#5b2c6f;">
+                <span class="genre-emoji">🎭</span><span>Drama</span>
+            </a>
+            <a href="movie.html" class="genre-tile" style="--gc1:#2c3e50;--gc2:#1a252f;">
+                <span class="genre-emoji">👻</span><span>Horror</span>
+            </a>
+            <a href="movie.html" class="genre-tile" style="--gc1:#2980b9;--gc2:#1a5276;">
+                <span class="genre-emoji">🚀</span><span>Sci-Fi</span>
+            </a>
+            <a href="movie.html" class="genre-tile" style="--gc1:#e91e8c;--gc2:#9b0a60;">
+                <span class="genre-emoji">❤️</span><span>Romance</span>
+            </a>
+            <a href="movie.html" class="genre-tile" style="--gc1:#27ae60;--gc2:#1a6b3a;">
+                <span class="genre-emoji">🌿</span><span>Adventure</span>
+            </a>
+            <a href="movie.html" class="genre-tile" style="--gc1:#e67e22;--gc2:#935116;">
+                <span class="genre-emoji">🎵</span><span>Musical</span>
+            </a>
+        </div>
+    </section>
+
+
+    <section class="row-section">
+        <div class="row-header">
+            <h2><span class="row-icon">💬</span> Community Reviews</h2>
+            <a href="UserDashboard.html" class="see-all">My Reviews →</a>
+        </div>
+        <div class="reviews-grid" id="reviewsGrid">
+        </div>
+    </section>
+
+
+    <section class="cta-section">
+        <div class="cta-glow"></div>
+        <div class="cta-body">
+            <div class="cta-text">
+                <h2>Loved a movie? Share it.</h2>
+                <p>Write a review and help the FILMFLEX community discover their next favourite film.</p>
+                <a href="movie.html" class="btn-primary" style="display:inline-flex;margin-top:1.5rem;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    Write a Review
+                </a>
+            </div>
+            <div class="cta-decoration">🎬 🍿 🎭 🌟 🎥</div>
+        </div>
+    </section>
+
+</main>
+
+
+<footer class="footer">
+    <div class="footer-top">
+        <div class="footer-brand">
+            <div class="footer-logo">FILM<span>FLEX</span></div>
+            <p class="footer-desc">Your ultimate movie rental and review platform. Discover, rent, and review thousands of movies from classics to the latest releases.</p>
+            <div class="footer-social">
+                <a href="#" class="social-btn" title="X / Twitter">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                </a>
+                <a href="#" class="social-btn" title="Instagram">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+                </a>
+                <a href="#" class="social-btn" title="YouTube">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93 .502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+                </a>
+                <a href="#" class="social-btn" title="Facebook">
+                    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                </a>
+            </div>
+        </div>
+
+        <div class="footer-col">
+            <h4>Browse</h4>
+            <a href="movie.html">All Movies</a>
+            <a href="movie.html">New Releases</a>
+            <a href="movie.html">Top Rated</a>
+            <a href="movie.html">Trending</a>
+            <a href="movie.html">By Genre</a>
+        </div>
+        <div class="footer-col">
+            <h4>Account</h4>
+            <a href="UserDashboard.html">My Profile</a>
+            <a href="UserDashboard.html">My Reviews</a>
+            <a href="Ticketpage.html">My Tickets</a>
+            <a href="PaymentMethods.html">Payments</a>
+        </div>
+        <div class="footer-col">
+            <h4>Support</h4>
+            <a href="#">Help Center</a>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+            <a href="#">Cookie Settings</a>
+            <a href="#">Contact Us</a>
+        </div>
+    </div>
+
+    <div class="footer-mid">
+        <div class="footer-badge">🎬</div>
+        <div class="footer-badge">🍿</div>
+        <div class="footer-badge">⭐</div>
+        <div class="footer-badge">🎭</div>
+        <div class="footer-badge">🌟</div>
+    </div>
+
+    <div class="footer-bottom">
+        <span>© 2026 FILMFLEX. All rights reserved.</span>
+        <span class="footer-dot">·</span>
+        <span>Made with ❤️ for movie lovers worldwide</span>
+    </div>
+</footer>
+
+
+<div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal" id="movieModal" role="dialog" aria-modal="true">
+        <button class="modal-close" id="modalClose">✕</button>
+        <div class="modal-inner">
+            <div class="modal-poster" id="modalPoster">🎬</div>
+            <div class="modal-detail">
+                <h2 class="modal-title" id="modalTitle">—</h2>
+                <div class="modal-tags" id="modalTags"></div>
+                <p class="modal-desc" id="modalDescText">—</p>
+                <div class="modal-actions">
+                    <button class="btn-primary btn-primary-sm" id="modalWatchBtn">▶ Watch Now</button>
+                    <button class="btn-ghost btn-sm">+ Wishlist</button>
+                </div>
+
+                <div class="modal-review-section">
+                    <h3 class="modal-review-title">Write a Review</h3>
+                    <div class="modal-stars" id="modalStars">
+                        <span class="mstar" data-v="1">★</span>
+                        <span class="mstar" data-v="2">★</span>
+                        <span class="mstar" data-v="3">★</span>
+                        <span class="mstar" data-v="4">★</span>
+                        <span class="mstar" data-v="5">★</span>
+                    </div>
+                    <textarea class="modal-review-input" id="modalReviewText" placeholder="Share your thoughts…"></textarea>
+                    <button class="btn-primary btn-sm" id="modalSubmitReview">Submit Review</button>
+                    <div class="modal-review-success" id="modalReviewSuccess">✓ Review submitted!</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="player-backdrop" id="playerBackdrop">
+    <div class="player-shell">
+
+        <div class="player-topbar">
+            <div class="player-topbar-left">
+                <div class="player-logo">FILM<span>FLEX</span></div>
+                <div class="player-divider"></div>
+                <div>
+                    <div class="player-title" id="playerTitle">Loading…</div>
+                    <div class="player-meta"  id="playerMeta"></div>
+                </div>
+            </div>
+            <button class="player-close" id="playerClose" aria-label="Close player">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="player-video-wrap">
+            <div class="player-loader" id="playerLoader">
+                <div class="player-spinner"></div>
+                <span>Loading trailer…</span>
+            </div>
+            <iframe
+                    id="playerFrame"
+                    class="player-frame"
+                    src=""
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                    title="Movie Trailer">
+            </iframe>
+        </div>
+
+        <div class="player-footer">
+            🎬 Official Trailer — Full movie available upon rental
+        </div>
+
+    </div>
+</div>
+
+<script src="js/home.js"></script>
+</body>
+</html>

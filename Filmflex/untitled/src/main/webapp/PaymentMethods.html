@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FILMFLEX — Payment Methods</title>
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/UserDashboard.css">
+    <style>
+        /* ── STABLE FIXED SIDEBAR ENFORCEMENT RULES ── */
+        .page-body {
+            display: flex !important;
+            gap: 30px !important;
+            max-width: 1200px !important;
+            margin: 40px auto !important;
+            padding: 0 2rem !important;
+            align-items: flex-start !important;
+        }
+
+        .sidebar {
+            width: 280px !important;
+            min-width: 280px !important;
+            max-width: 280px !important;
+            flex-shrink: 0 !important;
+            background: rgba(255, 255, 255, 0.02) !important;
+            border: 1px solid #222 !important;
+            border-radius: 12px !important;
+            padding: 20px !important;
+            box-sizing: border-box !important;
+        }
+
+        .main {
+            flex: 1 !important;
+            min-width: 0 !important;
+        }
+
+        /* ── PREMIUM SCENIC TOP-RIGHT COMPACT TOAST ALERTS ── */
+        .toast {
+            display: none;
+            position: fixed !important;
+            top: 100px !important;
+            right: 30px !important;
+            bottom: auto !important;
+            width: auto !important;
+            max-width: 350px !important;
+            z-index: 99999 !important;
+            align-items: center;
+            padding: 12px 20px !important;
+            border-radius: 6px !important;
+            color: white !important;
+            font-size: 0.88rem !important;
+            font-weight: bold !important;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5) !important;
+            border-left: 4px solid rgba(0,0,0,0.2) !important;
+            animation: slideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards !important;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(120%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* ── THEME ENFORCED INPUT CONTROLS PURE DARK ARCHITECTURE ── */
+        .form-card input[type="text"] {
+            width: 100%;
+            background: #1c1c1c !important;
+            border: 1px solid #333 !important;
+            border-radius: 6px !important;
+            color: white !important;
+            padding: 12px 14px !important;
+            font-size: 0.92rem !important;
+            outline: none !important;
+            transition: border-color 0.3s ease, background-color 0.3s ease !important;
+            box-sizing: border-box !important;
+        }
+
+        .form-card input[type="text"]:focus {
+            border-color: #e50914 !important;
+            background: #222 !important;
+        }
+
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus {
+            -webkit-text-fill-color: white !important;
+            -webkit-box-shadow: 0 0 0px 1000px #1c1c1c inset !important;
+            transition: background-color 5000s ease-in-out 0s !important;
+        }
+
+        /* ── PREMIUM PAYMENT BOX DECORATIONS ── */
+        .payment-method-box {
+            background: rgba(255, 255, 255, 0.02) !important;
+            border: 1px solid #222 !important;
+            border-radius: 12px !important;
+            padding: 24px !important;
+            margin-bottom: 25px !important;
+            text-align: left !important;
+        }
+
+        .payment-method-header {
+            display: flex !important;
+            align-items: center !important;
+            gap: 12px !important;
+            margin-bottom: 15px !important;
+        }
+
+        .card-icon { font-size: 1.5rem !important; }
+        .payment-method-header h3 { font-size: 1.2rem !important; color: white !important; margin: 0 !important; }
+        .card-details p { color: #aaa !important; font-size: 0.9rem !important; margin: 6px 0 !important; }
+        .payment-method-actions { display: flex !important; gap: 10px !important; margin-top: 15px !important; justify-content: flex-end !important; }
+
+        /* Premium style matching for edit/delete buttons inside cards */
+        .btn-crud-edit { background: #3498db; color: white; border: none; padding: 6px 14px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; font-weight: bold;}
+        .btn-crud-delete { background: #e74c3c; color: white; border: none; padding: 6px 14px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; font-weight: bold;}
+        .btn-crud-edit:hover { background: #2980b9; }
+        .btn-crud-delete:hover { background: #c0392b; }
+
+        .field-error { color: #e50914 !important; font-size: 0.8rem !important; margin-top: 5px !important; text-align: left !important; display: none; }
+        .no-methods-message { color: #666 !important; font-size: 0.95rem !important; padding: 20px 0 !important; text-align: left !important; }
+
+        .header { z-index: 1000 !important; }
+        .dropdown.show { display: block !important; }
+    </style>
+</head>
+<body>
+
+<div class="toast" id="toastSuccess" style="background: #2ecc71;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px; height:18px; margin-right:8px;"><polyline points="20 6 9 17 4 12"/></svg>
+    <span id="toastMsg">Saved successfully!</span>
+</div>
+<div class="toast" id="toastError" style="background: #e50914;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px; height:18px; margin-right:8px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span id="toastErrMsg">Error occurring!</span>
+</div>
+
+<header class="header" id="mainHeader">
+    <a href="home.html" class="logo">FILM<span>FLEX</span></a>
+    <nav class="nav">
+        <a href="home.html"          class="nav-link">Home</a>
+        <a href="movie.html"         class="nav-link">Movies</a>
+        <a href="UserDashboard.html" class="nav-link active">Account</a>
+        <a href="Ticketpage.html"    class="nav-link">Tickets</a>
+    </nav>
+
+    <div class="header-right">
+        <div class="search-wrap" id="searchWrap">
+            <button class="icon-btn" id="searchToggle" aria-label="Search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            </button>
+            <div class="search-box" id="searchBox">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                <input type="text" id="searchInput" placeholder="Search movies, genres…" autocomplete="off">
+                <button class="search-close" id="searchClose">✕</button>
+            </div>
+        </div>
+
+        <button class="icon-btn notif-btn" aria-label="Notifications">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="notif-dot"></span>
+        </button>
+
+        <div class="avatar-wrap">
+            <button class="avatar" id="avatarBtn" aria-label="Profile">U</button>
+            <div class="dropdown" id="dropdown">
+                <div class="dropdown-profile">
+                    <div class="dropdown-avatar" id="dropdownAvatar">U</div>
+                    <div>
+                        <div class="dropdown-name" id="dropdownName">Loading…</div>
+                        <div class="dropdown-email" id="dropdownEmail"></div>
+                    </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <a href="UserDashboard.html" class="dropdown-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>My Account
+                </a>
+                <a href="movie.html" class="dropdown-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>Browse Movies
+                </a>
+                <a href="Ticketpage.html" class="dropdown-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0"/><path d="M12 8v4l3 3"/></svg>My Tickets
+                </a>
+                <div class="dropdown-divider"></div>
+                <button class="dropdown-link dropdown-logout" id="logoutBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="profile-banner" id="profileBanner" style="display:none;">
+    <div class="pb-glow-left"></div>
+    <div class="pb-glow-right"></div>
+    <div class="pb-content">
+        <div class="pb-avatar-wrap">
+            <div class="pb-avatar" id="pbAvatar">U</div>
+            <div class="pb-avatar-ring"></div>
+        </div>
+        <div class="pb-info">
+            <h1 class="pb-name" id="pbName">Loading…</h1>
+            <div class="pb-email" id="pbEmail">—</div>
+            <div class="pb-badges">
+                <span class="pb-badge pb-badge-member">Member</span>
+            </div>
+        </div>
+        <div class="pb-stats">
+            <div class="pb-stat"><div class="pb-stat-num">4</div><div class="pb-stat-lbl">Watched</div></div>
+            <div class="pb-stat-sep"></div>
+            <div class="pb-stat"><div class="pb-stat-num">5</div><div class="pb-stat-lbl">Reviews</div></div>
+            <div class="pb-stat-sep"></div>
+            <div class="pb-stat"><div class="pb-stat-num">0</div><div class="pb-stat-lbl">Wishlist</div></div>
+        </div>
+    </div>
+</div>
+
+<div class="page-body" id="mainContent" style="display: none;">
+    <aside class="sidebar">
+        <div class="sb-label">Navigation</div>
+        <ul class="sb-menu">
+            <li><a href="UserDashboard.html" class="sb-link">Account Details</a></li>
+            <li><a href="UserDashboard.html" class="sb-link">Watch History</a></li>
+            <li><a href="UserDashboard.html" class="sb-link">My Reviews</a></li>
+            <li><a href="UserDashboard.html" class="sb-link">Wishlist</a></li>
+            <li><a href="#" class="sb-link active">Payment Methods</a></li>
+        </ul>
+    </aside>
+
+    <main class="main">
+        <section class="tab-panel active">
+            <div class="panel-header">
+                <h2 class="panel-title">Payment Methods</h2>
+            </div>
+
+            <div id="paymentMethodsContainer">
+                <div class="no-methods-message" id="noMethodsMessage" style="display: none;">
+                    <p>You don't have any payment methods saved yet.</p>
+                </div>
+
+                <div class="payment-method-box" id="existingCardSection" style="display: none;">
+                    <div class="payment-method-header">
+                        <span class="card-icon">💳</span>
+                        <h3>VISA •••• <span class="last-four" id="lastFour">1234</span></h3>
+                    </div>
+                    <div class="card-details">
+                        <p>Expires: <span id="existingExpiry">MM/YY</span></p>
+                        <p>Card holder: <span id="existingCardHolder">John Doe</span></p>
+                    </div>
+                    <div class="payment-method-actions">
+                        <button class="btn-crud-edit" id="editCardBtn">✏️ Edit Card</button>
+                        <button class="btn-crud-delete" id="removeCardBtn">🗑️ Remove</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-card" style="margin-top: 30px;">
+                <h3 class="form-card-title" id="addCardTitle">Add Payment Method</h3>
+                <form id="paymentForm" autocomplete="off">
+                    <input type="hidden" id="userEmail" name="userEmail" value="">
+
+                    <div class="form-grid">
+                        <div class="form-field form-field-full">
+                            <label for="cardNumber">Card Number</label>
+                            <input type="text" id="cardNumber" name="cardNumber" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" required>
+                            <div class="field-error" id="cardNumberError"></div>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="expiryDate">Expiry Date</label>
+                            <input type="text" id="expiryDate" name="expiryDate" placeholder="MM/YY" maxlength="5" required>
+                            <div class="field-error" id="expiryDateError"></div>
+                        </div>
+
+                        <div class="form-field">
+                            <label for="cvv">CVV</label>
+                            <input type="text" id="cvv" name="cvv" placeholder="XXX" maxlength="3" required>
+                            <div class="field-error" id="cvvError"></div>
+                        </div>
+
+                        <div class="form-field form-field-full">
+                            <label for="cardHolder">Cardholder Name</label>
+                            <input type="text" id="cardHolder" name="cardHolder" placeholder="Name as it appears on card" required>
+                            <div class="field-error" id="cardHolderError"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions" style="margin-top: 20px;">
+                        <button type="button" class="btn-ghost" id="cancelCardBtn">Cancel</button>
+                        <button type="submit" class="btn-primary" id="saveCardBtn">Save Card</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+</div>
+
+<footer class="footer">
+    <div class="footer-bottom"><span>© 2026 FILMFLEX. All rights reserved.</span></div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // DOM Elements
+        const paymentForm = document.getElementById('paymentForm');
+        const existingCardSection = document.getElementById('existingCardSection');
+        const noMethodsMessage = document.getElementById('noMethodsMessage');
+        const avatarBtn = document.getElementById('avatarBtn');
+        const dropdown = document.getElementById('dropdown');
+        const editCardBtn = document.getElementById('editCardBtn');
+        const removeCardBtn = document.getElementById('removeCardBtn');
+        const cancelCardBtn = document.getElementById('cancelCardBtn');
+        const addCardTitle = document.getElementById('addCardTitle');
+        const userEmailInput = document.getElementById('userEmail');
+
+        let existingPaymentData = null;
+        loadUserData();
+
+        // Dropdown listeners engine binds
+        if(avatarBtn && dropdown) {
+            avatarBtn.addEventListener('click', e => { e.stopPropagation(); dropdown.classList.toggle('show'); });
+            document.addEventListener('click', () => dropdown.classList.remove('show'));
+        }
+
+        const cardNumberInput = document.getElementById('cardNumber');
+        const expiryDateInput = document.getElementById('expiryDate');
+        const cvvInput = document.getElementById('cvv');
+
+        cardNumberInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            let formattedValue = '';
+            for (let i = 0; i < value.length; i++) {
+                if (i > 0 && i % 4 === 0) formattedValue += ' ';
+                formattedValue += value[i];
+            }
+            e.target.value = formattedValue;
+        });
+
+        expiryDateInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 2) value = value.substring(0, 2) + '/' + value.substring(2);
+            e.target.value = value;
+        });
+
+        cvvInput.addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/\D/g, '');
+        });
+
+        paymentForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            if (validatePaymentForm()) await savePaymentMethod();
+        });
+
+        editCardBtn.addEventListener('click', function() {
+            fillFormWithExistingCardData();
+            addCardTitle.textContent = "Edit Payment Method";
+        });
+
+        removeCardBtn.addEventListener('click', function() {
+            if (confirm('Are you sure you want to remove this payment method?')) removePaymentMethod();
+        });
+
+        cancelCardBtn.addEventListener('click', function() {
+            resetForm();
+            addCardTitle.textContent = "Add Payment Method";
+        });
+
+        // FIXED UNIFIED TOAST ENGINE
+        function showToast(msg, isErr) {
+            const toast = document.getElementById(isErr ? 'toastError' : 'toastSuccess');
+            const textSpan = document.getElementById(isErr ? 'toastErrMsg' : 'toastMsg');
+            if(!toast || !textSpan) return;
+
+            textSpan.textContent = msg;
+            toast.style.display = 'flex';
+            setTimeout(() => { toast.style.display = 'none'; }, 3500);
+        }
+
+        async function loadUserData() {
+            try {
+                const response = await fetch('user-data', { method: 'GET', credentials: 'include' });
+                if (!response.ok) throw new Error('Unauthorized');
+
+                const userData = await response.json();
+                const initial = userData.fullName ? userData.fullName.charAt(0).toUpperCase() : "U";
+
+                if(avatarBtn) avatarBtn.textContent = initial;
+                document.getElementById('dropdownAvatar').textContent = initial;
+                document.getElementById('dropdownName').textContent = userData.fullName;
+                document.getElementById('dropdownEmail').textContent = userData.email;
+                userEmailInput.value = userData.email;
+
+                document.getElementById('profileBanner').style.display = 'block';
+                document.getElementById('pbAvatar').textContent = initial;
+                document.getElementById('pbName').textContent = userData.fullName;
+                document.getElementById('pbEmail').textContent = userData.email;
+
+                document.getElementById('mainContent').style.display = 'flex';
+                await loadPaymentMethods();
+            } catch (error) {
+                window.location.href = 'login.html';
+            }
+        }
+
+        async function loadPaymentMethods() {
+            try {
+                const email = userEmailInput.value;
+                const response = await fetch('payment-methods?email=' + encodeURIComponent(email), { method: 'GET', credentials: 'include' });
+                if (!response.ok) throw new Error('Failed to fetch');
+
+                const paymentData = await response.json();
+                if (paymentData && paymentData.cardNumber) {
+                    existingPaymentData = paymentData;
+                    document.getElementById('lastFour').textContent = paymentData.cardNumber.slice(-4);
+                    document.getElementById('existingExpiry').textContent = paymentData.expiryDate;
+                    document.getElementById('existingCardHolder').textContent = paymentData.cardHolder;
+
+                    existingCardSection.style.display = 'block';
+                    noMethodsMessage.style.display = 'none';
+                } else {
+                    existingPaymentData = null;
+                    existingCardSection.style.display = 'none';
+                    noMethodsMessage.style.display = 'block';
+                }
+            } catch (error) {
+                showToast('Failed to load payment data.', true);
+            }
+        }
+
+        function validatePaymentForm() {
+            clearFieldErrors();
+            let isValid = true;
+
+            const cardNumber = cardNumberInput.value.replace(/\s/g, '');
+            const expiry = expiryDateInput.value;
+            const cvv = cvvInput.value;
+            const cardHolder = document.getElementById('cardHolder').value;
+
+            if (!cardNumber || cardNumber.length !== 16 || !/^\d+$/.test(cardNumber)) {
+                showFieldError('cardNumberError', 'Please enter a valid card number (16 digits)');
+                isValid = false;
+            }
+            if (!expiry || !expiry.match(/^(0[1-9]|1[0-2])\/\d{2}$/)) {
+                showFieldError('expiryDateError', 'Please enter a valid expiry date (MM/YY)');
+                isValid = false;
+            }
+            if (!cvv || cvv.length !== 3 || !/^\d{3}$/.test(cvv)) {
+                showFieldError('cvvError', 'Please enter a valid 3-digit CVV');
+                isValid = false;
+            }
+            if (!cardHolder || cardHolder.trim().length < 3) {
+                showFieldError('cardHolderError', 'Please enter the cardholder name');
+                isValid = false;
+            }
+            return isValid;
+        }
+
+        async function savePaymentMethod() {
+            try {
+                const email = userEmailInput.value;
+                const cardNumber = cardNumberInput.value.replace(/\s/g, '');
+                const expiryDate = expiryDateInput.value;
+                const cvv = cvvInput.value;
+                const cardHolder = document.getElementById('cardHolder').value;
+
+                const response = await fetch('payment-methods', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    credentials: 'include',
+                    body: new URLSearchParams({ email, cardNumber, expiryDate, cvv, cardHolder })
+                });
+
+                if (!response.ok) throw new Error();
+
+                showToast('Payment method saved successfully!', false);
+                resetForm();
+                await loadPaymentMethods();
+            } catch (error) {
+                showToast('Failed to save payment parameters.', true);
+            }
+        }
+
+        async function removePaymentMethod() {
+            try {
+                const email = userEmailInput.value;
+                const response = await fetch('payment-methods?email=' + encodeURIComponent(email), { method: 'DELETE', credentials: 'include' });
+                if (!response.ok) throw new Error();
+
+                showToast('Payment method removed successfully!', false);
+                await loadPaymentMethods();
+            } catch (error) {
+                showToast('Failed to remove card context.', true);
+            }
+        }
+
+        function fillFormWithExistingCardData() {
+            if (existingPaymentData && existingPaymentData.cardNumber) {
+                const digits = existingPaymentData.cardNumber.replace(/\D/g, '');
+                document.getElementById('cardNumber').value = digits.replace(/(.{4})/g, '$1 ').trim();
+            }
+            document.getElementById('expiryDate').value = document.getElementById('existingExpiry').textContent;
+            document.getElementById('cardHolder').value = document.getElementById('existingCardHolder').textContent;
+        }
+
+        function resetForm() {
+            paymentForm.reset();
+            clearFieldErrors();
+        }
+
+        // Field error hooks
+        function showFieldError(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.style.display = 'block';
+        }
+
+        function clearFieldErrors() {
+            document.querySelectorAll('.field-error').forEach(el => el.style.display = 'none');
+        }
+
+        const logoutBtn = document.getElementById('logoutBtn');
+        if(logoutBtn) {
+            logoutBtn.addEventListener('click', () => window.location.href = 'login.html');
+        }
+    });
+</script>
+</body>
+</html>

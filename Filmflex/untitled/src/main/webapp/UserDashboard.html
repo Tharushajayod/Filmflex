@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FILMFLEX — My Account</title>
+    <link class="theme-link" rel="stylesheet" href="css/home.css">
+    <link class="theme-link" rel="stylesheet" href="css/UserDashboard.css">
+    <style>
+        /* ── DYNAMIC ABSOLUTE FIXED SIDEBAR ENFORCEMENT RULES ── */
+        .page-body {
+            display: flex !important;
+            gap: 30px !important;
+            max-width: 1200px !important;
+            margin: 40px auto !important;
+            padding: 0 2rem !important;
+            align-items: flex-start !important;
+        }
+
+        .sidebar {
+            width: 280px !important;
+            min-width: 280px !important;
+            max-width: 280px !important;
+            flex-shrink: 0 !important;
+            background: rgba(255, 255, 255, 0.02) !important;
+            border: 1px solid #222 !important;
+            border-radius: 12px !important;
+            padding: 20px !important;
+            box-sizing: border-box !important;
+        }
+
+        .main {
+            flex: 1 !important;
+            min-width: 0 !important;
+        }
+
+        .tab-panel { display: none !important; }
+        .tab-panel.active { display: block !important; }
+        .sb-link { cursor: pointer; width: 100%; text-align: left; }
+
+        /* ── REVIEWS FULL WIDTH EXPANSION INDICATORS ── */
+        .reviews-grid {
+            display: grid !important;
+            grid-template-columns: 1fr !important;
+            gap: 20px !important;
+            padding: 15px 0 !important;
+            width: 100% !important;
+        }
+
+        .review-card-item {
+            background: rgba(255,255,255,0.02) !important;
+            padding: 24px !important;
+            border-radius: 12px !important;
+            border: 1px solid #222 !important;
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 12px !important;
+            box-sizing: border-box !important;
+            width: 100% !important;
+        }
+
+        /* ── THEME ENFORCED INPUT CONTROLS PURE DARK ARCHITECTURE ── */
+        .form-card input[type="password"],
+        .form-card input[type="text"],
+        .form-card input[type="email"],
+        .form-card input[type="tel"],
+        .form-grid input {
+            width: 100%;
+            background: #1c1c1c !important;
+            border: 1px solid #333 !important;
+            border-radius: 6px !important;
+            color: white !important;
+            padding: 12px 42px 12px 14px !important;
+            font-size: 0.92rem !important;
+            outline: none !important;
+            transition: border-color 0.3s ease, background-color 0.3s ease !important;
+            box-sizing: border-box !important;
+        }
+
+        .form-card input[type="password"]:focus,
+        .form-card input[type="text"]:focus,
+        .form-card input[type="email"]:focus,
+        .form-card input[type="tel"]:focus,
+        .form-grid input:focus {
+            border-color: #e50914 !important;
+            background: #222 !important;
+        }
+
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus {
+            -webkit-text-fill-color: white !important;
+            -webkit-box-shadow: 0 0 0px 1000px #1c1c1c inset !important;
+            transition: background-color 5000s ease-in-out 0s !important;
+        }
+
+        .pw-wrap { position: relative; display: flex; align-items: center; width: 100%; }
+
+        .pw-eye {
+            position: absolute !important;
+            right: 14px !important;
+            background: transparent !important;
+            border: none !important;
+            color: #888 !important;
+            cursor: pointer !important;
+            z-index: 10 !important;
+            padding: 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 20px;
+            height: 20px;
+        }
+
+        .pw-eye svg {
+            width: 18px;
+            height: 18px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        .pw-eye:hover { color: #e50914 !important; }
+
+        /* ── WATCH HISTORY TILES ── */
+        .history-grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 15px 0;
+        }
+
+        .history-tile-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid #222;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .history-tile-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.06);
+            border-color: #e50914;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+        }
+
+        .history-tile-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: #e50914;
+        }
+
+        /* ── WISHLIST PREMIUM TILES DESIGN ── */
+        .wishlist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
+            padding: 15px 0;
+        }
+
+        .premium-wish-card {
+            position: relative;
+            cursor: pointer;
+            background: #141414;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid #262626;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        .premium-wish-card:hover {
+            transform: scale(1.04);
+            border-color: #e50914;
+            box-shadow: 0 12px 25px rgba(229, 9, 20, 0.2);
+        }
+
+        .wish-img-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 2/3;
+            overflow: hidden;
+            background: #222;
+        }
+
+        .wish-poster {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .premium-wish-card:hover .wish-poster { transform: scale(1.08); }
+
+        .wish-overlay-badge {
+            position: absolute;
+            top: 12px; right: 12px;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(5px);
+            border-radius: 50%;
+            width: 36px; height: 36px;
+            display: flex; align-items: center; justify-content: center;
+            color: #ff3344; font-size: 1.1rem;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+        .wish-overlay-badge:hover { background: #e50914; color: white; transform: scale(1.1); }
+
+        .wish-details { padding: 15px; background: linear-gradient(to top, #0f0f0f, #141414); text-align: left; }
+        .wish-title { font-size: 0.98rem; font-weight: 600; color: #fff; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .wish-meta { display: flex; align-items: center; gap: 8px; font-size: 0.78rem; color: #888; }
+        .wish-tag { background: rgba(229, 9, 20, 0.15); color: #e50914; padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+
+        .crud-btn-group { display: flex; gap: 8px; margin-top: 12px; justify-content: flex-end; }
+        .btn-crud-edit { background: #3498db; color: white; border: none; padding: 6px 14px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; font-weight: bold;}
+        .btn-crud-delete { background: #e74c3c; color: white; border: none; padding: 6px 14px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; font-weight: bold;}
+        .btn-crud-edit:hover { background: #2980b9; }
+        .btn-crud-delete:hover { background: #c0392b; }
+
+        .inline-edit-area { width: 100%; height: 60px; background: #222; border: 1px solid #444; border-radius: 6px; color: white; padding: 8px; font-size: 0.85rem; resize: none; outline: none; margin-top: 8px; font-family: inherit; }
+
+        /* ── FIXED SCENIC TOP-RIGHT RESPONSIVE PREMIUM TOAST ALERTS ── */
+        .toast {
+            display: none;
+            position: fixed !important;
+            top: 100px !important; /* Positions it neatly below the main header line grid */
+            right: 30px !important;
+            bottom: auto !important; /* Overrides previous full height styles layout */
+            width: auto !important;
+            max-width: 380px !important;
+            z-index: 99999 !important;
+            align-items: center;
+            padding: 14px 24px !important;
+            border-radius: 8px !important;
+            color: white !important;
+            font-size: 0.92rem !important;
+            font-weight: bold !important;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.6) !important;
+            border-left: 5px solid rgba(0,0,0,0.2) !important;
+            animation: slideIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards !important;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(120%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .inline-star-select { background: #222; border: 1px solid #444; color: #ffd700; font-size: 0.85rem; padding: 4px 8px; border-radius: 4px; outline: none; margin-left: 10px; cursor: pointer;}
+    </style>
+</head>
+<body>
+
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-wrap">
+        <div class="spinner"></div>
+        <span id="loadingText">Checking access...</span>
+    </div>
+</div>
+
+<div class="admin-badge" id="adminBadge">Admin Mode</div>
+
+<div class="toast" id="toastSuccess" style="background: #4ae014;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:20px; height:20px; margin-right:10px;"><polyline points="20 6 9 17 4 12"/></svg>
+    <span id="toastMsg">Saved successfully!</span>
+</div>
+<div class="toast" id="toastError" style="background: #e50914;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:20px; height:20px; margin-right:10px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span id="toastErrMsg">Error occurring!</span>
+</div>
+
+<header class="header" id="mainHeader">
+    <a href="home.html" class="logo">FILM<span>FLEX</span></a>
+    <nav class="nav">
+        <a href="home.html"          class="nav-link">Home</a>
+        <a href="movie.html"         class="nav-link">Movies</a>
+        <a href="UserDashboard.html" class="nav-link active">Account</a>
+        <a href="Ticketpage.html"    class="nav-link">Tickets</a>
+    </nav>
+
+    <div class="header-right">
+        <div class="search-wrap" id="searchWrap">
+            <button class="icon-btn" id="searchToggle" aria-label="Search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            </button>
+            <div class="search-box" id="searchBox">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                <input type="text" id="searchInput" placeholder="Search movies, genres…" autocomplete="off">
+                <button class="search-close" id="searchClose">✕</button>
+            </div>
+        </div>
+
+        <button class="icon-btn notif-btn" aria-label="Notifications">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="notif-dot"></span>
+        </button>
+
+        <div class="avatar-wrap">
+            <button class="avatar" id="userAvatar" aria-label="Profile">U</button>
+            <div class="dropdown" id="dropdown">
+                <div class="dropdown-profile">
+                    <div class="dropdown-avatar" id="dropdownAvatar">U</div>
+                    <div>
+                        <div class="dropdown-name" id="dropdownName">Loading…</div>
+                        <div class="dropdown-email" id="dropdownEmail"></div>
+                    </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <a href="UserDashboard.html" class="dropdown-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>My Account
+                </a>
+                <a href="movie.html" class="dropdown-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>Browse Movies
+                </a>
+                <a href="Ticketpage.html" class="dropdown-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0"/><path d="M12 8v4l3 3"/></svg>My Tickets
+                </a>
+                <div class="dropdown-divider"></div>
+                <button class="dropdown-link dropdown-logout" id="logoutBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="profile-banner" id="profileBanner" style="display:none;">
+    <div class="pb-glow-left"></div>
+    <div class="pb-glow-right"></div>
+    <div class="pb-content">
+        <div class="pb-avatar-wrap">
+            <div class="pb-avatar" id="pbAvatar">U</div>
+            <div class="pb-avatar-ring"></div>
+            <button class="pb-avatar-edit" id="avatarPenBtn" title="Go to Account Details">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+        </div>
+        <div class="pb-info">
+            <h1 class="pb-name" id="pbName">Loading…</h1>
+            <div class="pb-email" id="pbEmail">—</div>
+            <div class="pb-badges">
+                <span class="pb-badge pb-badge-member">Member</span>
+            </div>
+        </div>
+        <div class="pb-stats">
+            <div class="pb-stat"><div class="pb-stat-num" id="statWatched">0</div><div class="pb-stat-lbl">Watched</div></div>
+            <div class="pb-stat-sep"></div>
+            <div class="pb-stat"><div class="pb-stat-num" id="statReviews">0</div><div class="pb-stat-lbl">Reviews</div></div>
+            <div class="pb-stat-sep"></div>
+            <div class="pb-stat"><div class="pb-stat-num" id="statWishlist">0</div><div class="pb-stat-lbl">Wishlist</div></div>
+        </div>
+    </div>
+</div>
+
+<div class="page-body" id="mainContent" style="display: none;">
+    <aside class="sidebar">
+        <div class="sb-label">Navigation</div>
+        <ul class="sb-menu">
+            <li><button class="sb-link active" data-tab="account" id="sb-link-account">Account Details</button></li>
+            <li><button class="sb-link" data-tab="history">Watch History</button></li>
+            <li><button class="sb-link" data-tab="reviews">My Reviews</button></li>
+            <li><button class="sb-link" data-tab="wishlist">Wishlist</button></li>
+            <li><button class="sb-link" data-tab="security">Security</button></li>
+        </ul>
+        <div class="sb-divider"></div>
+        <div class="sb-label">Quick Links</div>
+        <ul class="sb-menu">
+            <li><a href="Ticketpage.html" class="sb-link sb-link-a">My Tickets</a></li>
+            <li><a href="PaymentMethods.html" class="sb-link sb-link-a">Payments</a></li>
+        </ul>
+    </aside>
+
+    <main class="main">
+        <section class="tab-panel active" id="tab-account">
+            <div class="panel-header"><h2 class="panel-title">Account Details</h2></div>
+            <div class="profile-card">
+                <div class="profile-card-avatar" id="pcAvatar">U</div>
+                <div class="profile-card-info">
+                    <div class="pci-name" id="pciName">—</div>
+                    <div class="pci-email" id="pciEmail">—</div>
+                    <div class="pci-joined">Member since 2026</div>
+                </div>
+            </div>
+            <div class="form-card">
+                <h3 class="form-card-title">Personal Information</h3>
+                <div class="form-grid">
+                    <div class="form-field"><label>First Name</label><input type="text" id="firstName"></div>
+                    <div class="form-field"><label>Last Name</label><input type="text" id="lastName"></div>
+                    <div class="form-field form-field-full"><label>Email Address</label><input type="email" id="emailField" readonly></div>
+                    <div class="form-field form-field-full"><label>Phone Number</label><input type="tel" id="phoneField" placeholder="Optional (+94 XX XXX XXXX)"></div>
+                </div>
+                <div class="form-actions">
+                    <button class="btn-primary" id="saveProfileBtn">Save Changes</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="tab-panel" id="tab-history">
+            <div class="panel-header"><h2 class="panel-title">Watch History</h2><button class="btn-ghost btn-sm" id="clearHistoryBtn">Clear History</button></div>
+            <div class="filter-bar">
+                <button class="filter-chip active" data-filter="all">All</button>
+                <button class="filter-chip" data-filter="this-week">This Week</button>
+                <button class="filter-chip" data-filter="this-month">This Month</button>
+            </div>
+            <div class="history-grid-container" id="historyList"></div>
+        </section>
+
+        <section class="tab-panel" id="tab-reviews">
+            <div class="panel-header"><h2 class="panel-title">My Reviews</h2></div>
+            <div class="reviews-grid" id="reviewsGrid"></div>
+        </section>
+
+        <section class="tab-panel" id="tab-wishlist">
+            <div class="panel-header"><h2 class="panel-title">My Wishlist</h2><a href="movie.html" class="btn-primary btn-sm">Add Movies</a></div>
+            <div class="wishlist-grid" id="wishlistGrid"></div>
+        </section>
+
+        <section class="tab-panel" id="tab-security">
+            <div class="panel-header"><h2 class="panel-title">Security</h2></div>
+            <div class="form-card">
+                <h3 class="form-card-title">Change Password</h3>
+                <div class="form-grid">
+                    <div class="form-field form-field-full">
+                        <label for="currentPw">Current Password</label>
+                        <div class="pw-wrap">
+                            <input type="password" id="currentPw" autocomplete="new-password" placeholder="Enter current password">
+                            <button class="pw-eye" data-target="currentPw">
+                                <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <label for="newPw">New Password</label>
+                        <div class="pw-wrap">
+                            <input type="password" id="newPw" placeholder="New password">
+                            <button class="pw-eye" data-target="newPw">
+                                <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-field">
+                        <label for="confirmPw">Confirm New Password</label>
+                        <div class="pw-wrap">
+                            <input type="password" id="confirmPw" placeholder="Confirm new password">
+                            <button class="pw-eye" data-target="confirmPw">
+                                <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-actions"><button class="btn-primary" id="savePwBtn">Update Password</button></div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<footer class="footer">
+    <div class="footer-bottom"><span>© 2026 FILMFLEX. All rights reserved.</span></div>
+</footer>
+
+<script>
+    let GLOBAL_USER_EMAIL = "";
+    let DASHBOARD_REVIEWS_CACHE = [];
+    let DASHBOARD_HISTORY_CACHE = [
+        { title: "The Witcher", date: "2026-05-18 14:20:00", timestamp: new Date("2026-05-18"), type: "Fantasy", length: "2h 15m" },
+        { title: "Stranger Things", date: "2026-05-14 09:15:00", timestamp: new Date("2026-05-14"), type: "Horror Series", length: "50m" },
+        { title: "The Matrix", date: "2026-05-17 14:20:00", timestamp: new Date("2026-05-17"), type: "Sci-Fi", length: "2h 16m" },
+        { title: "Inception", date: "2026-04-28 21:45:00", timestamp: new Date("2026-04-28"), type: "Action/Sci-Fi", length: "2h 28m" }
+    ];
+
+    // GLOBAL RESPONSIVE TOAST MANAGER
+    function showToast(msg, isErr) {
+        const toast = document.getElementById(isErr ? 'toastError' : 'toastSuccess');
+        const textSpan = document.getElementById(isErr ? 'toastErrMsg' : 'toastMsg');
+        if(!toast || !textSpan) return;
+
+        textSpan.textContent = msg;
+        toast.style.display = 'flex';
+        setTimeout(() => { toast.style.display = 'none'; }, 3500);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+
+        const menuLinks = document.querySelectorAll('.sb-link[data-tab]');
+        const panels = document.querySelectorAll('.tab-panel');
+
+        function switchTab(tabName) {
+            menuLinks.forEach(l => l.classList.toggle('active', l.dataset.tab === tabName));
+            panels.forEach(p => p.classList.toggle('active', p.id === `tab-${tabName}`));
+            if(tabName !== 'security') {
+                document.getElementById('currentPw').value = "";
+                document.getElementById('newPw').value = "";
+                document.getElementById('confirmPw').value = "";
+            }
+        }
+
+        menuLinks.forEach(link => {
+            link.addEventListener('click', function() { switchTab(this.dataset.tab); });
+        });
+
+        const avatarPenBtn = document.getElementById('avatarPenBtn');
+        if(avatarPenBtn) {
+            avatarPenBtn.addEventListener('click', (e) => { e.preventDefault(); switchTab('account'); });
+        }
+
+        // Dropdown toggle mechanism mappings
+        const userAvatar = document.getElementById('userAvatar');
+        const dropdown = document.getElementById('dropdown');
+        if(userAvatar && dropdown) {
+            userAvatar.addEventListener('click', e => { e.stopPropagation(); dropdown.classList.toggle('show'); });
+            document.addEventListener('click', () => dropdown.classList.remove('show'));
+        }
+
+        // ── LOAD USER DATA SYSTEM ──
+        fetch('user-data', { method: 'GET', credentials: 'include' })
+            .then(res => { if(res.ok) return res.json(); else throw new Error(); })
+            .then(user => {
+                GLOBAL_USER_EMAIL = user.email;
+                const initial = user.fullName ? user.fullName.charAt(0).toUpperCase() : "U";
+
+                if(userAvatar) userAvatar.textContent = initial;
+                document.getElementById('dropdownAvatar').textContent = initial;
+                document.getElementById('dropdownName').textContent = user.fullName;
+                document.getElementById('dropdownEmail').textContent = user.email;
+
+                document.getElementById('profileBanner').style.display = 'block';
+                document.getElementById('pbAvatar').textContent = initial;
+                document.getElementById('pbName').textContent = user.fullName;
+                document.getElementById('pbEmail').textContent = user.email;
+                document.getElementById('pcAvatar').textContent = initial;
+                document.getElementById('pciName').textContent = user.fullName;
+                document.getElementById('pciEmail').textContent = user.email;
+
+                const names = user.fullName ? user.fullName.split(' ') : ["User"];
+                document.getElementById('firstName').value = names[0];
+                document.getElementById('lastName').value = names.slice(1).join(' ') || "";
+                document.getElementById('emailField').value = user.email;
+                document.getElementById('phoneField').value = user.phone || "";
+
+                document.getElementById('loadingOverlay').style.display = 'none';
+                document.getElementById('mainContent').style.display = 'flex';
+
+                loadActiveReviewsFromDatabase();
+                renderWatchHistory(DASHBOARD_HISTORY_CACHE);
+                loadWishlistGridData();
+            })
+            .catch(() => { window.location.href = 'login.html'; });
+
+        // ── PROFILE META DATA SAVE PIPELINE ──
+        document.getElementById('saveProfileBtn').addEventListener('click', function() {
+            const f = document.getElementById('firstName').value.trim();
+            const l = document.getElementById('lastName').value.trim();
+            const phoneVal = document.getElementById('phoneField').value.trim();
+
+            if(!f) { showToast("First Name is required!", true); return; }
+
+            const payload = {
+                fullName: f + " " + l,
+                phone: phoneVal
+            };
+
+            fetch('update-profile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+                .then(res => {
+                    if(res.ok) {
+                        showToast("Profile details updated inside users.txt successfully!", false);
+                        document.getElementById('pbName').textContent = payload.fullName;
+                        document.getElementById('pciName').textContent = payload.fullName;
+                        document.getElementById('dropdownName').textContent = payload.fullName;
+                    } else {
+                        showToast("Profile alteration failed.", true);
+                    }
+                }).catch(() => showToast("REST layer communication drop.", true));
+        });
+
+        // ── PASSWORD CHANGE PIPELINE (FIXED 400 ERROR BAD REQUESTS NOMENCLATURES) ──
+        document.getElementById('savePwBtn').addEventListener('click', function() {
+            const currentPw = document.getElementById('currentPw').value;
+            const newPw = document.getElementById('newPw').value;
+            const confirmPw = document.getElementById('confirmPw').value;
+
+            if(!currentPw || !newPw || !confirmPw) { showToast("Please fill all password fields!", true); return; }
+            if(newPw !== confirmPw) { showToast("New password fields do not match!", true); return; }
+
+            // FIXED SCHEMA PAYLOADS: Mapping with matching controller keys (currentPw, newPw) directly to prevent crashes
+            fetch('update-profile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ currentPw: currentPw, newPw: newPw })
+            })
+                .then(res => {
+                    if(res.ok) {
+                        showToast("Password changed successfully inside credentials database!", false);
+                        document.getElementById('currentPw').value = "";
+                        document.getElementById('newPw').value = "";
+                        document.getElementById('confirmPw').value = "";
+                    } else {
+                        showToast("Current password verification failed!", true);
+                    }
+                }).catch(() => showToast("Security link update error sequence triggered.", true));
+        });
+
+        function loadActiveReviewsFromDatabase() {
+            fetch('api/reviews/public-all', { method: 'GET' })
+                .then(res => res.json())
+                .then(reviews => {
+                    DASHBOARD_REVIEWS_CACHE = reviews.filter(r => r.userId === GLOBAL_USER_EMAIL);
+                    document.getElementById('statReviews').textContent = DASHBOARD_REVIEWS_CACHE.length;
+                    renderReviewsGrid(DASHBOARD_REVIEWS_CACHE);
+                });
+        }
+
+        function renderReviewsGrid(reviews) {
+            const grid = document.getElementById('reviewsGrid');
+            if(!grid) return;
+            if(reviews.length === 0) {
+                grid.innerHTML = `<p style="color:#666; font-size:0.9rem; padding:15px;">No reviews found.</p>`;
+                return;
+            }
+            grid.innerHTML = reviews.map(r => {
+                const stars = '★'.repeat(r.rating) + '☆'.repeat(5 - r.rating);
+                return `
+                    <div class="review-card-item" id="rc-block-${r.id}">
+                        <div>
+                            <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <strong style="color:white; font-size:1.1rem;">${r.movieId}</strong>
+                                <span style="color:#ffd700; font-size:1rem;">${stars}</span>
+                            </div>
+                            <p class="review-body-text" style="color:#ccc; font-size:0.9rem; line-height:1.6; text-align:left; margin-top:8px;">${r.reviewText}</p>
+                            <div class="edit-box-wrapper" style="display:none; margin-top:10px; text-align: left;">
+                                <textarea class="inline-edit-area" id="input-edit-${r.id}">${r.reviewText}</textarea>
+                                <label style="font-size:0.85rem; color:#aaa;">Change Rating: </label>
+                                <select class="inline-star-select" id="input-star-${r.id}">
+                                    <option value="5" ${r.rating == 5 ? 'selected' : ''}>★★★★★ (5)</option>
+                                    <option value="4" ${r.rating == 4 ? 'selected' : ''}>★★★★☆ (4)</option>
+                                    <option value="3" ${r.rating == 3 ? 'selected' : ''}>★★★☆☆ (3)</option>
+                                    <option value="2" ${r.rating == 2 ? 'selected' : ''}>★★☆☆☆ (2)</option>
+                                    <option value="1" ${r.rating == 1 ? 'selected' : ''}>★☆☆☆☆ (1)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #222; padding-top:12px; margin-top:8px;">
+                            <span style="font-size:0.75rem; color:#555;">${r.createdAt}</span>
+                            <div class="crud-btn-group">
+                                <button class="btn-crud-edit" onclick="handleInlineEdit('${r.id}')">✏️ Edit</button>
+                                <button class="btn-crud-delete" onclick="handleInlineDelete('${r.id}')">🗑️ Delete</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.handleInlineDelete = function(id) {
+            if(confirm("Are you sure you want to completely delete this review from data files?")) {
+                fetch(`api/reviews/${id}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json' } })
+                    .then(() => {
+                        showToast("Review successfully deleted from reviews.txt database!", false);
+                        loadActiveReviewsFromDatabase();
+                    });
+            }
+        };
+
+        window.handleInlineEdit = function(id) {
+            const block = document.getElementById(`rc-block-${id}`);
+            const textPara = block.querySelector('.review-body-text');
+            const editWrapper = block.querySelector('.edit-box-wrapper');
+            const editBtn = block.querySelector('.btn-crud-edit');
+
+            if(editBtn.textContent.includes("Edit")) {
+                textPara.style.display = 'none';
+                editWrapper.style.display = 'block';
+                editBtn.textContent = "💾 Save";
+            } else {
+                const newText = document.getElementById(`input-edit-${id}`).value.trim();
+                const newRating = document.getElementById(`input-star-${id}`).value;
+                fetch(`api/reviews/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ reviewText: newText, rating: parseInt(newRating) })
+                }).then(() => {
+                    showToast("Review text and stars metric saved permanently!", false);
+                    loadActiveReviewsFromDatabase();
+                });
+            }
+        };
+
+        function renderWatchHistory(list) {
+            const container = document.getElementById('historyList');
+            document.getElementById('statWatched').textContent = list.length;
+            if(!container) return;
+            if(list.length === 0) {
+                container.innerHTML = `<p style="color:#666; font-size:0.9rem; padding:15px;">Your watch history is empty.</p>`;
+                return;
+            }
+            container.innerHTML = list.map(h => `
+                <div class="history-tile-card">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <span style="color:white; font-size:1.1rem; font-weight:bold;">🎬 ${h.title}</span>
+                        <span class="wish-tag" style="font-size:0.75rem;">${h.length || '2h'}</span>
+                    </div>
+                    <div style="font-size:0.82rem; color:#666; margin-top:5px;">Genre Group: ${h.type}</div>
+                    <div style="font-size:0.75rem; color:#444; border-top:1px solid #222; margin-top:12px; padding-top:8px; text-align:right;">${h.date}</div>
+                </div>
+            `).join('');
+        }
+
+        document.querySelectorAll('.filter-chip').forEach(chip => {
+            chip.addEventListener('click', function() {
+                document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+
+                const filter = this.dataset.filter;
+                const now = new Date("2026-05-19");
+                let filtered = [...DASHBOARD_HISTORY_CACHE];
+
+                if(filter === 'this-week') {
+                    const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+                    filtered = DASHBOARD_HISTORY_CACHE.filter(h => h.timestamp >= oneWeekAgo);
+                } else if(filter === 'this-month') {
+                    filtered = DASHBOARD_HISTORY_CACHE.filter(h => h.timestamp.getMonth() === now.getMonth() && h.timestamp.getFullYear() === now.getFullYear());
+                }
+                renderWatchHistory(filtered);
+            });
+        });
+
+        document.getElementById('clearHistoryBtn').addEventListener('click', () => {
+            DASHBOARD_HISTORY_CACHE = [];
+            renderWatchHistory([]);
+        });
+
+        function loadWishlistGridData() {
+            let wishlist = JSON.parse(localStorage.getItem('user_wishlist') || '[]');
+            document.getElementById('statWishlist').textContent = wishlist.length;
+            const grid = document.getElementById('wishlistGrid');
+            if(!grid) return;
+            if(wishlist.length === 0) {
+                grid.innerHTML = `<p style="color:#666; font-size:0.9rem; padding:15px;">Your wishlist stack is empty.</p>`;
+                return;
+            }
+            grid.innerHTML = wishlist.map(m => `
+                <div class="premium-wish-card">
+                    <div class="wish-img-container"><img src="${m.poster}" class="wish-poster"></div>
+                    <div class="wish-details">
+                        <div class="wish-title">${m.title}</div>
+                        <div class="wish-meta"><span class="wish-tag">★ ${m.rating}</span><span>${m.year}</span></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        document.querySelectorAll('.pw-eye').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const input = document.getElementById(this.dataset.target);
+                if(input) {
+                    if(input.type === 'password') {
+                        input.type = 'text';
+                        this.innerHTML = `<svg viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+                    } else {
+                        input.type = 'password';
+                        this.innerHTML = `<svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
+                    }
+                }
+            });
+        });
+
+        const logoutBtn = document.getElementById('logoutBtn');
+        if(logoutBtn) { logoutBtn.addEventListener('click', () => window.location.href = 'login.html'); }
+    });
+</script>
+</body>
+</html>
