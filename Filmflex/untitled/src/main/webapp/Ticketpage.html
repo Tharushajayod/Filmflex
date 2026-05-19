@@ -397,6 +397,8 @@
 
         const searchToggle = document.getElementById('searchToggle');
         const searchBox = document.getElementById('searchBox');
+        const logoutBtn = document.getElementById('logoutBtn');
+
         if(searchToggle && searchBox) {
             searchToggle.addEventListener('click', e => { e.stopPropagation(); searchBox.classList.add('active'); });
             document.getElementById('searchClose').addEventListener('click', () => searchBox.classList.remove('active'));

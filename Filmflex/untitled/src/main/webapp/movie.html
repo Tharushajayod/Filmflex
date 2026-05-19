@@ -603,21 +603,10 @@
 
     <h2 class="section-header">Popular on FILMFLEX <a href="#" class="view-all">View All</a></h2>
     <div class="movies-container" id="popularMoviesGrid">
-        <div class="movie-card" onclick="if(window.openInfoModal) window.openInfoModal(12);"><img src="assets/image/default-poster.jpg" alt="The Witcher" class="movie-poster"><div class="movie-title">The Witcher</div></div>
-        <div class="movie-card" onclick="if(window.openInfoModal) window.openInfoModal(4);"><img src="assets/image/default-poster.jpg" alt="Narcos" class="movie-poster"><div class="movie-title">Narcos</div></div>
-        <div class="movie-card" onclick="if(window.openInfoModal) window.openInfoModal(8);"><img src="assets/image/default-poster.jpg" alt="Jessica Jones" class="movie-poster"><div class="movie-title">Jessica Jones</div></div>
-        <div class="movie-card" onclick="if(window.openInfoModal) window.openInfoModal(7);"><img src="assets/image/default-poster.jpg" alt="Lucifer" class="movie-poster"><div class="movie-title">Lucifer</div></div>
-        <div class="movie-card" onclick="if(window.openInfoModal) window.openInfoModal(18);"><img src="assets/image/default-poster.jpg" alt="You" class="movie-poster"><div class="movie-title">You</div></div>
-        <div class="movie-card" onclick="if(window.openInfoModal) window.openInfoModal(16);"><img src="assets/image/default-poster.jpg" alt="The Crown" class="movie-poster"><div class="movie-title">The Crown</div></div>
-        <div class="movie-card" onclick="if(window.openInfoModal) window.openInfoModal(10);"><img src="assets/image/default-poster.jpg" alt="The Rain" class="movie-poster"><div class="movie-title">The Rain</div></div>
     </div>
 
     <h2 class="section-header">Continue Watching <a href="#" class="view-all">View All</a></h2>
     <div class="movies-container" id="continueMoviesGrid">
-        <div class="movie-card" onclick="if(window.openInfoModal) window.openInfoModal(2);"><img src="assets/image/default-poster.jpg" alt="Stranger Things" class="movie-poster"><div class="movie-title">Stranger Things</div></div>
-        <div class="movie-card" onclick="if(window.openInfoModal) window.openInfoModal(9);"><img src="assets/image/default-poster.jpg" alt="Dark" class="movie-poster"><div class="movie-title">Dark</div></div>
-        <div class="movie-card" onclick="if(window.openInfoModal) window.openInfoModal(5);"><img src="assets/image/default-poster.jpg" alt="Money Heist" class="movie-poster"><div class="movie-title">Money Heist</div></div>
-        <div class="movie-card" onclick="if(window.openInfoModal) window.openInfoModal(14);"><img src="assets/image/default-poster.jpg" alt="The Queen's Gambit" class="movie-poster"><div class="movie-title">The Queen's Gambit</div></div>
     </div>
 </div>
 
@@ -743,13 +732,40 @@
     </div>
 </div>
 
+<footer class="filmflex-footer">
+    <div class="footer-inner">
+        <div class="footer-col footer-brand-col">
+            <div class="footer-logo">FILM<span>FLEX</span></div>
+            <p>Your premier destination for secure movie rentals, structured critiques, and cinematic ecosystem workflows.</p>
+            <div class="footer-socials">
+                <a href="#">Fb</a><a href="#">Tw</a><a href="#">Ig</a><a href="#">Yt</a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4>Platform</h4>
+            <a href="home.html">Browse Movies</a><a href="Ticketpage.html">Ticket Center</a><a href="#">Premium Plans</a>
+        </div>
+        <div class="footer-col">
+            <h4>Support</h4>
+            <a href="#">Help Center</a><a href="#">Terms of Use</a><a href="#">Privacy Policy</a>
+        </div>
+        <div class="footer-col">
+            <h4>Security</h4>
+            <a href="#">OSINT Center</a><a href="#">Encrypted Gateway</a><a href="#">Admin Node</a>
+        </div>
+    </div>
+    <div class="footer-bar">
+        <span>© 2026 FILMFLEX. All rights reserved.</span>
+        <span>Made with ❤️ for movie lovers</span>
+    </div>
+</footer>
+
 <script src="js/home.js"></script>
 <script>
     let CURRENT_MOVIE_CONTEXT_NAME = "The Witcher";
     let BACKEND_LIVE_REVIEWS = [];
     let modalSelectedRating = 0;
 
-    // Mapped completely to fallback arrays to ensure dynamic layout operations never go blank
     const PAGE_LOCAL_REVIEWS = [
         { name:"Alex M.",     initial:"A", movie:"Inception",       rating:5, date:"2 days ago",  text:"Mind-bending masterpiece. Christopher Nolan at his absolute best. Every rewatch reveals something new." },
         { name:"Sarah K.",    initial:"S", movie:"The Dark Knight",  rating:5, date:"5 days ago",  text:"Heath Ledger's Joker is iconic. This film redefined what superhero movies could be — dark, complex, brilliant." },
@@ -822,6 +838,59 @@
     function handleLike(btn) { btn.textContent = btn.textContent.startsWith('👍') ? '👍 1 found helpful' : '👍 Helpful'; }
     function handleReport(btn) { btn.textContent = '⚑ Reported'; btn.style.color = '#e74c3c'; }
 
+    // DYNAMIC INJECTION INTEGRATION SYSTEM MAPPING (A-Z LIVE DATA GRID FETCH)
+    function fetchAndRenderLiveMovies() {
+        fetch('api/movies', { method: 'GET', credentials: 'include' })
+            .then(res => { if(!res.ok) throw new Error(); return res.json(); })
+            .then(movies => {
+                // Synchronize global window context tracker matrix array
+                window.MOVIES = movies.map(m => ({
+                    id: parseInt(m.id),
+                    title: m.title,
+                    year: m.year,
+                    rating: m.rating,
+                    genre: m.genre,
+                    desc: m.description,
+                    poster: m.posterPath,
+                    file: m.filePath,
+                    trailer: m.trailerPath
+                }));
+
+                // Clear structural containers and populate live cells dynamically
+                const popularGrid = document.getElementById('popularMoviesGrid');
+                const continueGrid = document.getElementById('continueMoviesGrid');
+                const movieDropdown = document.getElementById('reviewMovieSelect');
+
+                if (popularGrid && movies.length > 0) {
+                    popularGrid.innerHTML = movies.map(m => `
+                        <div class="movie-card" onclick="openInfoModal(${m.id})">
+                            <img src="${m.posterPath}" alt="${m.title}" class="movie-poster" onerror="this.src='assets/image/default-poster.jpg'">
+                            <div class="movie-title">${m.title}</div>
+                        </div>
+                    `).join('');
+                }
+
+                if (continueGrid && movies.length > 1) {
+                    // Populate continuation layout frame slices using dynamic indexes
+                    const continueSlice = movies.slice().reverse();
+                    continueGrid.innerHTML = continueSlice.map(m => `
+                        <div class="movie-card" onclick="openInfoModal(${m.id})">
+                            <img src="${m.posterPath}" alt="${m.title}" class="movie-poster" onerror="this.src='assets/image/default-poster.jpg'">
+                            <div class="movie-title">${m.title}</div>
+                        </div>
+                    `).join('');
+                }
+
+                if(movieDropdown) {
+                    movieDropdown.innerHTML = `<option value="">— Select a movie —</option>` +
+                        movies.map(m => `<option value="${m.title}">${m.title}</option>`).join('');
+                }
+            })
+            .catch(() => {
+                console.error("Live catalog data initialization stream dropped. Fallbacks triggered.");
+            });
+    }
+
     const originalOpenModal = window.openInfoModal;
     window.openInfoModal = function(movieId) {
         if(window.MOVIES) {
@@ -830,81 +899,18 @@
         }
         if(originalOpenModal) originalOpenModal(movieId);
 
-        // Clears any previous star ratings and locks dynamic resetting loop overrides
         modalSelectedRating = 0;
         const modalStarsList = document.querySelectorAll('#popupStarWrapper .mstar');
         modalStarsList.forEach(s => s.classList.remove('active'));
 
-        // Dynamic fallback injection validation check to prevent premature focus clear errors
         const textarea = document.getElementById('modalReviewText');
         if(textarea) textarea.value = "";
     };
 
     document.addEventListener('DOMContentLoaded', function() {
+        // Run live tracking stream mapping
+        fetchAndRenderLiveMovies();
         loadPersistentReviews();
-
-        // FIXED DROPDOWN OPTION GENERATION LOOP INJECTION
-        const movieDropdown = document.getElementById('reviewMovieSelect');
-        function populateDynamicDropdown() {
-            if(window.MOVIES && movieDropdown) {
-                movieDropdown.innerHTML = `<option value="">— Select a movie —</option>` +
-                    MOVIES.map(m => `<option value="${m.title}">${m.title}</option>`).join('');
-            } else {
-                // Keep polling execution frame loop safe until window context registers array structure
-                setTimeout(populateDynamicDropdown, 50);
-            }
-        }
-        populateDynamicDropdown();
-
-        // Dynamic poster mapping to replace placeholders dynamically
-        setTimeout(() => {
-            if(window.MOVIES) {
-                const popularContainer = document.getElementById('popularMoviesGrid');
-                const continueContainer = document.getElementById('continueMoviesGrid');
-                const mappingPopular = [13, 2, 4, 7, 18, 6, 10];
-                const mappingContinue = [3, 10, 6, 15];
-
-                if(popularContainer) {
-                    popularContainer.querySelectorAll('.movie-card').forEach((card, idx) => {
-                        const targetMovie = MOVIES.find(m => m.id === mappingPopular[idx]);
-                        if(targetMovie) {
-                            const img = card.querySelector('.movie-poster');
-                            const txt = card.querySelector('.movie-title');
-                            if(img) img.src = targetMovie.poster;
-                            if(txt) txt.textContent = targetMovie.title;
-                            card.setAttribute('onclick', `openInfoModal(${targetMovie.id})`);
-                        }
-                    });
-                }
-                if(continueContainer) {
-                    continueContainer.querySelectorAll('.movie-card').forEach((card, idx) => {
-                        const targetMovie = MOVIES.find(m => m.id === mappingContinue[idx]);
-                        if(targetMovie) {
-                            const img = card.querySelector('.movie-poster');
-                            const txt = card.querySelector('.movie-title');
-                            if(img) img.src = targetMovie.poster;
-                            if(txt) txt.textContent = targetMovie.title;
-                            card.setAttribute('onclick', `openInfoModal(${targetMovie.id})`);
-                        }
-                    });
-                }
-            }
-        }, 200);
-
-        const featuredWishlistBtn = document.getElementById('featuredWishlistBtn');
-        let wishlistState = false;
-        if(featuredWishlistBtn) {
-            featuredWishlistBtn.addEventListener('click', function() {
-                wishlistState = !wishlistState;
-                if(wishlistState) {
-                    featuredWishlistBtn.textContent = '✓ Added to List';
-                    featuredWishlistBtn.classList.add('added');
-                } else {
-                    featuredWishlistBtn.textContent = '+ My List';
-                    featuredWishlistBtn.classList.remove('added');
-                }
-            });
-        }
 
         const userAvatarBtn = document.getElementById('userAvatar');
         const dropdownMenu = document.getElementById('dropdown');
@@ -1013,13 +1019,10 @@
             });
         });
 
-        // POPUP MODAL REVIEW FORM SUBMISSION FETCH
         const modalSubmitBtn = document.getElementById('modalSubmitReview');
         if(modalSubmitBtn) {
             modalSubmitBtn.addEventListener('click', function(e) {
-                // FIXED EVENT PROPRIETARY PROPAGATION LOOP OVERRIDES TO STOP BLANK TEXT VALUE BUGS
                 e.preventDefault();
-
                 const reviewText = document.getElementById('modalReviewText').value.trim();
                 if(modalSelectedRating === 0) { alert('Please select a star rating first!'); return; }
                 if(!reviewText) { alert('Please enter your review text thoughts!'); return; }
@@ -1083,7 +1086,6 @@
             });
         }
 
-        // MAIN WRITE CARD REVIEW FORM SUBMISSION FETCH
         const submitBtn = document.getElementById('submitReviewBtn');
         if (submitBtn) {
             submitBtn.addEventListener('click', function() {

@@ -1,3 +1,5 @@
-1|The Witcher|2019|8.2|Fantasy|Fantasy movie|assets/image/default-poster.jpg|assets/Video/Trailer.mp4|assets/Video/Trailer.mp4
-2|Stranger Things|2016|8.7|Sci-Fi|Sci-fi mystery series|assets/image/default-poster.jpg|assets/Video/Trailer2 .mp4|assets/Video/Trailer2 .mp4
-4f5cb65e-0a24-41f6-b47d-6ca6ba3aab67|New add|2002|6.0|Comedy|RDTYGHJKmdggyehkmevyguhei hbjckj|assets/image/default-poster.jpg|assets/Video/Trailer.mp4|assets/Video/Trailer.mp4
+1|The Witcher|2019|8.2|Horror|Fantasy movie|assets/image/the-witcher.jpg|assets/Video/Trailer.mp4|assets/Video/Trailer.mp4
+2|Stranger Things|2016|8.7|Sci-Fi|Sci-fi mystery series|assets/image/1.jpg|assets/Video/Trailer2 .mp4|assets/Video/Trailer2 .mp4
+4f5cb65e-0a24-41f6-b47d-6ca6ba3aab67|New add|2002|6.0|Comedy|RDTYGHJKmdggyehkmevyguhei hbjckj|assets/image/2.jpg|assets/Video/Trailer.mp4|assets/Video/Trailer.mp4
+00849dc6-f9b8-444f-a8e5-cd3f7f5ba9a4|New add 3|2010|10.0|Sci-Fi|EVDVV|assets/image/11.jpg|assets/Video/new-add-3.mp4|assets/Video/new-add-3-trailer.mp4
+359971f9-50a9-4124-8dd2-30cc8b19db53|16|2019|8.2|Thriller|vfvfvf|assets/image/the-witcher.jpg|assets/Video/the-witcher.mp4|assets/Video/the-witcher-trailer.mp4

@@ -158,31 +158,35 @@
     });
 
     function fetchPaymentLogs() {
-        // Connected to PaymentAdminController mapped at /api/admin/all-tickets
         fetch('api/admin/all-tickets', { method: 'GET', credentials: 'include' })
             .then(res => {
-                if(!res.ok) throw new Error();
+                if(!res.ok) throw new Error("Network response was not ok");
                 return res.json();
             })
             .then(data => {
                 const tbody = document.getElementById('paymentTableBody');
-                if (data.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No payment records found in tickets.txt.</td></tr>';
+
+                // 1. දත්ත හිස් නම් පණිවිඩයක් පෙන්වන්න
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No payment records found.</td></tr>';
                     return;
                 }
 
+                // 2. Table එකේ දත්ත එකින් එක ලූප් කරන්න
                 tbody.innerHTML = data.map(t => `
-                    <tr>
-                        <td style="font-weight:bold; color:white;">${t.email}</td>
-                        <td><span class="role-badge" style="background:rgba(255,255,255,0.05);">${t.plan}</span></td>
-                        <td style="color:#2ecc71; font-weight:bold;">Rs. ${parseFloat(t.amount).toLocaleString('.2')}</td>
-                        <td style="color:#888;">${t.date}</td>
-                        <td><span class="role-badge status-completed">Completed</span></td>
-                    </tr>
-                `).join('');
+                <tr>
+                    <td style="font-weight:bold; color:white;">${t.email}</td>
+                    <td><span class="role-badge" style="background:rgba(255,255,255,0.05);">${t.plan}</span></td>
+                    <td style="color:#2ecc71; font-weight:bold;">Rs. ${parseFloat(t.amount).toLocaleString()}</td>
+                    <td style="color:#888;">${t.date}</td>
+                    <td><span class="role-badge status-completed">Completed</span></td>
+                </tr>
+            `).join('');
             })
-            .catch(() => {
-                document.getElementById('paymentTableBody').innerHTML = '<tr><td colspan="5" style="text-align:center; color:#e74c3c;">Failed to communicate with Payment API. Check backend.</td></tr>';
+            .catch(err => {
+                console.error("Fetch Error:", err);
+                document.getElementById('paymentTableBody').innerHTML =
+                    '<tr><td colspan="5" style="text-align:center; color:#e74c3c;">Failed to load data. Check console.</td></tr>';
             });
     }
 
