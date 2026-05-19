@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FILMFLEX — My Tickets</title>
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/Ticketpage.css">
+    <link rel="stylesheet" href="css/UserDashboard.css">
+    <style>
+        /* ── STABLE FIXED SIDEBAR ENFORCEMENT RULES ── */
+        .page-body {
+            display: flex !important;
+            gap: 30px !important;
+            max-width: 1200px !important;
+            margin: 40px auto !important;
+            padding: 0 2rem !important;
+            align-items: flex-start !important;
+        }
+
+        .sidebar {
+            width: 280px !important;
+            min-width: 280px !important;
+            max-width: 280px !important;
+            flex-shrink: 0 !important;
+            background: rgba(255, 255, 255, 0.02) !important;
+            border: 1px solid #222 !important;
+            border-radius: 12px !important;
+            padding: 20px !important;
+            box-sizing: border-box !important;
+        }
+
+        .main {
+            flex: 1 !important;
+            min-width: 0 !important;
+        }
+
+        /* ── PREMIUM SCENIC TOP-RIGHT COMPACT TOAST ALERTS ── */
+        .toast {
+            display: none;
+            position: fixed !important;
+            top: 100px !important;
+            right: 30px !important;
+            bottom: auto !important;
+            width: auto !important;
+            max-width: 350px !important;
+            z-index: 99999 !important;
+            align-items: center;
+            padding: 12px 20px !important;
+            border-radius: 6px !important;
+            color: white !important;
+            font-size: 0.88rem !important;
+            font-weight: bold !important;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5) !important;
+            border-left: 4px solid rgba(0,0,0,0.2) !important;
+            animation: slideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.2) forwards !important;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(120%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .header { z-index: 1000 !important; }
+        .dropdown.show { display: block !important; }
+        .modal-bd.open { display: flex !important; }
+    </style>
+</head>
+<body>
+
+<div class="toast" id="toastSuccess" style="background: #2ecc71;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px; height:18px; margin-right:8px;"><polyline points="20 6 9 17 4 12"/></svg>
+    <span id="toastSuccessMsg">Success!</span>
+</div>
+<div class="toast toast-err" id="toastError" style="background: #e50914;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:18px; height:18px; margin-right:8px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <span id="toastErrorMsg">Error occurred</span>
+</div>
+
+<header class="header" id="siteHeader">
+    <a href="home.html" class="logo">FILM<span>FLEX</span></a>
+    <nav class="nav">
+        <a href="home.html"          class="nav-link">Home</a>
+        <a href="movie.html"         class="nav-link">Movies</a>
+        <a href="UserDashboard.html" class="nav-link">Account</a>
+        <a href="Ticketpage.html"    class="nav-link active">Tickets</a>
+    </nav>
+
+    <div class="header-right">
+        <div class="search-wrap" id="searchWrap">
+            <button class="icon-btn" id="searchToggle" aria-label="Search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            </button>
+            <div class="search-box" id="searchBox">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                <input type="text" id="searchInput" placeholder="Search movies, genres…" autocomplete="off">
+                <button class="search-close" id="searchClose">✕</button>
+            </div>
+        </div>
+
+        <button class="icon-btn notif-btn" aria-label="Notifications">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <span class="notif-dot"></span>
+        </button>
+
+        <div class="avatar-wrap">
+            <button class="avatar" id="avatarBtn" aria-label="Profile">U</button>
+            <div class="dropdown" id="dropdown">
+                <div class="dropdown-profile">
+                    <div class="dropdown-avatar" id="dropdownAvatar">U</div>
+                    <div>
+                        <div class="dropdown-name" id="dropdownName">Loading…</div>
+                        <div class="dropdown-email" id="dropdownEmail"></div>
+                    </div>
+                </div>
+                <div class="dropdown-divider"></div>
+                <a href="UserDashboard.html" class="dropdown-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>My Account
+                </a>
+                <a href="movie.html" class="dropdown-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>Browse Movies
+                </a>
+                <a href="Ticketpage.html" class="dropdown-link">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0"/><path d="M12 8v4l3 3"/></svg>My Tickets
+                </a>
+                <div class="dropdown-divider"></div>
+                <button class="dropdown-link dropdown-logout" id="logoutBtn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Sign Out
+                </button>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="hero-film-strip" aria-hidden="true">
+        <div class="film-reel">🎬🎥🎞️🍿🎭⭐🎬🎥🎞️🍿🎭⭐🎬🎥🎞️🍿🎭⭐🎬🎥🎞️🍿</div>
+        <div class="film-reel film-reel-reverse">🍿🎭⭐🎬🎥🎞️🍿🎭⭐🎬🎥🎞️🍿🎭⭐🎬🎥🎞️🍿🎭⭐🎬🎥</div>
+    </div>
+
+    <div class="hero-glow-left"></div>
+    <div class="hero-glow-right"></div>
+
+    <div class="hero-content">
+        <div class="hero-badge">
+            <span class="badge-dot"></span>
+            FILMFLEX PASS
+        </div>
+        <h1 class="hero-title">
+            Cinema Without<br>
+            <span class="hero-title-accent">Limits.</span>
+        </h1>
+        <p class="hero-sub">
+            One payment. Lifetime access. Over 1,200 movies in stunning quality — on every screen you own.
+        </p>
+        <div class="hero-stats">
+            <div class="hstat">
+                <div class="hstat-num">1,200<span>+</span></div>
+                <div class="hstat-lbl">Movies</div>
+            </div>
+            <div class="hstat-sep"></div>
+            <div class="hstat">
+                <div class="hstat-num">4K</div>
+                <div class="hstat-lbl">Ultra HD</div>
+            </div>
+            <div class="hstat-sep"></div>
+            <div class="hstat">
+                <div class="hstat-num">∞</div>
+                <div class="hstat-lbl">Devices</div>
+            </div>
+            <div class="hstat-sep"></div>
+            <div class="hstat">
+                <div class="hstat-num">0</div>
+                <div class="hstat-lbl">Ads</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero-ticket-preview" aria-hidden="true">
+        <div class="htp-glow"></div>
+        <div class="htp-inner">
+            <div class="htp-logo">FILM<span>FLEX</span></div>
+            <div class="htp-title">Premium Pass</div>
+            <div class="htp-barcode">
+                <div class="bc-bar"></div><div class="bc-bar tall"></div><div class="bc-bar"></div>
+                <div class="bc-bar tall"></div><div class="bc-bar short"></div><div class="bc-bar tall"></div>
+                <div class="bc-bar"></div><div class="bc-bar short"></div><div class="bc-bar tall"></div>
+                <div class="bc-bar"></div><div class="bc-bar tall"></div><div class="bc-bar short"></div>
+                <div class="bc-bar tall"></div><div class="bc-bar"></div><div class="bc-bar tall"></div>
+                <div class="bc-bar short"></div><div class="bc-bar tall"></div><div class="bc-bar"></div>
+            </div>
+            <div class="htp-status">
+                <span class="htp-dot"></span> ACTIVE
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="page-body">
+
+    <aside class="sidebar">
+        <div class="sidebar-label">My Account</div>
+        <ul class="sidebar-menu">
+            <li><a href="UserDashboard.html" class="sb-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Account Details</a></li>
+            <li><a href="UserDashboard.html" class="sb-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>Watch History</a></li>
+            <li><a href="UserDashboard.html" class="sb-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>My Reviews</a></li>
+            <li><a href="PaymentMethods.html" class="sb-link"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Payment Methods</a></li>
+            <li><a href="#" class="sb-link active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/></svg>My Tickets</a></li>
+        </ul>
+
+        <div class="sb-pass-badge" id="sbPassBadge" style="display:none">
+            <div class="sbp-shine"></div>
+            <div class="sbp-icon">🎟️</div>
+            <div class="sbp-info">
+                <div class="sbp-title">FILMFLEX PASS</div>
+                <div class="sbp-status"><span class="sbp-dot"></span>Active</div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main">
+
+        <section id="existingTicketSection" style="display:none">
+            <div class="section-header">
+                <h2 class="section-title">Your FILMFLEX Pass</h2>
+                <p class="section-sub">Your pass is active. Enjoy unlimited access.</p>
+            </div>
+
+            <div class="ticket-card" id="ticketCard">
+                <div class="tc-left">
+                    <div class="tc-logo">FILM<span>FLEX</span></div>
+                    <div class="tc-plan-name">Premium Pass</div>
+                    <div class="tc-badge-active"><span class="tc-live-dot"></span>ACTIVE</div>
+                    <div class="tc-qr" id="tcQr"></div>
+                    <div class="tc-scan-hint">Scan to verify</div>
+                </div>
+
+                <div class="tc-perf">
+                    <div class="tc-perf-circle top"></div>
+                    <div class="tc-perf-line"></div>
+                    <div class="tc-perf-circle bot"></div>
+                </div>
+
+                <div class="tc-right">
+                    <div class="tc-shine"></div>
+                    <div class="tc-field"><span class="tc-label">Ticket ID</span><span class="tc-value mono" id="tcTicketId">#FF-000000</span></div>
+                    <div class="tc-field"><span class="tc-label">Holder</span><span class="tc-value" id="tcHolder">—</span></div>
+                    <div class="tc-field"><span class="tc-label">Plan</span><span class="tc-value">Premium Lifetime</span></div>
+                    <div class="tc-field"><span class="tc-label">Amount Paid</span><span class="tc-value" id="tcAmount">Rs. 5,000.00</span></div>
+                    <div class="tc-field"><span class="tc-label">Valid Until</span><span class="tc-value">♾️ Lifetime</span></div>
+                    <div class="tc-field"><span class="tc-label">Issued</span><span class="tc-value" id="tcIssued">—</span></div>
+                </div>
+            </div>
+
+            <div class="perks-row" style="margin-top:20px; display:flex; gap:10px; flex-wrap:wrap;">
+                <div class="perk-pill" style="background:rgba(255,255,255,0.03); padding:8px 14px; border-radius:20px; font-size:0.85rem; color:#ccc;">🎬 1,200+ Movies</div>
+                <div class="perk-pill" style="background:rgba(255,255,255,0.03); padding:8px 14px; border-radius:20px; font-size:0.85rem; color:#ccc;">📺 Full HD · 4K</div>
+                <div class="perk-pill" style="background:rgba(255,255,255,0.03); padding:8px 14px; border-radius:20px; font-size:0.85rem; color:#ccc;">📵 Ad-Free</div>
+            </div>
+
+            <div class="ticket-actions" style="margin-top:20px; display:flex; gap:10px;">
+                <a href="movie.html" class="btn-primary">Browse Movies</a>
+                <button class="btn-ghost" onclick="window.print()">Print Ticket</button>
+            </div>
+        </section>
+
+        <section id="purchaseSection">
+            <div class="section-header">
+                <h2 class="section-title">Choose Your Plan</h2>
+                <p class="section-sub">One-time payment · Lifetime access · No hidden fees · No subscription</p>
+            </div>
+
+            <div class="billing-toggle">
+                <button class="bt-opt" id="btMonthly">Monthly</button>
+                <button class="bt-opt bt-opt-active" id="btLifetime">Lifetime <span class="bt-badge">BEST VALUE</span></button>
+            </div>
+
+            <div class="plans-grid">
+                <div class="plan-card" id="planBasic">
+                    <div class="plan-top">
+                        <div class="plan-icon-wrap plan-icon-basic">🎬</div>
+                        <div class="plan-name">Basic</div>
+                        <div class="plan-tagline" style="font-size:0.8rem; color:#666; margin-top:4px;">For casual viewers</div>
+                    </div>
+                    <div class="plan-price-wrap" style="margin:20px 0;">
+                        <div class="plan-price"><span class="plan-cur">Rs.</span><span class="plan-amt" data-lifetime="2500" data-monthly="299">2,500</span></div>
+                        <div class="plan-period" style="font-size:0.8rem; color:#555;">one-time</div>
+                    </div>
+                    <ul class="plan-feats" style="list-style:none; padding:0; margin:0 0 20px 0; text-align:left; font-size:0.88rem; color:#aaa;">
+                        <li style="margin-bottom:8px;">✔ 500+ Movies</li>
+                        <li style="margin-bottom:8px;">✔ HD Quality</li>
+                        <li style="margin-bottom:8px;">✔ 2 Devices</li>
+                    </ul>
+                    <button class="plan-btn plan-btn-outline" onclick="selectPlan('Basic','2500.00')" style="width:100%; padding:10px; border-radius:6px; cursor:pointer; font-weight:bold; background:transparent; border:1px solid #333; color:white;">Get Basic</button>
+                </div>
+
+                <div class="plan-card plan-card-featured" id="planPremium" style="border-color:#e50914;">
+                    <div class="plan-popular-ribbon" style="background:#e50914; color:white; font-size:0.75rem; font-weight:bold; padding:4px 0; border-radius:4px 4px 0 0;">MOST POPULAR</div>
+                    <div class="plan-top" style="padding-top:10px;">
+                        <div class="plan-icon-wrap plan-icon-premium">⭐</div>
+                        <div class="plan-name">Premium</div>
+                        <div class="plan-tagline" style="font-size:0.8rem; color:#666; margin-top:4px;">The full experience</div>
+                    </div>
+                    <div class="plan-price-wrap" style="margin:20px 0;">
+                        <div class="plan-price"><span class="plan-cur">Rs.</span><span class="plan-amt" data-lifetime="5000" data-monthly="499">5,000</span></div>
+                        <div class="plan-period" style="font-size:0.8rem; color:#555;">one-time</div>
+                    </div>
+                    <ul class="plan-feats" style="list-style:none; padding:0; margin:0 0 20px 0; text-align:left; font-size:0.88rem; color:#aaa;">
+                        <li style="margin-bottom:8px;">✔ 1,200+ Movies</li>
+                        <li style="margin-bottom:8px;">✔ Full HD Quality</li>
+                        <li style="margin-bottom:8px;">✔ All Devices</li>
+                        <li style="margin-bottom:8px;">✔ Ad-Free Forever</li>
+                    </ul>
+                    <button class="plan-btn plan-btn-primary" onclick="selectPlan('Premium','5000.00')" style="width:100%; padding:10px; border-radius:6px; cursor:pointer; font-weight:bold; background:#e50914; border:none; color:white;">Get Premium</button>
+                </div>
+
+                <div class="plan-card" id="planCinematic">
+                    <div class="plan-top">
+                        <div class="plan-icon-wrap plan-icon-cinema">🏆</div>
+                        <div class="plan-name">Cinematic</div>
+                        <div class="plan-tagline" style="font-size:0.8rem; color:#666; margin-top:4px;">For the true cinephile</div>
+                    </div>
+                    <div class="plan-price-wrap" style="margin:20px 0;">
+                        <div class="plan-price"><span class="plan-cur">Rs.</span><span class="plan-amt" data-lifetime="8000" data-monthly="799">8,000</span></div>
+                        <div class="plan-period" style="font-size:0.8rem; color:#555;">one-time</div>
+                    </div>
+                    <ul class="plan-feats" style="list-style:none; padding:0; margin:0 0 20px 0; text-align:left; font-size:0.88rem; color:#aaa;">
+                        <li style="margin-bottom:8px;">✔ Everything in Premium</li>
+                        <li style="margin-bottom:8px;">✔ 4K Ultra HD</li>
+                        <li style="margin-bottom:8px;">✔ Exclusive Content</li>
+                    </ul>
+                    <button class="plan-btn plan-btn-outline" onclick="selectPlan('Cinematic','8000.00')" style="width:100%; padding:10px; border-radius:6px; cursor:pointer; font-weight:bold; background:transparent; border:1px solid #333; color:white;">Get Cinematic</button>
+                </div>
+            </div>
+
+            <div class="trust-bar" style="display:flex; justify-content:space-around; margin-top:40px; padding:20px; background:rgba(255,255,255,0.01); border-radius:8px; font-size:0.85rem; color:#666;">
+                <div>🔒 Secure Payment</div>
+                <div>🛡️ SSL Encrypted</div>
+                <div>💯 7-Day Refund</div>
+            </div>
+        </section>
+    </main>
+</div>
+
+<div class="modal-bd" id="paymentModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:3000; align-items:center; justify-content:center;">
+    <div class="pay-modal" style="background:#1c1c1c; padding:30px; border-radius:12px; border:1px solid #333; width:100%; max-width:460px; text-align:center; position:relative;">
+        <button class="pay-modal-x" id="cancelBtn" style="position:absolute; top:15px; right:15px; background:transparent; border:none; color:white; font-size:1.2rem; cursor:pointer;">✕</button>
+        <div class="pm-header" style="margin-bottom:20px;">
+            <div class="pm-logo" style="font-size:1.5rem; font-weight:bold; margin-bottom:5px;">FILM<span style="color:#e50914;">FLEX</span></div>
+            <h2 class="pm-title" style="font-size:1.3rem; color:white;">Complete Purchase</h2>
+            <div class="pm-plan-tag" id="selectedPlanLabel" style="color:#e50914; font-weight:bold; margin-top:5px;">Premium Plan</div>
+        </div>
+        <div id="paymentDetails" style="margin-bottom:20px;"></div>
+        <div class="pm-no-card" id="noPaymentMessage" style="display:none; margin-bottom:20px;">
+            <p style="color:#aaa; font-size:0.9rem;">No payment method found on file.</p>
+            <a href="PaymentMethods.html" class="btn-primary" style="display:inline-block; margin-top:10px;">Add a Card First</a>
+        </div>
+        <div class="pm-summary" id="orderSummary" style="background:rgba(255,255,255,0.02); padding:15px; border-radius:8px; border:1px solid #222; margin-bottom:20px;">
+            <div style="display:flex; justify-content:space-between; font-size:0.9rem; color:#aaa; margin-bottom:8px;"><span>Plan Name</span><span id="summaryPlan">—</span></div>
+            <div style="display:flex; justify-content:space-between; font-size:1.1rem; font-weight:bold; color:white; border-top:1px solid #333; padding-top:8px;"><span>Total</span><span id="summaryTotal">Rs. 0.00</span></div>
+        </div>
+        <div style="display:flex; gap:10px; justify-content:center;">
+            <button class="btn-ghost" id="cancelBtn2">Cancel</button>
+            <button class="btn-primary" id="confirmBtn">Pay Now</button>
+        </div>
+    </div>
+</div>
+
+<div class="success-overlay" id="successOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:4000; align-items:center; justify-content:center; text-align:center;">
+    <div class="success-box" style="background:#141414; padding:40px; border-radius:16px; border:1px solid #222; max-width:480px; width:90%;">
+        <div style="font-size:3.5rem; margin-bottom:15px;">✓</div>
+        <h2 class="success-title" style="font-size:1.8rem; color:white; margin-bottom:10px;">Payment Successful!</h2>
+        <p style="color:#aaa; font-size:0.95rem; margin-bottom:20px;">Your pass is now active. Enjoy unlimited access to Filmflex!</p>
+        <div class="success-tid" id="successTicketId" style="font-family:monospace; font-size:1.2rem; color:#e50914; background:#1c1c1c; padding:10px; border-radius:6px; margin-bottom:25px;">#FF-000000</div>
+        <button class="btn-primary" onclick="window.location.reload()">Go to My Ticket</button>
+    </div>
+</div>
+
+<footer class="footer">
+    <div class="footer-bottom"><span>© 2026 FILMFLEX. All rights reserved.</span></div>
+</footer>
+
+<script>
+    let userEmail = '';
+    let selectedPlan = 'Premium';
+    let selectedAmt = '5000.00';
+    let billingMode = 'lifetime';
+
+    document.addEventListener('DOMContentLoaded', () => {
+        // FIXED REGISTRATION SELECTOR: Perfectly mapped to id="avatarBtn" match properties safely
+        const avatarBtn = document.getElementById('avatarBtn');
+        const dropdown = document.getElementById('dropdown');
+        if(avatarBtn && dropdown) {
+            avatarBtn.addEventListener('click', e => { e.stopPropagation(); dropdown.classList.toggle('show'); });
+            document.addEventListener('click', () => dropdown.classList.remove('show'));
+        }
+
+        const searchToggle = document.getElementById('searchToggle');
+        const searchBox = document.getElementById('searchBox');
+        if(searchToggle && searchBox) {
+            searchToggle.addEventListener('click', e => { e.stopPropagation(); searchBox.classList.add('active'); });
+            document.getElementById('searchClose').addEventListener('click', () => searchBox.classList.remove('active'));
+        }
+
+        document.getElementById('cancelBtn').addEventListener('click', closeModal);
+        document.getElementById('cancelBtn2').addEventListener('click', closeModal);
+        document.getElementById('confirmBtn').addEventListener('click', purchaseTicket);
+
+        document.getElementById('btMonthly').addEventListener('click', () => setBilling('monthly'));
+        document.getElementById('btLifetime').addEventListener('click', () => setBilling('lifetime'));
+
+        loadUserData();
+        generateQR('tcQr');
+    });
+
+    function showToast(msg, isErr) {
+        const toast = document.getElementById(isErr ? 'toastError' : 'toastSuccess');
+        const textSpan = document.getElementById(isErr ? 'toastErrorMsg' : 'toastSuccessMsg');
+        if(toast && textSpan) { textSpan.textContent = msg; toast.style.display = 'flex'; setTimeout(() => toast.style.display = 'none', 3500); }
+    }
+
+    function setBilling(mode) {
+        billingMode = mode;
+        document.getElementById('btMonthly').classList.toggle('bt-opt-active', mode === 'monthly');
+        document.getElementById('btLifetime').classList.toggle('bt-opt-active', mode === 'lifetime');
+        document.querySelectorAll('.plan-amt').forEach(el => {
+            el.textContent = parseInt(mode === 'monthly' ? el.dataset.monthly : el.dataset.lifetime).toLocaleString('en-IN');
+        });
+    }
+
+    function loadUserData() {
+        fetch('user-data', { method: 'GET', credentials: 'include' })
+            .then(r => r.json())
+            .then(u => {
+                userEmail = u.email;
+                const initial = u.fullName ? u.fullName.charAt(0).toUpperCase() : "U";
+                const avatarBtn = document.getElementById('avatarBtn');
+                if(avatarBtn) avatarBtn.textContent = initial;
+                document.getElementById('dropdownAvatar').textContent = initial;
+                document.getElementById('dropdownName').textContent = u.fullName;
+                document.getElementById('dropdownEmail').textContent = u.email;
+                document.getElementById('tcHolder').textContent = u.fullName;
+                checkExistingTicket();
+            }).catch(() => { window.location.href = 'login.html'; });
+    }
+
+    function checkExistingTicket() {
+        fetch('purchase-ticket?email=' + encodeURIComponent(userEmail), { method: 'GET', credentials: 'include' })
+            .then(r => r.ok ? r.json() : null)
+            .then(t => { if(t && t.ticketId) showExistingTicket(t); })
+            .catch(() => {});
+    }
+
+    function showExistingTicket(t) {
+        document.getElementById('purchaseSection').style.display = 'none';
+        document.getElementById('existingTicketSection').style.display = 'block';
+        document.getElementById('tcTicketId').textContent = '#FF-' + t.ticketId;
+        document.getElementById('tcIssued').textContent = t.timestamp ? new Date(t.timestamp).toLocaleDateString('en-GB') : '—';
+        document.getElementById('tcAmount').textContent = 'Rs. ' + parseFloat(t.price).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+    }
+
+    function selectPlan(plan, amount) {
+        selectedPlan = plan;
+        if (billingMode === 'monthly') {
+            const map = { Basic:'299.00', Premium:'499.00', Cinematic:'799.00' };
+            amount = map[plan] || amount;
+        }
+        selectedAmt = amount;
+        document.getElementById('selectedPlanLabel').textContent = plan + ' Plan';
+        document.getElementById('summaryPlan').textContent = plan;
+        document.getElementById('summaryTotal').textContent = 'Rs. ' + parseFloat(amount).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+
+        fetch('payment-methods?email=' + encodeURIComponent(userEmail), { method: 'GET', credentials: 'include' })
+            .then(r => r.ok ? r.json() : null)
+            .then(data => {
+                const hasCard = data && data.cardNumber;
+                document.getElementById('noPaymentMessage').style.display = hasCard ? 'none' : 'block';
+                document.getElementById('orderSummary').style.display = hasCard ? 'block' : 'none';
+                document.getElementById('confirmBtn').style.display = hasCard ? 'block' : 'none';
+                document.getElementById('paymentDetails').innerHTML = hasCard ? `<p style="color:#2ecc71; font-size:0.95rem;">💳 Card Linked: •••• •••• •••• ${data.cardNumber.slice(-4)}</p>` : '';
+                openModal();
+            });
+    }
+
+    function purchaseTicket() {
+        const ticketId = Math.floor(10000000 + Math.random() * 90000000);
+        fetch('purchase-ticket', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: userEmail, ticketId: ticketId.toString(), plan: selectedPlan, price: selectedAmt, timestamp: new Date().toISOString() })
+        }).then(() => {
+            closeModal();
+            document.getElementById('successTicketId').textContent = '#FF-' + ticketId;
+            document.getElementById('successOverlay').style.display = 'flex';
+        });
+    }
+
+    function openModal() { document.getElementById('paymentModal').style.display = 'flex'; }
+    function closeModal() { document.getElementById('paymentModal').style.display = 'none'; }
+
+    function generateQR(cId) {
+        const el = document.getElementById(cId); if(!el) return;
+        let html = ''; for (let i = 0; i < 100; i++) html += `<div class="qr-c ${Math.random() > 0.4 ? 'qr-on' : ''}" style="width:10%; height:10%; float:left; background:${Math.random() > 0.4 ? '#fff' : 'transparent'}"></div>`;
+        el.innerHTML = html;
+    }
+</script>
+</body>
+</html>

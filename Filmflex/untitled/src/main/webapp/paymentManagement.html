@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FILMFLEX — Payment Management</title>
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/UserDashboard.css">
+    <style>
+        /* ── FIXED NAV BAR GAP ENFORCEMENT RULES ── */
+        .page-body {
+            display: flex !important;
+            gap: 30px !important;
+            max-width: 1400px !important;
+            margin: 100px auto 40px auto !important; /* Fixed gap below Nav Bar */
+            padding: 0 2rem !important;
+            align-items: flex-start !important;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* PREMIUM SIDEBAR ARCHITECTURE */
+        .sidebar {
+            width: 280px !important;
+            min-width: 280px !important;
+            max-width: 280px !important;
+            flex-shrink: 0 !important;
+            background: rgba(18, 18, 18, 0.6) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.05) !important;
+            border-radius: 16px !important;
+            padding: 24px 16px !important;
+            box-sizing: border-box;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37) !important;
+        }
+
+        .sidebar-menu { list-style: none !important; padding: 0 !important; margin: 0 !important; }
+        .sidebar-menu li { margin-bottom: 6px !important; }
+        .sidebar-menu a {
+            display: flex !important;
+            align-items: center !important;
+            padding: 12px 16px !important;
+            color: #aaa !important;
+            font-size: 0.9rem !important;
+            font-weight: 500 !important;
+            border-radius: 8px !important;
+            transition: all 0.3s ease !important;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .sidebar-menu a:hover { color: #fff !important; background: rgba(255, 255, 255, 0.04) !important; padding-left: 20px !important; }
+        .sidebar-menu a.active {
+            color: #fff !important;
+            background: #e50914 !important;
+            font-weight: 600 !important;
+            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.3) !important;
+        }
+
+        .main { flex: 1 !important; min-width: 0 !important; }
+        .content-area { width: 100% !important; }
+
+        /* ── PREMIUM DARK THEME DATA TABLES ── */
+        .data-table {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            margin: 20px 0 35px !important;
+            background: #141414 !important;
+            border: 1px solid #222 !important;
+            border-radius: 12px !important;
+            overflow: hidden !important;
+        }
+
+        .data-table th {
+            background: #1c1c1c !important;
+            color: white !important;
+            padding: 16px 20px !important;
+            font-size: 0.9rem !important;
+            font-weight: bold !important;
+            text-align: left !important;
+            border-bottom: 1px solid #2c2c2c !important;
+        }
+
+        .data-table td {
+            padding: 16px 20px !important;
+            color: #ccc !important;
+            font-size: 0.88rem !important;
+            border-bottom: 1px solid #222 !important;
+            text-align: left !important;
+        }
+
+        .data-table tr:hover td { background: rgba(255, 255, 255, 0.01) !important; }
+
+        .role-badge { padding: 4px 10px !important; border-radius: 20px !important; font-size: 0.75rem !important; font-weight: bold !important; }
+        .status-completed { background: rgba(46, 204, 113, 0.15) !important; color: #2ecc71 !important; }
+
+        .header { z-index: 1000 !important; }
+    </style>
+</head>
+<body>
+
+<header class="header" id="mainHeader">
+    <a href="adminDashboard.html" class="logo">FILM<span>FLEX</span>ADMIN</a>
+    <div class="header-right">
+        <button class="logout-btn" id="logoutBtn" style="background:#e50914; color:white; border:none; padding:8px 18px; border-radius:6px; font-weight:bold; cursor:pointer;">Logout</button>
+    </div>
+</header>
+
+<div class="page-body">
+    <aside class="sidebar">
+        <ul class="sidebar-menu">
+            <li><a href="adminDashboard.html" class="sb-link">Dashboard Overview</a></li>
+            <li><a href="adminDashboard.html?section=users" class="sb-link">User Management</a></li>
+            <li><a href="adminDashboard.html?section=admins" class="sb-link">Admin Management</a></li>
+            <li><a href="movieManagement.html" class="sb-link">Movie Management</a></li>
+            <li><a href="reviewManagement.html" class="sb-link">Review Management</a></li>
+            <li><a href="#" class="sb-link active">Payment Management</a></li>
+        </ul>
+    </aside>
+
+    <main class="main">
+        <div class="content-area">
+            <div class="panel-header">
+                <h2 class="panel-title">Payment & Income Management</h2>
+            </div>
+
+            <h2 class="section-title">Ticket Purchase Logs</h2>
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>User Email</th>
+                    <th>Plan Type</th>
+                    <th>Amount (Rs.)</th>
+                    <th>Date Stamp</th>
+                    <th>Status</th>
+                </tr>
+                </thead>
+                <tbody id="paymentTableBody">
+                <tr><td colspan="5" style="text-align:center; color:#666;">Loading payment data layers...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+</div>
+
+<footer class="filmflex-footer" style="background: #0d0d0d; border-top: 1px solid rgba(255,255,255,0.06); margin-top: auto; padding: 20px 0; text-align: center; font-size: 0.85rem; color: #555;">
+    <div>© 2026 FILMFLEX Admin Panel. All rights reserved.</div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Setup Logout
+        document.getElementById('logoutBtn').addEventListener('click', logoutAdmin);
+
+        // Fetch Data
+        fetchPaymentLogs();
+    });
+
+    function fetchPaymentLogs() {
+        // Connected to PaymentAdminController mapped at /api/admin/all-tickets
+        fetch('api/admin/all-tickets', { method: 'GET', credentials: 'include' })
+            .then(res => {
+                if(!res.ok) throw new Error();
+                return res.json();
+            })
+            .then(data => {
+                const tbody = document.getElementById('paymentTableBody');
+                if (data.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No payment records found in tickets.txt.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = data.map(t => `
+                    <tr>
+                        <td style="font-weight:bold; color:white;">${t.email}</td>
+                        <td><span class="role-badge" style="background:rgba(255,255,255,0.05);">${t.plan}</span></td>
+                        <td style="color:#2ecc71; font-weight:bold;">Rs. ${parseFloat(t.amount).toLocaleString('.2')}</td>
+                        <td style="color:#888;">${t.date}</td>
+                        <td><span class="role-badge status-completed">Completed</span></td>
+                    </tr>
+                `).join('');
+            })
+            .catch(() => {
+                document.getElementById('paymentTableBody').innerHTML = '<tr><td colspan="5" style="text-align:center; color:#e74c3c;">Failed to communicate with Payment API. Check backend.</td></tr>';
+            });
+    }
+
+    function logoutAdmin() {
+        if (confirm("Are you sure you want to logout?")) {
+            fetch('admin-logout', { method: 'POST', credentials: 'include' })
+                .then(response => {
+                    if (response.ok) window.location.href = 'index.html';
+                    else throw new Error();
+                }).catch(() => alert('Logout failed. Please try again.'));
+        }
+    }
+</script>
+</body>
+</html>

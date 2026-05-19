@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FILMFLEX — Movie Management</title>
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/UserDashboard.css">
+    <style>
+        /* ── FIXED NAV BAR GAP ENFORCEMENT RULES ── */
+        .page-body {
+            display: flex !important;
+            gap: 30px !important;
+            max-width: 1400px !important;
+            margin: 100px auto 40px auto !important;
+            padding: 0 2rem !important;
+            align-items: flex-start !important;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .sidebar {
+            width: 280px !important;
+            background: #121212 !important; /* Premium Dark */
+            border: 1px solid #222 !important;
+            border-radius: 12px !important;
+            padding: 16px !important;
+        }
+
+        .sidebar-menu a {
+            padding: 12px 16px !important;
+            color: #aaa !important;
+            text-decoration: none;
+            border-radius: 8px !important;
+            display: flex !important;
+            transition: 0.3s;
+        }
+
+        .sidebar-menu a:hover {
+            background: #1c1c1c !important;
+            color: white !important;
+        }
+
+        .sidebar-menu a.active {
+            background: #e50914 !important; /* FILMFLEX Red */
+            color: white !important;
+            font-weight: bold;
+        }
+
+        .main { flex: 1 !important; min-width: 0 !important; }
+        .content-area { width: 100% !important; }
+
+        .movie-management-section { position: relative !important; padding-top: 20px !important; }
+        .movie-toolbar { display: block !important; width: 100% !important; margin-bottom: 30px !important; }
+
+        /* Absolute Search Box mapped exactly under logout btn line */
+        .search-box {
+            position: absolute !important;
+            top: -55px !important;
+            right: 0 !important;
+            display: flex !important;
+            gap: 10px !important;
+            width: 380px !important;
+            z-index: 99;
+        }
+
+        #addMovieBtn {
+            display: inline-block !important;
+            background: #27ae60 !important;
+            height: 42px !important;
+            padding: 0 24px !important;
+            line-height: 42px !important;
+            border-radius: 6px !important;
+            font-weight: bold !important;
+            border: none !important;
+            color: white !important;
+            cursor: pointer !important;
+        }
+
+        /* ── PREMIUM DARK THEME DATA TABLES ── */
+        .data-table {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            margin: 20px 0 35px !important;
+            background: #141414 !important;
+            border: 1px solid #222 !important;
+            border-radius: 12px !important;
+            overflow: hidden !important;
+        }
+
+        .data-table th {
+            background: #1c1c1c !important;
+            color: white !important;
+            padding: 16px 20px !important;
+            font-size: 0.9rem !important;
+            font-weight: bold !important;
+            text-align: left !important;
+            border-bottom: 1px solid #2c2c2c !important;
+        }
+
+        .data-table td {
+            padding: 16px 20px !important;
+            color: #ccc !important;
+            font-size: 0.88rem !important;
+            border-bottom: 1px solid #222 !important;
+            text-align: left !important;
+            vertical-align: middle !important;
+        }
+
+        .data-table tr:hover td { background: rgba(255, 255, 255, 0.01) !important; }
+        .movie-poster { width: 50px !important; height: 72px !important; object-fit: cover !important; border-radius: 6px !important; border: 1px solid #333 !important; display: block; }
+
+        .movie-search, #movieForm input, #movieForm select, #movieForm textarea {
+            width: 100%; background: #1c1c1c !important; border: 1px solid #333 !important; border-radius: 6px !important; color: white !important; padding: 12px 16px !important; font-size: 0.92rem !important; outline: none !important; box-sizing: border-box !important;
+        }
+        .movie-search:focus, #movieForm input:focus, #movieForm select:focus, #movieForm textarea:focus { border-color: #e50914 !important; background: #222 !important; }
+
+        .action-btn { border: none !important; padding: 8px 14px !important; border-radius: 6px !important; font-size: 0.82rem !important; font-weight: bold !important; cursor: pointer !important; display: inline-flex; align-items: center; justify-content: center; }
+        .edit-btn { background: #3498db !important; color: white !important; }
+        .delete-btn { background: #e74c3c !important; color: white !important; }
+        .crud-btn-group { display: flex; gap: 8px; }
+
+        .role-badge { padding: 4px 10px !important; border-radius: 4px !important; font-size: 0.75rem !important; font-weight: bold !important; }
+        .role-user { background: rgba(229,9,20,0.1) !important; color: #e50914 !important; }
+
+        /* ── MODAL CENTERING ── */
+        .modal {
+            display: none; position: fixed !important; inset: 0 !important; background: rgba(0,0,0,0.85) !important; z-index: 3000 !important; align-items: center !important; justify-content: center !important; padding: 20px !important;
+        }
+        .modal-content {
+            background: #141414 !important; border: 1px solid #262626 !important; padding: 35px !important; border-radius: 14px !important; width: 100% !important; max-width: 700px !important; position: relative !important; box-sizing: border-box !important; text-align: left !important;
+        }
+        .close-btn { position: absolute !important; top: 20px !important; right: 20px !important; color: #666 !important; font-size: 1.6rem !important; cursor: pointer !important; }
+        .close-btn:hover { color: white !important; }
+        .image-preview img { height: 80px !important; border-radius: 6px !important; border: 1px solid #333 !important; object-fit: cover;}
+        small { color: #555 !important; font-size: 0.78rem !important; display: block; margin-top: 4px; }
+
+        .header { z-index: 1000 !important; }
+        body { display: flex; flex-direction: column; min-height: 100vh; }
+    </style>
+</head>
+<body>
+
+<header class="header" id="mainHeader">
+    <a href="adminDashboard.html" class="logo">FILM<span>FLEX</span>ADMIN</a>
+    <div class="header-right">
+        <button class="logout-btn" id="logoutBtn" style="background:#e50914; color:white; border:none; padding:8px 18px; border-radius:6px; font-weight:bold; cursor:pointer;">Logout</button>
+    </div>
+</header>
+
+<div class="page-body">
+    <aside class="sidebar">
+        <ul class="sidebar-menu">
+            <li><a href="adminDashboard.html" class="sb-link">Dashboard Overview</a></li>
+            <li><a href="adminDashboard.html?section=users" class="sb-link">User Management</a></li>
+            <li><a href="adminDashboard.html?section=admins" class="sb-link">Admin Management</a></li>
+            <li><a href="movieManagement.html" class="sb-link active">Movie Management</a></li>
+            <li><a href="reviewManagement.html" class="sb-link">Review Management</a></li>
+            <li><a href="paymentManagement.html" class="sb-link">Payment Management</a></li>
+        </ul>
+    </aside>
+    <main class="main">
+        <div class="content-area" id="movieMgmtPanel">
+            <div class="panel-header"><h2 class="panel-title">Movie Management</h2></div>
+            <div class="movie-management-section">
+                <h2 class="section-title" style="margin-bottom: 15px;">Movies Catalog</h2>
+                <div class="movie-toolbar">
+                    <button id="addMovieBtn">+ Add New Movie</button>
+                    <div class="search-box">
+                        <input type="text" id="movieSearch" class="movie-search" placeholder="Search movies...">
+                        <button class="btn-primary" id="searchBtn" style="padding: 0 24px; height: 44px; background:#e50914; border:none;">Search</button>
+                    </div>
+                </div>
+                <table class="data-table" id="moviesTable">
+                    <thead>
+                    <tr>
+                        <th style="width: 80px;">Poster</th>
+                        <th>Movie Title</th>
+                        <th style="width: 100px;">Year</th>
+                        <th style="width: 100px;">Rating</th>
+                        <th style="width: 150px;">Genre</th>
+                        <th style="width: 180px; text-align: right;">Control Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody id="moviesTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</div>
+
+<div class="modal" id="movieModal">
+    <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <h2 id="modalTitle" class="section-title" style="margin-top:0;">Add New Movie</h2>
+        <form id="movieForm" class="admin-form">
+            <input type="hidden" id="movieId">
+            <div class="form-grid">
+                <div class="form-field"><label>Movie Title*</label><input type="text" id="movieTitle" required></div>
+                <div class="form-field"><label>Release Year*</label><input type="number" id="movieYear" min="1900" max="2030" required></div>
+                <div class="form-field"><label>Rating* (0.0 - 10.0)</label><input type="number" id="movieRating" min="0" max="10" step="0.1" required></div>
+                <div class="form-field">
+                    <label>Genre Class*</label>
+                    <select id="movieGenre" required>
+                        <option value="">Select Genre</option>
+                        <option value="Action">Action</option><option value="Adventure">Adventure</option>
+                        <option value="Comedy">Comedy</option><option value="Drama">Drama</option>
+                        <option value="Horror">Horror</option><option value="Sci-Fi">Sci-Fi</option>
+                        <option value="Thriller">Thriller</option><option value="Romance">Romance</option>
+                    </select>
+                </div>
+                <div class="form-field form-field-full"><label>Movie Overview Description*</label><textarea id="movieDescription" rows="3" required></textarea></div>
+                <div class="form-field">
+                    <label>Poster Asset File Path*</label><input type="text" id="moviePoster" placeholder="assets/image/poster.jpg" required>
+                    <small>Example: assets/image/default-poster.jpg</small>
+                    <div class="image-preview" id="posterPreview"></div>
+                </div>
+                <div class="form-field">
+                    <label>Movie Source Stream Path*</label><input type="text" id="movieFile" placeholder="assets/Video/movie.mp4" required>
+                    <small>Example: assets/Video/Trailer.mp4</small>
+                </div>
+                <div class="form-field form-field-full"><label>Trailer Teaser Path</label><input type="text" id="movieTrailer" placeholder="assets/Video/trailer.mp4"></div>
+            </div>
+            <div class="form-actions" style="margin-top:25px;">
+                <button type="button" class="btn-ghost" id="cancelMovieBtn">Cancel</button>
+                <button type="submit" class="btn-primary">Save Parameters</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal" id="confirmModal">
+    <div class="modal-content" style="max-width:400px; text-align:center;">
+        <h2>Confirm Execution</h2>
+        <p id="confirmMessage" style="color:#aaa; margin:15px 0;">Are you sure you want to proceed with purging this record?</p>
+        <div class="form-actions" style="justify-content:center; gap:10px; margin-top:20px;">
+            <button class="btn-ghost" id="confirmNo">No</button>
+            <button class="btn-primary" id="confirmYes" style="background:#e74c3c;">Yes, Purge</button>
+        </div>
+    </div>
+</div>
+
+<footer class="footer" style="background: #0d0d0d; border-top: 1px solid rgba(255,255,255,0.06); margin-top: auto; padding: 20px 0; text-align: center; font-size: 0.85rem; color: #555;">
+    <div>© 2026 FILMFLEX Admin Panel. All rights reserved.</div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const moviesTableBody = document.getElementById('moviesTableBody');
+        const addMovieBtn = document.getElementById('addMovieBtn');
+        const movieModal = document.getElementById('movieModal');
+        const confirmModal = document.getElementById('confirmModal');
+        const movieForm = document.getElementById('movieForm');
+        const posterPreview = document.getElementById('posterPreview');
+        const closeBtn = document.querySelector('.close-btn');
+        const cancelMovieBtn = document.getElementById('cancelMovieBtn');
+        const searchBtn = document.getElementById('searchBtn');
+        const movieSearch = document.getElementById('movieSearch');
+        const confirmYes = document.getElementById('confirmYes');
+        const confirmNo = document.getElementById('confirmNo');
+        const moviePosterInput = document.getElementById('moviePoster');
+
+        let movies = [];
+        let currentAction = '';
+        let movieToDelete = null;
+
+        fetchMovies();
+        setupEventListeners();
+
+        function setupEventListeners() {
+            addMovieBtn.addEventListener('click', () => showMovieModal('add'));
+            closeBtn.addEventListener('click', () => movieModal.style.display = 'none');
+            cancelMovieBtn.addEventListener('click', () => movieModal.style.display = 'none');
+            movieForm.addEventListener('submit', handleMovieSubmit);
+
+            moviePosterInput.addEventListener('input', function() {
+                const path = this.value.trim();
+                posterPreview.innerHTML = path ? `<img src="${path}" alt="Preview" onerror="this.style.display='none'">` : '';
+            });
+
+            confirmYes.addEventListener('click', confirmAction);
+            confirmNo.addEventListener('click', () => confirmModal.style.display = 'none');
+            searchBtn.addEventListener('click', fetchMovies);
+            movieSearch.addEventListener('keypress', e => { if (e.key === 'Enter') fetchMovies(); });
+            document.getElementById('logoutBtn').addEventListener('click', logoutAdmin);
+        }
+
+        function fetchMovies() {
+            const searchTerm = movieSearch.value.trim();
+            let url = 'api/movies';
+            if (searchTerm) url += `?search=${encodeURIComponent(searchTerm)}`;
+
+            fetch(url, { method: 'GET', credentials: 'include' })
+                .then(res => res.json())
+                .then(data => { movies = data; renderMovies(); })
+                .catch(() => {
+                    moviesTableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color: #e74c3c;">Failed to load catalog directory context lines.</td></tr>`;
+                });
+        }
+
+        function renderMovies() {
+            if (movies.length === 0) {
+                moviesTableBody.innerHTML = `<tr><td colspan="6" style="text-align: center; color:#666;">No movies found inside catalog.</td></tr>`;
+                return;
+            }
+            moviesTableBody.innerHTML = movies.map(m => `
+                <tr data-id="${m.id}">
+                    <td><img src="${m.posterPath}" class="movie-poster" alt="Poster" onerror="this.src='assets/image/default-poster.jpg'"></td>
+                    <td style="font-weight:bold; color:white;">${m.title}</td>
+                    <td>${m.year}</td>
+                    <td style="color:#ffd700; font-weight:bold;">★ ${m.rating}</td>
+                    <td><span class="role-badge role-user">${m.genre}</span></td>
+                    <td style="text-align: right;">
+                        <div class="crud-btn-group" style="justify-content: flex-end;">
+                            <button class="action-btn edit-btn" onclick="showEditMovie('${m.id}')">Edit</button>
+                            <button class="action-btn delete-btn" onclick="showDeleteConfirm('${m.id}')">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function showMovieModal(action, movieId = null) {
+            currentAction = action;
+            const modalTitle = document.getElementById('modalTitle');
+            if (action === 'add') {
+                modalTitle.textContent = 'Add New Movie'; movieForm.reset(); posterPreview.innerHTML = ''; document.getElementById('movieId').value = '';
+                movieModal.style.display = 'flex';
+            } else if (action === 'edit') {
+                modalTitle.textContent = 'Edit Movie Parameters';
+                const m = movies.find(movie => movie.id === movieId);
+                if (m) {
+                    document.getElementById('movieId').value = m.id; document.getElementById('movieTitle').value = m.title;
+                    document.getElementById('movieYear').value = m.year; document.getElementById('movieRating').value = m.rating;
+                    document.getElementById('movieGenre').value = m.genre; document.getElementById('movieDescription').value = m.description;
+                    document.getElementById('moviePoster').value = m.posterPath; document.getElementById('movieFile').value = m.filePath;
+                    document.getElementById('movieTrailer').value = m.trailerPath || '';
+                    posterPreview.innerHTML = m.posterPath ? `<img src="${m.posterPath}">` : '';
+                    movieModal.style.display = 'flex';
+                }
+            }
+        }
+
+        function handleMovieSubmit(e) {
+            e.preventDefault();
+            const id = document.getElementById('movieId').value;
+            const payload = {
+                title: document.getElementById('movieTitle').value, year: parseInt(document.getElementById('movieYear').value),
+                rating: parseFloat(document.getElementById('movieRating').value), genre: document.getElementById('movieGenre').value,
+                description: document.getElementById('movieDescription').value, posterPath: document.getElementById('moviePoster').value,
+                filePath: document.getElementById('movieFile').value, trailerPath: document.getElementById('movieTrailer').value || null
+            };
+            let url = 'api/movies'; let method = 'POST';
+            if (currentAction === 'edit' && id) { url += `/${id}`; method = 'PUT'; payload.id = id; }
+
+            fetch(url, { method: method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload), credentials: 'include' })
+                .then(res => { if(!res.ok) throw new Error(); return res.json(); })
+                .then(() => { movieModal.style.display = 'none'; fetchMovies(); alert("Movie catalog properties synchronized successfully!"); })
+                .catch(() => alert("Error writing parameters to server catalog data layers stream."));
+        }
+
+        function showDeleteConfirm(id) {
+            currentAction = 'delete'; movieToDelete = id;
+            const m = movies.find(movie => movie.id === id);
+            if (m) { document.getElementById('confirmMessage').textContent = `Completely purge "${m.title}" from catalog streams?`; confirmModal.style.display = 'flex'; }
+        }
+
+        function confirmAction() {
+            if (currentAction === 'delete' && movieToDelete) {
+                fetch(`api/movies/${movieToDelete}`, { method: 'DELETE', credentials: 'include' })
+                    .then(res => { if(!res.ok) throw new Error(); return res.json(); })
+                    .then(() => { confirmModal.style.display = 'none'; fetchMovies(); alert("Entry destroyed from system database."); })
+                    .catch(() => alert("Purging process error context dropped."));
+            }
+        }
+
+        function logoutAdmin() {
+            if (confirm("Logout from operations workspace matrix?")) {
+                fetch('admin-logout', { method: 'POST', credentials: 'include' }).then(() => window.location.href = 'index.html');
+            }
+        }
+
+        window.showEditMovie = showMovieModal.bind(null, 'edit'); window.showDeleteConfirm = showDeleteConfirm;
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FILMFLEX- Admin Dashboard</title>
+    <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/UserDashboard.css">
+    <style>
+        /* ── STABLE FIXED SIDEBAR & HEADER GAP RULES ── */
+        .page-body {
+            display: flex !important;
+            gap: 30px !important;
+            max-width: 1400px !important;
+            margin: 100px auto 40px auto !important; /* Fixed gap to prevent hiding under Nav Bar */
+            padding: 0 2rem !important;
+            align-items: flex-start !important;
+            box-sizing: border-box;
+        }
+
+        /* PREMIUM SIDEBAR ARCHITECTURE (Matches movieManagement layout perfectly) */
+        .sidebar {
+            width: 280px !important;
+            min-width: 280px !important;
+            max-width: 280px !important;
+            flex-shrink: 0 !important;
+            background: rgba(18, 18, 18, 0.6) !important;
+            backdrop-filter: blur(10px) !important;
+            -webkit-backdrop-filter: blur(10px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.05) !important;
+            border-radius: 16px !important;
+            padding: 24px 16px !important;
+            box-sizing: border-box !important;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37) !important;
+        }
+
+        .sidebar-menu {
+            list-style: none !important;
+            padding: 0 !important;
+            margin: 0 !important;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 6px !important;
+        }
+
+        .sidebar-menu a {
+            display: flex !important;
+            align-items: center !important;
+            padding: 12px 16px !important;
+            color: #aaa !important;
+            font-size: 0.9rem !important;
+            font-weight: 500 !important;
+            border-radius: 8px !important;
+            transition: all 0.3s ease !important;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            text-decoration: none;
+            box-sizing: border-box !important;
+        }
+
+        .sidebar-menu a:hover {
+            color: #fff !important;
+            background: rgba(255, 255, 255, 0.04) !important;
+            padding-left: 20px !important;
+        }
+
+        .sidebar-menu a.active {
+            color: #fff !important;
+            background: #e50914 !important;
+            font-weight: 600 !important;
+            box-shadow: 0 4px 15px rgba(229, 9, 20, 0.3) !important;
+        }
+
+        .main {
+            flex: 1 !important;
+            min-width: 0 !important;
+        }
+
+        .content-section { display: none !important; }
+        .content-section.active { display: block !important; }
+
+        /* ── PREMIUM RED STATS CARDS CONFIGURATION ── */
+        .stats-container {
+            display: grid !important;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)) !important;
+            gap: 25px !important;
+            margin-bottom: 35px !important;
+            width: 100% !important;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.02) !important;
+            border: 1px solid #222 !important;
+            border-radius: 14px !important;
+            padding: 24px !important;
+            position: relative !important;
+            overflow: hidden !important;
+            text-align: left !important;
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px) !important;
+            border-color: #e50914 !important;
+        }
+
+        .stat-card::before {
+            content: '' !important;
+            position: absolute !important;
+            top: 0; left: 0; width: 4px; height: 100%;
+            background: #e50914 !important;
+        }
+
+        .stat-label { font-size: 0.85rem !important; text-transform: uppercase !important; letter-spacing: 1px !important; color: #888 !important; margin-bottom: 8px !important; }
+        .stat-value { font-size: 2.2rem !important; font-weight: 900 !important; color: #e50914 !important; line-height: 1.2 !important; margin-bottom: 4px !important; }
+
+        /* ── PREMIUM DARK THEME DATA TABLES ── */
+        .data-table {
+            width: 100% !important;
+            border-collapse: collapse !important;
+            margin: 20px 0 35px !important;
+            background: #141414 !important;
+            border: 1px solid #222 !important;
+            border-radius: 12px !important;
+            overflow: hidden !important;
+        }
+
+        .data-table th {
+            background: #1c1c1c !important;
+            color: white !important;
+            padding: 16px 20px !important;
+            font-size: 0.9rem !important;
+            font-weight: bold !important;
+            text-align: left !important;
+            border-bottom: 1px solid #2c2c2c !important;
+        }
+
+        .data-table td {
+            padding: 16px 20px !important;
+            color: #ccc !important;
+            font-size: 0.88rem !important;
+            border-bottom: 1px solid #222 !important;
+            text-align: left !important;
+            vertical-align: middle !important;
+        }
+
+        .data-table tr:hover td { background: rgba(255, 255, 255, 0.01) !important; }
+
+        /* ── THEME ENFORCED INPUT ARCHITECTURE ── */
+        .admin-form input[type="text"],
+        .admin-form input[type="email"],
+        .admin-form input[type="password"],
+        .admin-form select {
+            width: 100%;
+            background: #1c1c1c !important;
+            border: 1px solid #333 !important;
+            border-radius: 6px !important;
+            color: white !important;
+            padding: 12px 14px !important;
+            font-size: 0.92rem !important;
+            outline: none !important;
+            transition: border-color 0.3s ease !important;
+            box-sizing: border-box !important;
+            margin-top: 6px;
+        }
+
+        .admin-form input:focus, .admin-form select:focus { border-color: #e50914 !important; background: #222 !important; }
+
+        .role-badge { padding: 4px 10px !important; border-radius: 4px !important; font-size: 0.75rem !important; font-weight: bold !important; }
+        .role-user { background: rgba(52, 152, 219, 0.15) !important; color: #3498db !important; }
+        .role-admin { background: rgba(230, 126, 34, 0.15) !important; color: #e67e22 !important; }
+        .role-superadmin { background: rgba(142, 68, 173, 0.15) !important; color: #8e44ad !important; }
+
+        .action-btn.delete-btn { background: #e74c3c !important; color: white !important; border: none !important; padding: 6px 14px !important; border-radius: 4px !important; font-size: 0.8rem !important; cursor: pointer !important; font-weight: bold !important; }
+        .action-btn.edit-btn { background: #3498db; color: white; border: none; padding: 6px 14px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; font-weight: bold; margin-right: 5px;}
+        .action-btn.delete-btn:hover { background: #c0392b !important; }
+        .action-btn.edit-btn:hover { background: #2980b9 !important; }
+
+        .header { z-index: 1000 !important; }
+        body { display: flex; flex-direction: column; min-height: 100vh; }
+    </style>
+</head>
+<body>
+
+<header class="header" id="mainHeader">
+    <a href="adminDashboard.html" class="logo">FILM<span>FLEX</span>ADMIN</a>
+    <div class="header-right">
+        <button class="logout-btn" id="logoutBtn" style="background:#e50914; color:white; border:none; padding:8px 18px; border-radius:6px; font-weight:bold; cursor:pointer;">Logout</button>
+    </div>
+</header>
+
+<div class="page-body">
+    <aside class="sidebar">
+        <ul class="sidebar-menu">
+            <li><a href="#" class="sb-link active" data-section="dashboard">Dashboard Overview</a></li>
+            <li><a href="#" class="sb-link" data-section="users">User Management</a></li>
+            <li><a href="#" class="sb-link" data-section="admins">Admin Management</a></li>
+            <li><a href="movieManagement.html" class="sb-link">Movie Management</a></li>
+            <li><a href="reviewManagement.html" class="sb-link">Review Management</a></li>
+            <li><a href="paymentManagement.html" class="sb-link">Payment Management</a></li>
+        </ul>
+    </aside>
+
+
+    <main class="main">
+
+        <div id="dashboard-section" class="content-section active">
+            <div class="panel-header">
+                <h2 class="panel-title">Admin Dashboard</h2>
+            </div>
+
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-label">Total Users</div>
+                    <div class="stat-value" id="totalUsers">Loading...</div>
+                    <div class="stat-label" style="color:#555;">FILMFLEXUsers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Admins</div>
+                    <div class="stat-value" id="totalAdmins">Loading...</div>
+                    <div class="stat-label" style="color:#555;">System Administrators</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Ticket Sales Income</div>
+                    <div class="stat-value" id="ticketIncome">Rs.24,580</div>
+                    <div class="stat-label" style="color:#2ecc71;">+$2,450 this week</div>
+                </div>
+            </div>
+
+            <div class="form-card" style="text-align: left;">
+                <h3 class="form-card-title">Welcome to the FILMFLEXAdmin Panel</h3>
+                <p style="color:#aaa; line-height:1.6; font-size:0.92rem;">Use this section to add new admin users who can help manage the FILMFLEXmovie rental and review platform. Admins have special access to manage movies, users, and platform settings to ensure a smooth and engaging experience for all users.</p>
+            </div>
+        </div>
+
+        <div id="users-section" class="content-section">
+            <div class="panel-header">
+                <h2 class="panel-title">User Management</h2>
+            </div>
+
+            <h2 class="section-title">Registered Users</h2>
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody id="usersTableBody">
+                </tbody>
+            </table>
+
+            <h2 class="section-title">Quick Actions</h2>
+            <div style="display: flex; gap: 15px; margin-bottom: 2rem;">
+                <button class="btn-primary" onclick="showAddUserForm()">Add New User</button>
+            </div>
+
+            <div class="form-card" id="addUserForm" style="display: none; text-align: left;">
+                <h3 class="form-card-title">Add New User</h3>
+                <form class="admin-form" onsubmit="event.preventDefault();">
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label for="newUsername">Username</label>
+                            <input type="text" id="newUsername" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="newUserEmail">Email</label>
+                            <input type="email" id="newUserEmail" required>
+                        </div>
+                        <div class="form-field form-field-full">
+                            <label for="newUserPassword">Password</label>
+                            <input type="password" id="newUserPassword" required>
+                        </div>
+                    </div>
+                    <div class="form-actions" style="margin-top: 15px;">
+                        <button type="button" class="btn-ghost" onclick="hideAddUserForm()">Cancel</button>
+                        <button type="button" class="btn-primary" onclick="addNewUser()">Create User</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="admins-section" class="content-section">
+            <div class="panel-header">
+                <h2 class="panel-title">Admin Management</h2>
+            </div>
+
+            <h2 class="section-title">Administrators</h2>
+            <table class="data-table">
+                <thead>
+                <tr>
+                    <th>Admin Name</th>
+                    <th>Role</th>
+                    <th>Login</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody id="adminsTableBody">
+                </tbody>
+            </table>
+
+            <h2 class="section-title">Quick Actions</h2>
+            <div style="display: flex; gap: 15px; margin-bottom: 2rem;">
+                <button class="btn-primary" onclick="showAddAdminForm()">Add New Admin</button>
+            </div>
+
+            <div class="form-card" id="addAdminForm" style="display: none; text-align: left; margin-bottom: 25px;">
+                <h3 class="form-card-title">Add New Administrator</h3>
+                <form class="admin-form" onsubmit="event.preventDefault();">
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label for="adminUsername">Admin Username</label>
+                            <input type="text" id="adminUsername" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="adminPassword">Password</label>
+                            <input type="password" id="adminPassword" required>
+                        </div>
+                        <div class="form-field form-field-full">
+                            <label for="adminRole">Role Rank</label>
+                            <select id="adminRole">
+                                <option value="admin">Admin</option>
+                                <option value="superadmin">Super Admin</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions" style="margin-top: 15px;">
+                        <button type="button" class="btn-ghost" onclick="hideAddAdminForm()">Cancel</button>
+                        <button type="button" class="btn-primary" onclick="addNewAdmin()">Create Admin</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="form-card" id="editAdminForm" style="display: none; text-align: left;">
+                <h3 class="form-card-title">Edit Administrator</h3>
+                <form class="admin-form" onsubmit="event.preventDefault();">
+                    <input type="hidden" id="editAdminOriginalUsername">
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label for="editAdminUsername">Admin Username</label>
+                            <input type="text" id="editAdminUsername" required>
+                        </div>
+                        <div class="form-field">
+                            <label for="editAdminPassword">Password (leave blank to keep current)</label>
+                            <input type="password" id="editAdminPassword">
+                        </div>
+                        <div class="form-field form-field-full">
+                            <label for="editAdminRole">Role</label>
+                            <select id="editAdminRole">
+                                <option value="admin">Admin</option>
+                                <option value="superadmin">Super Admin</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions" style="margin-top: 15px;">
+                        <button type="button" class="btn-ghost" onclick="hideEditAdminForm()">Cancel</button>
+                        <button type="button" class="btn-primary" onclick="updateAdmin()">Update Admin</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+
+<footer class="filmflex-footer">
+    <div class="footer-bar-admin">
+        <span class="footer-logo-sm">FILM<span>FLEX</span> Admin Panel</span>
+        <span>© 2026 FILMFLEX. All rights reserved.</span>
+        <span>Made with ❤️ for movie lovers</span>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('logoutBtn').addEventListener('click', logoutAdmin);
+        setupSidebarNavigation();
+
+        fetchDashboardData();
+        fetchUsers();
+        fetchAdmins();
+
+        document.getElementById('usersTableBody').addEventListener('click', function(e) {
+            if (e.target.classList.contains('delete-btn')) {
+                const row = e.target.closest('tr');
+                const email = row.getAttribute('data-email');
+                deleteUser(email, row);
+            }
+        });
+    });
+
+    function setupSidebarNavigation() {
+        const menuItems = document.querySelectorAll('.sidebar .sb-link');
+        menuItems.forEach(item => {
+            item.addEventListener('click', function(e) {
+                if (this.getAttribute('href') && this.getAttribute('href') !== '#') return;
+                e.preventDefault();
+
+                menuItems.forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+
+                document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+                const sectionId = this.getAttribute('data-section') + '-section';
+                document.getElementById(sectionId).classList.add('active');
+            });
+        });
+    }
+
+    function fetchUsers() {
+        const tableBody = document.getElementById('usersTableBody');
+        tableBody.innerHTML = '<tr><td colspan="4" style="text-align: center; color:#666;">Loading users data layers...</td></tr>';
+
+        fetch('get-all-users', { method: 'GET', credentials: 'include' })
+            .then(response => { if (!response.ok) throw new Error(); return response.json(); })
+            .then(users => {
+                displayUsers(users);
+                updateUserCount(users.length);
+            })
+            .catch(() => {
+                tableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #e74c3c;">Error loading users. Please try again.</td></tr>`;
+            });
+    }
+
+    function displayUsers(users) {
+        const tableBody = document.getElementById('usersTableBody');
+        tableBody.innerHTML = '';
+        if (users.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No users found</td></tr>';
+            return;
+        }
+        users.forEach(user => {
+            const row = document.createElement('tr');
+            row.setAttribute('data-email', user.email);
+            row.innerHTML = `
+                <td style="font-weight:bold; color:white;">${user.fullName}</td>
+                <td>${user.email}</td>
+                <td><span class="role-badge role-user">User</span></td>
+                <td><button class="action-btn delete-btn">Delete</button></td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    function addNewUser() {
+        const fullName = document.getElementById('newUsername').value.trim();
+        const email = document.getElementById('newUserEmail').value.trim();
+        const password = document.getElementById('newUserPassword').value;
+
+        if (!fullName || !email || !password) { alert("Please fill in all fields"); return; }
+        if (!validateEmail(email)) { alert("Please enter a valid email address"); return; }
+        if (password.length < 8) { alert("Password must be at least 8 characters long"); return; }
+
+        fetch('admin-add-user', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ fullName, email, password })
+        })
+            .then(response => {
+                if (!response.ok) throw new Error(response.status === 409 ? 'Email already exists' : 'Failed to add user');
+                return response.json();
+            })
+            .then(() => {
+                fetchUsers();
+                document.getElementById('newUsername').value = '';
+                document.getElementById('newUserEmail').value = '';
+                document.getElementById('newUserPassword').value = '';
+                hideAddUserForm();
+                alert("User added successfully!");
+            })
+            .catch(error => alert(error.message || "Failed to add user. Please try again."));
+    }
+
+    function deleteUser(email, row) {
+        if (!confirm(`Are you sure you want to delete the user with email ${email}?`)) return;
+
+        fetch('admin-delete-user', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ email: email })
+        })
+            .then(response => { if (!response.ok) throw new Error(); return response.json(); })
+            .then(() => {
+                row.remove();
+                updateUserCount(-1, true);
+                if (document.getElementById('usersTableBody').children.length === 0) {
+                    document.getElementById('usersTableBody').innerHTML = '<tr><td colspan="4" style="text-align: center;">No users found</td></tr>';
+                }
+                alert("User deleted successfully!");
+            })
+            .catch(() => alert("Failed to delete user. Please try again."));
+    }
+
+    function updateUserCount(count, increment = false) {
+        const totalUsersElement = document.getElementById('totalUsers');
+        let currentCount = parseInt(totalUsersElement.textContent.replace(/,/g, '')) || 0;
+        currentCount = increment ? currentCount + count : count;
+        totalUsersElement.textContent = currentCount.toLocaleString();
+    }
+
+    function validateEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+
+    function fetchAdmins() {
+        const tableBody = document.getElementById('adminsTableBody');
+        tableBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">Loading admins...</td></tr>';
+
+        fetch('get-all-admins', { method: 'GET', credentials: 'include' })
+            .then(response => { if (!response.ok) throw new Error(); return response.json(); })
+            .then(admins => {
+                displayAdmins(admins);
+                updateAdminCount(admins.length);
+            })
+            .catch(() => {
+                tableBody.innerHTML = `<tr><td colspan="4" style="text-align: center; color: #e74c3c;">Error loading admins. Please try again.</td></tr>`;
+            });
+    }
+
+    function displayAdmins(admins) {
+        const tableBody = document.getElementById('adminsTableBody');
+        tableBody.innerHTML = '';
+        if (admins.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="4" style="text-align: center;">No admins found</td></tr>';
+            return;
+        }
+        admins.forEach(admin => {
+            const row = document.createElement('tr');
+            row.setAttribute('data-username', admin.username);
+            const rBadge = admin.role === 'superadmin' ? 'role-superadmin' : 'role-admin';
+            const rDisplay = admin.role === 'superadmin' ? 'Super Admin' : 'Admin';
+
+            row.innerHTML = `
+                <td style="font-weight:bold; color:white;">${admin.username}</td>
+                <td><span class="role-badge ${rBadge}">${rDisplay}</span></td>
+                <td>${admin.lastLogin || 'Secure login'}</td>
+                <td>
+                    <button class="action-btn edit-btn" onclick="showEditAdminForm('${admin.username}', '${admin.role}')">Edit</button>
+                    <button class="action-btn delete-btn" onclick="deleteAdmin('${admin.username}', this)">Delete</button>
+                </td>
+            `;
+            tableBody.appendChild(row);
+        });
+    }
+
+    function addNewAdmin() {
+        const username = document.getElementById('adminUsername').value.trim();
+        const password = document.getElementById('adminPassword').value;
+        const role = document.getElementById('adminRole').value;
+
+        if (!username || !password) { alert("Please fill in all required fields"); return; }
+
+        fetch('admin-add-admin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ username, password, role })
+        })
+            .then(response => {
+                if (!response.ok) throw new Error(response.status === 409 ? 'Username already exists' : 'Failed to add admin');
+                return response.json();
+            })
+            .then(() => {
+                fetchAdmins();
+                hideAddAdminForm();
+                alert("Admin added successfully!");
+            })
+            .catch(error => alert(error.message || "Failed to add admin. Please try again."));
+    }
+
+    function updateAdmin() {
+        const originalUsername = document.getElementById('editAdminOriginalUsername').value;
+        const username = document.getElementById('editAdminUsername').value.trim();
+        const password = document.getElementById('editAdminPassword').value;
+        const role = document.getElementById('editAdminRole').value;
+
+        if (!username) { alert("Username is required"); return; }
+
+        fetch('admin-update-admin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ originalUsername, username, password: password || null, role })
+        })
+            .then(response => {
+                if (!response.ok) throw new Error(response.status === 409 ? 'Username already exists' : 'Failed to update admin');
+                return response.json();
+            })
+            .then(() => {
+                fetchAdmins();
+                hideEditAdminForm();
+                alert("Admin updated successfully!");
+            })
+            .catch(error => alert(error.message || "Failed to update admin. Please try again."));
+    }
+
+    function deleteAdmin(username, button) {
+        if (!confirm(`Are you sure you want to delete admin ${username}?`)) return;
+
+        fetch('admin-delete-admin', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ username: username })
+        })
+            .then(response => { if (!response.ok) throw new Error(); return response.json(); })
+            .then(() => {
+                button.closest('tr').remove();
+                updateAdminCount(-1, true);
+                alert("Admin deleted successfully!");
+            })
+            .catch(() => alert("Failed to delete admin. Please try again."));
+    }
+
+    function updateAdminCount(count, increment = false) {
+        const totalAdminsElement = document.getElementById('totalAdmins');
+        let currentCount = parseInt(totalAdminsElement.textContent.replace(/,/g, '')) || 0;
+        currentCount = increment ? currentCount + count : count;
+        totalAdminsElement.textContent = currentCount.toLocaleString();
+    }
+
+    function fetchDashboardData() {
+        fetch('get-user-count', { method: 'GET', credentials: 'include' })
+            .then(response => { if (!response.ok) throw new Error(); return response.json(); })
+            .then(userData => {
+                document.getElementById('totalUsers').textContent = userData.userCount.toLocaleString();
+                return fetch('get-admin-count', { method: 'GET', credentials: 'include' });
+            })
+            .then(response => { if (!response.ok) throw new Error(); return response.json(); })
+            .then(adminData => {
+                document.getElementById('totalAdmins').textContent = adminData.adminCount.toLocaleString();
+                return fetch('get-ticket-sales', { method: 'GET', credentials: 'include' });
+            })
+            .then(response => { if (!response.ok) throw new Error(); return response.json(); })
+            .then(salesData => {
+                document.getElementById('ticketIncome').textContent = `Rs.${salesData.totalSales.toFixed(2)}`;
+                const weeklyDisplay = document.getElementById('ticketIncome').parentElement.querySelector('.stat-label:last-child');
+                if (weeklyDisplay) weeklyDisplay.textContent = `+ Rs.${salesData.weeklySales.toFixed(2)} this week`;
+            })
+            .catch(() => {
+                document.getElementById('totalUsers').textContent = "0";
+                document.getElementById('totalAdmins').textContent = "0";
+                document.getElementById('ticketIncome').textContent = "Rs.0.00";
+            });
+    }
+
+    function showAddUserForm() { document.getElementById('addUserForm').style.display = 'block'; }
+    function hideAddUserForm() { document.getElementById('addUserForm').style.display = 'none'; }
+
+    function showAddAdminForm() { document.getElementById('addAdminForm').style.display = 'block'; }
+    function hideAddAdminForm() { document.getElementById('addAdminForm').style.display = 'none'; }
+
+    function showEditAdminForm(username, role) {
+        document.getElementById('editAdminOriginalUsername').value = username;
+        document.getElementById('editAdminUsername').value = username;
+        document.getElementById('editAdminRole').value = role;
+        document.getElementById('editAdminPassword').value = '';
+        document.getElementById('editAdminForm').style.display = 'block';
+    }
+    function hideEditAdminForm() { document.getElementById('editAdminForm').style.display = 'none'; }
+
+    function logoutAdmin() {
+        if (confirm("Are you sure you want to logout from Admin Panel?")) {
+            fetch('admin-logout', { method: 'POST', credentials: 'include' })
+                .then(response => {
+                    if (response.ok) window.location.href = 'index.html';
+                    else throw new Error();
+                }).catch(() => alert('Logout failed. Please try again.'));
+        }
+    }
+</script>
+</body>
+</html>

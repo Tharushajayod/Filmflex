@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FILMFLEX - Sign In</title>
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --red: #e50914;
+            --red-hover: #f40612;
+            --dark: #141414;
+            --card: rgba(0,0,0,0.78);
+            --border: rgba(255,255,255,0.1);
+            --input-bg: #2a2a2a;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: var(--dark);
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* ── Video BG ── */
+        #videoBg {
+            position: fixed; inset: 0;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.35;
+        }
+        .overlay {
+            position: fixed; inset: 0;
+            background: linear-gradient(135deg,
+            rgba(0,0,0,0.85) 0%,
+            rgba(20,0,0,0.7) 50%,
+            rgba(0,0,0,0.85) 100%);
+            z-index: 1;
+        }
+
+        /* ── Layout ── */
+        .page {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 460px;
+            padding: 1.5rem;
+        }
+
+        /* ── Logo ── */
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .logo-text {
+            font-size: 2.8rem;
+            font-weight: 900;
+            letter-spacing: -2px;
+            color: white;
+        }
+        .logo-text span { color: var(--red); }
+        .logo-sub {
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.4);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        /* ── Card ── */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+        }
+
+        .card-title {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+        .card-sub {
+            color: rgba(255,255,255,0.4);
+            font-size: 0.88rem;
+            margin-bottom: 2rem;
+        }
+
+        /* ── Error banner ── */
+        .error-banner {
+            display: none;
+            background: rgba(229,9,20,0.15);
+            border: 1px solid rgba(229,9,20,0.4);
+            color: #ff6b6b;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            margin-bottom: 1.5rem;
+        }
+        .error-banner.show { display: flex; align-items: center; gap: 8px; }
+
+        /* ── Form fields ── */
+        .field {
+            margin-bottom: 1.2rem;
+        }
+        .field label {
+            display: block;
+            font-size: 0.82rem;
+            color: rgba(255,255,255,0.55);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .field input {
+            width: 100%;
+            padding: 13px 16px;
+            background: var(--input-bg);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: white;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .field input:focus {
+            border-color: var(--red);
+            box-shadow: 0 0 0 3px rgba(229,9,20,0.15);
+        }
+        .field input::placeholder { color: rgba(255,255,255,0.25); }
+
+        /* ── Buttons ── */
+        .btn-signin {
+            width: 100%;
+            padding: 14px;
+            background: var(--red);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-signin:hover:not(:disabled) {
+            background: var(--red-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 8px 25px rgba(229,9,20,0.4);
+        }
+        .btn-signin:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        .btn-signin .spinner {
+            display: none;
+            width: 18px; height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin: 0 auto;
+        }
+        .btn-signin.loading .btn-text { display: none; }
+        .btn-signin.loading .spinner { display: block; }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .btn-back {
+            width: 100%;
+            padding: 12px;
+            background: transparent;
+            color: rgba(255,255,255,0.6);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 10px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-top: 0.75rem;
+            transition: all 0.3s;
+        }
+        .btn-back:hover {
+            background: rgba(255,255,255,0.06);
+            color: white;
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        /* ── Footer links ── */
+        .card-footer {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.4);
+        }
+        .card-footer a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        .card-footer a:hover { color: var(--red); }
+
+        /* ── Loading screen ── */
+        .loading-screen {
+            display: none;
+            position: fixed; inset: 0;
+            z-index: 100;
+            background: var(--dark);
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .loading-screen.show { display: flex; }
+        .loading-logo {
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        .loading-logo span { color: var(--red); }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+        .loading-bar {
+            width: 200px; height: 3px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .loading-bar-fill {
+            height: 100%;
+            background: var(--red);
+            border-radius: 2px;
+            animation: loadBar 1.2s ease-in-out infinite;
+        }
+        @keyframes loadBar {
+            0% { width: 0; margin-left: 0; }
+            50% { width: 100%; margin-left: 0; }
+            100% { width: 0; margin-left: 100%; }
+        }
+        .loading-text {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.4);
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 480px) {
+            .card { padding: 2rem 1.5rem; }
+            .logo-text { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<video autoplay muted loop playsinline id="videoBg">
+    <source src="assets/Video/Trailer2 .mp4" type="video/mp4">
+</video>
+<div class="overlay"></div>
+
+<div class="loading-screen" id="loadingScreen">
+    <div class="loading-logo">FILM<span>FLEX</span></div>
+    <div class="loading-bar"><div class="loading-bar-fill"></div></div>
+    <div class="loading-text" id="loadingText">Setting up your experience...</div>
+</div>
+
+<div class="page">
+    <div class="logo">
+        <div class="logo-text">FILM<span>FLEX</span></div>
+        <div class="logo-sub">Movie Rental &amp; Review</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Welcome back</div>
+        <div class="card-sub">Sign in to continue your movie journey</div>
+
+        <div class="error-banner" id="errorBanner">
+            <span>⚠</span>
+            <span id="errorMsg">Invalid email or username or password.</span>
+        </div>
+
+        <form id="loginForm" action="login" method="POST">
+            <div class="field">
+                <label for="usernameOrEmail">Email or Username</label>
+                <input type="text" id="usernameOrEmail" name="email"
+                       placeholder="you@example.com or username" required>
+            </div>
+            <div class="field">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password"
+                       placeholder="••••••••" required autocomplete="current-password">
+            </div>
+
+            <button type="submit" class="btn-signin" id="signinBtn">
+                <span class="btn-text">Sign In</span>
+                <div class="spinner"></div>
+            </button>
+            <button type="button" class="btn-back" onclick="window.location.href='index.html'">
+                ← Back to Home
+            </button>
+        </form>
+
+        <div class="card-footer" style="margin-top:1.2rem;">
+            New to FILMFLEX? <a href="register.html">Create an account</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const params = new URLSearchParams(window.location.search);
+        if (params.get('error') === 'invalid') {
+            showError('Invalid credentials. Please try again.');
+        }
+        if (params.get('registered') === 'true') {
+            const banner = document.getElementById('errorBanner');
+            banner.style.background = 'rgba(46,204,113,0.15)';
+            banner.style.borderColor = 'rgba(46,204,113,0.4)';
+            banner.style.color = '#2ecc71';
+            document.getElementById('errorMsg').textContent = 'Account created! Please sign in.';
+            banner.classList.add('show');
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('signinBtn');
+            btn.classList.add('loading');
+            btn.disabled = true;
+            hideError();
+
+            const inputData = document.getElementById('usernameOrEmail').value.trim();
+            const password  = document.getElementById('password').value;
+
+            fetch('login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'email=' + encodeURIComponent(inputData) + '&password=' + encodeURIComponent(password)
+            })
+                .then(function (res) {
+                    if (!res.ok) {
+                        throw new Error('Unauthorized');
+                    }
+                    return res.json();
+                })
+                .then(function (data) {
+                    if (data.status === 'success') {
+                        navigateBasedOnRole(data.role);
+                    } else {
+                        handleFailure(btn);
+                    }
+                })
+                .catch(function () {
+                    handleFailure(btn);
+                });
+        });
+
+        function navigateBasedOnRole(role) {
+            const loadingScreen = document.getElementById('loadingScreen');
+            const loadingText = document.getElementById('loadingText');
+
+            loadingScreen.classList.add('show');
+
+            if (role === 'admin') {
+                loadingText.textContent = 'Access granted. Opening Admin Control Panel...';
+                setTimeout(function () {
+                    window.location.href = 'adminDashboard.html';
+                }, 1000);
+            } else {
+                loadingText.textContent = 'Setting up your experience...';
+                setTimeout(function () {
+                    window.location.href = 'home.html';
+                }, 1000);
+            }
+        }
+
+        function handleFailure(btn) {
+            btn.classList.remove('loading');
+            btn.disabled = false;
+            showError('Invalid email/username or password. Please try again.');
+        }
+
+        function showError(msg) {
+            document.getElementById('errorMsg').textContent = msg;
+            document.getElementById('errorBanner').classList.add('show');
+        }
+
+        function hideError() {
+            document.getElementById('errorBanner').classList.remove('show');
+        }
+    });
+</script>
+</body>
+</html>
