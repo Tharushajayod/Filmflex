@@ -1,6 +1,0 @@
-English,default.jpg,Grade9,Science,test1@test1.com,aBC,1000.0
-Mathematics,default.jpg,grade12,science,tutor@tutor.com,Introduction to Algebra,25.0,Linear Equations,25.0,Calculus Fundamentals,30.0,Probability and Statistics,25.0,Geometry for Beginners,20.0,Advanced Calculus,35.0,Trigonometry Basics,25.0,Differential Equations,30.0
-Physics,default.jpg,grade12,science,tutor1@tutor1.com,Basic Mechanics,25.0,Thermodynamics,28.0,Waves and Oscillations,26.0,Electricity and Magnetism,30.0,Quantum Physics,35.0,Optics and Light,27.0
-English Literature,default.jpg,grade12,arts,tutor2@tutor2.com,Introduction to Poetry,22.0,Shakespeareâs Plays,25.0,English Drama History,30.0,Modern Fiction,28.0
-Environmental Science,default.jpg,grade11,science,tutor3@tutor3.com,Introduction to Environmental Science,25.0,Environmental Issues and Solutions,28.0,Ecosystems and Biodiversity,30.0
-Chemistry,default.jpg,grade10,science,tutor3@tutor3.com,Atomic Structure,20.0,Periodic Table,22.0,Chemical Bonding,23.0,Acids and Bases,20.0,Chemical Reactions,22.0

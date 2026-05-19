@@ -1,4 +1,0 @@
-user,user,user@user.com,student
-user1,user1,user1@user1.com,student
-user2,user2,user2@user2.com,student
-test,test,test@test.com,student
