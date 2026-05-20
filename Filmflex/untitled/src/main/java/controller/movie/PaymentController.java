@@ -7,18 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Utility Controller class responsible for handling business logic transactions for Payments.
- * Manages atomic read, write, update, and delete mutations directly over payment flat files.
- * Employs clean static processing design patterns without requiring object state initialization.
- */
 public class PaymentController {
 
-    /**
-     * CREATE / UPDATE Operation: Saves a payment record into the tracking persistence store (payments.txt).
-     * If the email identifier already exists, it updates the record; otherwise, it appends a new row.
-     * Demonstrates strict data validation and row-replacement handling patterns.
-     */
     public static void savePayment(Payment payment) throws IOException {
         // Defensive Input Validation Rule: Guarding against null data objects or empty email constraints
         if (payment == null || isBlank(payment.getEmail())) {
@@ -53,10 +43,6 @@ public class PaymentController {
         FileUtil.writeAllPaymentLines(updated);
     }
 
-    /**
-     * READ Operation: Searches for a specific payment entity transaction using a unique email address token.
-     * @return Payment object model mapping or null if target row index does not overlap flat file records boundaries
-     */
     public static Payment getPaymentByEmail(String email) throws IOException {
         // Safe Guard Clause checking for null or malicious space-only identifier parameters drops
         if (isBlank(email)) return null;
@@ -73,9 +59,6 @@ public class PaymentController {
         return null; // Return null default if identity string is absent from data rows index maps
     }
 
-    /**
-     * DELETE Operation: Removes a unique payment dataset transaction mapping row using email reference markers.
-     */
     public static void deletePayment(String email) throws IOException {
         // Guard clause checking to avoid redundant loop runs if specified input keys are blank
         if (isBlank(email)) return;
@@ -96,9 +79,6 @@ public class PaymentController {
         FileUtil.writeAllPaymentLines(updated);
     }
 
-    /**
-     * Null-defensive helper validation block analyzing input parameter density states.
-     */
     private static boolean isBlank(String value) {
         return value == null || value.trim().isEmpty();
     }

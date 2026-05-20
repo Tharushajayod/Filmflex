@@ -11,17 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Controller servlet handling user payment method configuration profiles.
- * Implements RESTful architecture constraints by utilizing HTTP GET (Read),
- * POST (Create/Update), and DELETE (Remove) operations on a single unified resource path.
- */
 @WebServlet("/payment-methods")
 public class PaymentServlet extends HttpServlet {
 
-    /**
-     * READ Operation: Intercepts HTTP GET requests to fetch a user's stored card profile parameters.
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Access Control Gatekeeper: Verifies if the active request contains a valid customer session token context
@@ -50,9 +42,6 @@ public class PaymentServlet extends HttpServlet {
         ServletHelper.json(response, obj.toString());
     }
 
-    /**
-     * CREATE / UPDATE Operation: Intercepts HTTP POST requests to save or overwrite user payment profiles.
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Authentication Barrier Check: Terminate request processing early if customer state token is missing
@@ -87,9 +76,6 @@ public class PaymentServlet extends HttpServlet {
         }
     }
 
-    /**
-     * DELETE Operation: Intercepts HTTP DELETE requests to remove a user's card data records.
-     */
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Authorization Guard Clause Check: Restricting access context profiles exclusively to verified active users
@@ -101,9 +87,6 @@ public class PaymentServlet extends HttpServlet {
         ServletHelper.json(response, new JSONObject().put("message", "Payment method removed successfully").toString());
     }
 
-    /**
-     * Null-defensive utility validation checking for blank strings inputs parameters.
-     */
     private boolean isBlank(String value) {
         return value == null || value.trim().isEmpty();
     }

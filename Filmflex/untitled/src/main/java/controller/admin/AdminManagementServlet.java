@@ -24,9 +24,6 @@ public class AdminManagementServlet extends HttpServlet {
 
     private final AdminService adminService = new AdminService();
 
-    /**
-     * READ Operation: Handles requests to view administrators list or current logged admin session profile attributes.
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Security Access Guard Barrier Check: Terminate process if request session lacks admin claims
@@ -68,9 +65,6 @@ public class AdminManagementServlet extends HttpServlet {
         ServletHelper.json(response, array.toString());
     }
 
-    /**
-     * CREATE, UPDATE, DELETE Operations: Handles state data mutations strictly limiting to Super Admins.
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (!ServletHelper.requireAdmin(request, response)) return;

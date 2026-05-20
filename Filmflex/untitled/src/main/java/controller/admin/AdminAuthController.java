@@ -1,4 +1,4 @@
-package controller.admin; // Organized under the dedicated administrative sub-package structure
+package controller.admin;
 
 import controller.ServletHelper;
 import model.Admin;
@@ -28,9 +28,6 @@ public class AdminAuthController extends HttpServlet {
         }
     }
 
-    /**
-     * Processes administrative credential evaluation pipelines and initiates validated session tracking.
-     */
     private void handleAdminLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // Extracting string parameters safely encapsulated from the incoming form submission payload fields
         String username = request.getParameter("admin-username");
@@ -54,9 +51,6 @@ public class AdminAuthController extends HttpServlet {
         response.sendRedirect("adminDashboard.html");
     }
 
-    /**
-     * Destroys existing validation credentials contexts to successfully terminate system operational cache.
-     */
     private void handleAdminLogout(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // Checking for pre-existing active memory session states without initializing blank instances
         if (request.getSession(false) != null) {

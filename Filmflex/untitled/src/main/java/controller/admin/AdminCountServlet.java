@@ -1,4 +1,4 @@
-package controller.admin; // Organized under the dedicated administrative sub-package structure
+package controller.admin;
 
 import controller.ServletHelper;
 import org.json.JSONObject;
@@ -11,19 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Controller servlet responsible for retrieving the total count of registered administrators.
- * Demonstrates secure endpoint guard management, service layer integration, and dynamic JSON serialization.
- */
 @WebServlet(name = "AdminCountServlet", urlPatterns = "/get-admin-count")
 public class AdminCountServlet extends HttpServlet {
 
     // Dependency Injection of the Service Layer to separate data aggregation from presentation logic
     private final AdminService adminService = new AdminService();
 
-    /**
-     * Overridden HTTP doGet handler managing incoming data retrieval request streams.
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 

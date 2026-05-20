@@ -1,4 +1,4 @@
-package repository; // Placed inside the core infrastructure data access repository package layer
+package repository;
 
 import model.Review;
 import util.FileUtil;

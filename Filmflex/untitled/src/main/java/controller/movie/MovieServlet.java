@@ -1,4 +1,4 @@
-package controller.movie; // Organized under the dedicated movie sub-package structure
+package controller.movie;
 
 import controller.ServletHelper;
 import model.Movie;
@@ -13,21 +13,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Advanced RESTful controller servlet managing the complete lifecycle of Movie entities.
- * Implements full CRUD functionality mapped across standard HTTP methods:
- * GET (Read), POST (Create), PUT (Update), and DELETE (Delete).
- */
 @WebServlet(urlPatterns = {"/api/movies", "/api/movies/*"})
 public class MovieServlet extends HttpServlet {
 
     // Dependency Injection of the Service Layer to abstract computational logic from servlet request routing
     private final MovieService movieService = new MovieService();
 
-    /**
-     * READ Operation: Intercepts HTTP GET requests to fetch all movies or filter them by search queries.
-     * Accessible by both regular customers and administrators.
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Initializing a top-level JSON Array container to structure the collection response
@@ -43,10 +34,6 @@ public class MovieServlet extends HttpServlet {
         ServletHelper.json(response, array.toString());
     }
 
-    /**
-     * CREATE Operation: Intercepts HTTP POST requests to write a new movie record into storage.
-     * Protected by strict administrative authorization barriers.
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Authorization Barrier: Rejecting execution early if request credentials lack admin privileges
@@ -65,10 +52,6 @@ public class MovieServlet extends HttpServlet {
         ServletHelper.json(response, movie.toJson().toString());
     }
 
-    /**
-     * UPDATE Operation: Intercepts HTTP PUT requests to modify an existing movie record mapped by ID.
-     * Protected by strict administrative authorization barriers.
-     */
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Security Gatekeeping: Ensuring authorization level matches strict administrative criteria
@@ -99,10 +82,6 @@ public class MovieServlet extends HttpServlet {
         ServletHelper.json(response, movie.toJson().toString());
     }
 
-    /**
-     * DELETE Operation: Intercepts HTTP DELETE requests to remove a specified movie permanently.
-     * Protected by strict administrative authorization barriers.
-     */
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Authorization Guard Clause Check: Restricting destructive transactions exclusively to authenticated admins
@@ -121,10 +100,6 @@ public class MovieServlet extends HttpServlet {
         ServletHelper.json(response, new JSONObject().put("message", "Movie deleted successfully").toString());
     }
 
-    /**
-     * Defensive Path Parsing Utility: Strips structural delimiter symbols to isolate path parameter tokens.
-     * e.g., converts URI string "/api/movies/13" path info fragment "/13" directly into target ID value "13".
-     */
     private String extractId(HttpServletRequest request) {
         String pathInfo = request.getPathInfo();
         if (pathInfo == null || pathInfo.length() <= 1) return null;

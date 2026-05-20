@@ -11,16 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Controller servlet responsible for managing the ticket booking pipeline lifecycle endpoints.
- * Intercepts user booking actions, supports dynamic dashboard lookup, and structural admin ledger tracing.
- */
 @WebServlet("/purchase-ticket")
 public class TicketServlet extends HttpServlet {
 
-    /**
-     * CREATE Operation: Intercepts HTTP POST requests to initiate ticket purchasing workflows.
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (!ServletHelper.requireUser(request, response)) return;
@@ -44,9 +37,6 @@ public class TicketServlet extends HttpServlet {
         }
     }
 
-    /**
-     * READ Operation: Handles individual user ticket dashboard rendering and complete admin logs tracking data matrices.
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 

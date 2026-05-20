@@ -13,20 +13,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Controller servlet responsible for administrative User Management workflows.
- * Handles fetching all users, adding new user accounts manually, and administrative deletion.
- * Demonstrates HTTP method division (GET/POST) and safe JSON parsing constraints.
- */
 @WebServlet(urlPatterns = {"/get-all-users", "/admin-add-user", "/admin-delete-user"})
 public class AdminUserManagementServlet extends HttpServlet {
 
     // Dependency Injection of the Service Layer to separate business rule evaluation from request handling
     private final UserService userService = new UserService();
 
-    /**
-     * READ Operation: Intercepts HTTP GET requests to retrieve the full list of registered users.
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Security Gatekeeping Barrier: Confirming if the active session possesses valid administrative claims
@@ -47,9 +39,6 @@ public class AdminUserManagementServlet extends HttpServlet {
         ServletHelper.json(response, array.toString());
     }
 
-    /**
-     * CREATE & DELETE Operations: Intercepts HTTP POST requests to mutate user datasets context blocks.
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Authorization Guard Clause: Restricting downstream modifications exclusively to verified administrators

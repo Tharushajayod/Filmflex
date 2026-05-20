@@ -1,4 +1,4 @@
-package controller.admin; // Organized under the dedicated administrative sub-package structure
+package controller.admin;
 
 import repository.PurchaseTicketRepository;
 import model.Ticket;
@@ -9,19 +9,14 @@ import javax.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * Administrative controller servlet responsible for aggregating financial ticket sales records.
- * Fetches transactional data rows from the persistence layer and serializes them into a readable JSON matrix array.
- */
+
 @WebServlet("/api/admin/all-tickets")
 public class PaymentAdminController extends HttpServlet {
 
     // Dependency Injection of the Repository data node to decouple storage extraction from routing mechanics
     private final PurchaseTicketRepository repo = new PurchaseTicketRepository();
 
-    /**
-     * READ Operation: Intercepts incoming HTTP GET data stream requests to expose analytics metadata logs.
-     */
+
     protected void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         try {
             // Interacting with the repository access object layer to fetch the raw array token collection records

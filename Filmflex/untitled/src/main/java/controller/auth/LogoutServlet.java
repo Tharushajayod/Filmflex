@@ -1,4 +1,4 @@
-package controller.auth; // Organized under the dedicated authentication sub-package structure
+package controller.auth;
 
 import controller.ServletHelper;
 
@@ -8,18 +8,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Controller servlet handling the user session termination pipeline.
- * Demonstrates secure state destruction by invalidating the HTTP session
- * and responding with an asynchronous JSON confirmation status payload.
- */
+
 @WebServlet("/logout")
 public class LogoutServlet extends HttpServlet {
 
-    /**
-     * Overridden HTTP POST handler managing secure authentication exit streams.
-     * Enforces the use of POST over GET to comply with standard security guidelines for state mutations.
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 

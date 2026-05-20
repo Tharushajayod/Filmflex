@@ -1,4 +1,4 @@
-package controller.auth; // Organized under the dedicated authentication sub-package structure
+package controller.auth;
 
 import model.Admin;
 import model.User;
@@ -13,11 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-/**
- * Core authentication gateway controller managing User Registration and Dual-Role Authentication.
- * Routes traffic dynamically using the request servlet path and handles state tracking
- * via standard HTTP Session management constraints.
- */
 @WebServlet(urlPatterns = {"/login", "/register"})
 public class AuthController extends HttpServlet {
 
@@ -25,9 +20,6 @@ public class AuthController extends HttpServlet {
     private final UserService userService = new UserService();
     private final AdminService adminService = new AdminService();
 
-    /**
-     * Intercepts HTTP POST requests managing account generation and authentication verification streams.
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Dynamic Path Routing: Isolating the specific URL trigger token pattern matching context
@@ -43,9 +35,6 @@ public class AuthController extends HttpServlet {
         }
     }
 
-    /**
-     * Processes new User account registration pipelines.
-     */
     private void handleRegister(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // Extracting form-encoded string parameters safely from the client request payload fields
         String name = request.getParameter("name");
@@ -66,9 +55,6 @@ public class AuthController extends HttpServlet {
         response.sendRedirect(saved ? "login.html?registered=true" : "register.html?error=exists");
     }
 
-    /**
-     * Executes the Dual-Role (Admin/User) Authentication matrix strategy workflow layers.
-     */
     private void handleLogin(HttpServletRequest request, HttpServletResponse response) throws IOException {
         // This unified parameter variable abstracts either a regular User's email string OR an Admin's plain username token
         String usernameOrEmail = request.getParameter("email");
@@ -114,9 +100,6 @@ public class AuthController extends HttpServlet {
         out.print("{\"status\":\"error\",\"message\":\"Invalid credentials\"}");
     }
 
-    /**
-     * Null-defensive utility helper checking for structural text string anomalies or space-only content layout elements.
-     */
     private boolean isBlank(String value) {
         return value == null || value.trim().isEmpty();
     }

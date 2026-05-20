@@ -1,4 +1,4 @@
-package service; // Placed inside the core domain business logic service package layer
+package service;
 
 import model.Review;
 import repository.ReviewRepository;
