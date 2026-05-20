@@ -1,4 +1,4 @@
-package repository; // Placed inside the core infrastructure data access repository package layer
+package repository;
 
 import model.Ticket;
 import util.FileUtil;
@@ -6,18 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Data Access Repository component acting as the direct gateway to flat-file ticket storage.
- * Follows the standard Repository Design Pattern to isolate physical file storage mechanics
- * from upstream business logic controllers, facilitating clean architectural abstraction.
- */
 public class PurchaseTicketRepository {
 
-    /**
-     * READ Operation: Fetches and parses all documented rows inside the text storage into typed domain objects.
-     * @return A List collection containing successfully populated Ticket instances blueprints
-     * @throws IOException Propagating absolute system I/O errors up into calling controller layers for global catch trapping
-     */
     public List<Ticket> getAllPurchasedTickets() throws IOException {
 
         // Operational Monitoring Logs: Printing absolute storage system targets pathing parameters directly onto IDE server console

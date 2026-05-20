@@ -1,4 +1,4 @@
-package service; // Placed inside the core domain business logic service package layer
+package service;
 
 import model.Admin;
 import util.FileUtil;
@@ -9,17 +9,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Service Layer component orchestrating core business logic algorithms for Admin accounts.
- * Acts as the structural intermediary separating HTTP Controller Servlets from direct low-level
- * File I/O operations, enforcing functional transactional rules and authorization checks.
- */
 public class AdminService {
 
-    /**
-     * Default Constructor initialization node.
-     * Enforces explicit bootstrap data generation rules during servlet deployment configurations.
-     */
     public AdminService() {
         try {
             // Defensively seeding the file system with default administrative credentials if admins.txt is absent
@@ -29,11 +20,6 @@ public class AdminService {
         }
     }
 
-    /**
-     * BUSINESS RULE (Authentication Matrix): Verifies administrative matching login credentials.
-     * Automatically injects a live dynamic operational timestamp record loop parameters upon successful execution.
-     * @return Fully populated Admin model reference if credentials match, or null if validation fails
-     */
     public Admin authenticateAdmin(String username, String password) {
         // Safe Guard Clause: Immediate rejection of empty input parameters fields to preserve compute cycles
         if (isBlank(username) || password == null) return null;
@@ -58,9 +44,6 @@ public class AdminService {
         return null; // Authentication fail fallback marker
     }
 
-    /**
-     * READ Operation: Streams raw file records datasets and compiles them into a structured Java Object collection.
-     */
     public List<Admin> getAllAdmins() throws IOException {
         List<Admin> admins = new ArrayList<>();
         // Fetching plain string rows from storage via custom configurations utility paths references
@@ -74,10 +57,7 @@ public class AdminService {
         return admins; // Yielding unmarshalled business collection array lists
     }
 
-    /**
-     * CREATE Operation: Validates uniqueness limits and appends a new Administrative data row entry onto file systems.
-     * Enforces domain integrity rules to explicitly deny duplicate account name configurations.
-     */
+
     public boolean addAdmin(Admin admin) throws IOException {
         // Validation Guard Barrier: Denying structural creation loops if mandatory attributes map inputs are absent
         if (admin == null || isBlank(admin.getUsername()) || isBlank(admin.getPassword())) return false;
@@ -96,10 +76,6 @@ public class AdminService {
         return true;
     }
 
-    /**
-     * UPDATE Operation: Overwrites matching historical entity records variables with updated state properties.
-     * Manages conflict protection barriers and preserves static pre-existing properties values if inputs evaluate blank.
-     */
     public boolean updateAdmin(String originalUsername, Admin updatedAdmin) throws IOException {
         if (isBlank(originalUsername) || updatedAdmin == null || isBlank(updatedAdmin.getUsername())) return false;
 
@@ -134,9 +110,6 @@ public class AdminService {
         return updated;
     }
 
-    /**
-     * DELETE Operation: Prunes an individual system operator trace record line mapped using identification names strings.
-     */
     public boolean deleteAdmin(String username) throws IOException {
         if (isBlank(username)) return false;
         List<String> lines = new ArrayList<>();
@@ -156,9 +129,7 @@ public class AdminService {
         return deleted;
     }
 
-    /**
-     * Null-defensive helper validation block analyzing input parameter density states strings fields.
-     */
+
     private boolean isBlank(String value) {
         return value == null || value.trim().isEmpty();
     }

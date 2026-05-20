@@ -8,18 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Service Layer component orchestrating core business workflows for Movie Management.
- * Handles search filtering, dynamic retrieval validation metrics, and interfaces directly
- * with the underlying file processing layer to execute full CRUD operations.
- */
 public class MovieService {
 
-    /**
-     * READ Operation (Filtered / Complete Catalog): Fetches rows from storage and applies multi-criteria filters.
-     * Enforces case-insensitive parameters evaluation using the system's root locale settings.
-     * @param search Optional search keyword string mapped from the frontend client text interface
-     */
     public List<Movie> getAllMovies(String search) throws IOException {
         List<Movie> movies = new ArrayList<>();
 
@@ -45,10 +35,6 @@ public class MovieService {
         return movies;
     }
 
-    /**
-     * READ Operation (Single Unique Lookup): Scans the active text record layers to match a unique ID token string.
-     * Re-uses the base getAllMovies pipeline to safely retrieve data matrices boundaries.
-     */
     public Movie getMovie(String id) throws IOException {
         // Defensive Guard: Return null pointer immediately if specified input key parameters evaluate null
         if (id == null) return null;
@@ -63,9 +49,6 @@ public class MovieService {
         return null; // Return null default if target unique key is absent from storage matrices boundaries
     }
 
-    /**
-     * CREATE Operation: Commits a newly marshalled Movie object's text string representation onto disk blocks.
-     */
     public Movie addMovie(Movie movie) throws IOException {
         // Extracting historical records lines data bundles safely from the file management utils node
         List<String> lines = FileUtil.readAllMovieLines();
@@ -78,10 +61,6 @@ public class MovieService {
         return movie;
     }
 
-    /**
-     * UPDATE Operation: In-memory parsing algorithm to modify properties fields based on unique ID parameters mapping.
-     * Overwrites matching target metadata rows while keeping adjacent datasets entirely untouched.
-     */
     public boolean updateMovie(String id, Movie updated) throws IOException {
         List<Movie> movies = getAllMovies(null);
         List<String> lines = new ArrayList<>();
@@ -106,9 +85,6 @@ public class MovieService {
         return found;
     }
 
-    /**
-     * DELETE Operation: Removes a unique movie dataset transaction mapping line segment from text records boundaries.
-     */
     public boolean deleteMovie(String id) throws IOException {
         List<String> lines = new ArrayList<>();
         boolean deleted = false;

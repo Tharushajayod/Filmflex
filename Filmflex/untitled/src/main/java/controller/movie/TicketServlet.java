@@ -120,9 +120,7 @@ public class TicketServlet extends HttpServlet {
         }
     }
 
-    /**
-     * UPDATE Operation: Intercepts HTTP PUT requests to safely mutate ticket configurations layers.
-     */
+
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (!ServletHelper.requireUser(request, response)) return;
@@ -145,9 +143,6 @@ public class TicketServlet extends HttpServlet {
         }
     }
 
-    /**
-     * DELETE Operation: Intercepts HTTP DELETE request verbs to purge entry metadata records.
-     */
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         if (!ServletHelper.requireUser(request, response)) return;

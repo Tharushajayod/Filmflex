@@ -63,9 +63,6 @@ public class FileUtil {
             Files.write(path, lines == null ? new ArrayList<>() : lines, StandardCharsets.UTF_8);
     }
 
-    /**
-     * ADMINISTRATIVE BUSINESS RULES DATA SEEDER: Forces default credential allocation if admins logs are dropped.
-     */
     public static void initializeAdminData() throws IOException {
         Path admin = DATA_DIR.resolve(ADMIN_FILE);
         ensureFile(admin, Arrays.asList(
@@ -95,10 +92,6 @@ public class FileUtil {
         return absolutePath;
     }
 
-    /**
-     * SYSTEM DATABASE INITIALIZATION WORKFLOW: Bootstraps complete application folders structures
-     * and seeds initial demo database rows datasets elements matrices to allow the web platform to execute testing immediately.
-     */
     private static void initializeDataFiles() throws IOException {
         Files.createDirectories(DATA_DIR); // Enforcing structural directories presence checks early
 
@@ -138,10 +131,6 @@ public class FileUtil {
         );
     }
 
-    /**
-     * Checks if a target file exists on physical storage.
-     * If the file is missing, it dynamically manufactures it and injects standard seed collections metadata lines.
-     */
     private static void ensureFile(Path path, List<String> defaultLines) throws IOException {
         Files.createDirectories(path.getParent());
         if (!Files.exists(path)) {
