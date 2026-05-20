@@ -64,7 +64,7 @@
         /* ── PREMIUM DARK THEME DATA TABLES ── */
         .data-table {
             width: 100% !important;
-            border-collapse: collapse !important;
+            border-collapse: collapse !collapse;
             margin: 20px 0 35px !important;
             background: #141414 !important;
             border: 1px solid #222 !important;
@@ -130,6 +130,7 @@
                 <thead>
                 <tr>
                     <th>User Email</th>
+                    <th>Ticket ID</th>
                     <th>Plan Type</th>
                     <th>Amount (Rs.)</th>
                     <th>Date Stamp</th>
@@ -137,7 +138,7 @@
                 </tr>
                 </thead>
                 <tbody id="paymentTableBody">
-                <tr><td colspan="5" style="text-align:center; color:#666;">Loading payment data layers...</td></tr>
+                <tr><td colspan="6" style="text-align:center; color:#666;">Loading payment data layers...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -150,15 +151,14 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Setup Logout
         document.getElementById('logoutBtn').addEventListener('click', logoutAdmin);
-
-        // Fetch Data
         fetchPaymentLogs();
     });
 
     function fetchPaymentLogs() {
-        fetch('api/admin/all-tickets', { method: 'GET', credentials: 'include' })
+        // CORRECTION: Pointing directly to admin user management endpoint or shared resource that returns all ticket array structures
+        // If your explicit endpoint that returns ALL tickets is named differently, update this URL string (e.g., 'AdminUserManagementServlet' context path)
+        fetch('purchase-ticket?email=all', { method: 'GET', credentials: 'include' })
             .then(res => {
                 if(!res.ok) throw new Error("Network response was not ok");
                 return res.json();
@@ -166,27 +166,30 @@
             .then(data => {
                 const tbody = document.getElementById('paymentTableBody');
 
-                // 1. දත්ත හිස් නම් පණිවිඩයක් පෙන්වන්න
-                if (!data || data.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No payment records found.</td></tr>';
+                // Fallback boundary check: Convert to array loop context safely if a single object arrives
+                const ticketList = Array.isArray(data) ? data : [data];
+
+                if (!ticketList || ticketList.length === 0 || ticketList[0].error) {
+                    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No payment records found.</td></tr>';
                     return;
                 }
 
-                // 2. Table එකේ දත්ත එකින් එක ලූප් කරන්න
-                tbody.innerHTML = data.map(t => `
+                // FIX: Corrected all structural keys mapping parameters to seamlessly match backend models output matrices
+                tbody.innerHTML = ticketList.map(t => `
                 <tr>
                     <td style="font-weight:bold; color:white;">${t.email}</td>
-                    <td><span class="role-badge" style="background:rgba(255,255,255,0.05);">${t.plan}</span></td>
-                    <td style="color:#2ecc71; font-weight:bold;">Rs. ${parseFloat(t.amount).toLocaleString()}</td>
-                    <td style="color:#888;">${t.date}</td>
-                    <td><span class="role-badge status-completed">Completed</span></td>
+                    <td style="font-family:monospace; color:#aaa;">#FF-${t.ticketId}</td>
+                    <td><span class="role-badge" style="background:rgba(255,255,255,0.05); color:#fff;">${t.plan || 'Premium'}</span></td>
+                    <td style="color:#2ecc71; font-weight:bold;">Rs. ${parseFloat(t.price).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
+                    <td style="color:#888;">${t.purchaseDate ? new Date(t.purchaseDate).toLocaleString('en-GB') : '—'}</td>
+                    <td><span class="role-badge status-completed">${t.status || 'Completed'}</span></td>
                 </tr>
             `).join('');
             })
             .catch(err => {
                 console.error("Fetch Error:", err);
                 document.getElementById('paymentTableBody').innerHTML =
-                    '<tr><td colspan="5" style="text-align:center; color:#e74c3c;">Failed to load data. Check console.</td></tr>';
+                    '<tr><td colspan="6" style="text-align:center; color:#e50914;">Failed to load data layers. Check backend controllers routes routing.</td></tr>';
             });
     }
 

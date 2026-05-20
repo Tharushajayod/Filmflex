@@ -9,3 +9,4 @@
 4f5cb65e-0a24-41f6-b47d-6ca6ba3aab67|New add|2002|6.0|Comedy|RDTYGHJKmdggyehkmevyguhei hbjckj|assets/image/2.jpg|assets/Video/Trailer.mp4|assets/Video/Trailer.mp4
 00849dc6-f9b8-444f-a8e5-cd3f7f5ba9a4|New add 3|2010|10.0|Sci-Fi|EVDVV|assets/image/11.jpg|assets/Video/new-add-3.mp4|assets/Video/new-add-3-trailer.mp4
 359971f9-50a9-4124-8dd2-30cc8b19db53|16|2019|8.2|Thriller|vfvfvf|assets/image/the-witcher.jpg|assets/Video/the-witcher.mp4|assets/Video/the-witcher-trailer.mp4
+01f80d11-5822-4b6c-90dd-c45b33a6da80|5|2026|9.0|Comedy|rextcyguiop|assets/image/5.jpg|assets/Video/5.mp4|assets/Video/5-trailer.mp4

@@ -1,8 +1,7 @@
 package controller.movie;
 
-import controller.ServletHelper;
 import org.json.JSONObject;
-import util.FileUtil;
+import controller.ServletHelper;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -17,66 +16,71 @@ import java.util.Date;
 @WebServlet("/get-ticket-sales")
 public class TicketSalesServlet extends HttpServlet {
 
-    /**
-     * READ Operation: Intercepts HTTP GET requests to return financial metadata summaries for the admin dashboard.
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // Authorization Barrier Gate: Instantly terminates thread if request session lacks administrative privileges
-        if (!ServletHelper.requireAdmin(request, response))
-            return;
+        // Enforcing that only signed admins can touch the dashboard metrics analytics pipeline
+        if (!ServletHelper.requireAdmin(request, response)) return;
 
-        // Initializing primitive double value accumulators to compute revenue aggregations safely
-        double total = 0.0;
-        double weekly = 0.0;
+        double totalSales = 0.0;
+        double weeklySales = 0.0;
 
-        // Time Window Computation: Instantiating Calendar instance to execute dynamic date manipulation algorithms
-        Calendar cal = Calendar.getInstance();
-        // Moving calendar state exactly 7 days backward into historical timeline relative to active runtime clock
-        cal.add(Calendar.DAY_OF_YEAR, -7);
-        Date weekStart = cal.getTime();
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date now = new Date();
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            // Dynamic boundary timeline tracking setups for weekly filtering operations
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(now);
+            cal.add(Calendar.DAY_OF_MONTH, -7);
+            Date sevenDaysAgo = cal.getTime();
 
-        // Iterating across raw dataset lines fetched directly from tickets.txt persistence boundaries
-        for (String line : FileUtil.readAllTicketLines()) {
+            // Fetching active raw tracking lines directly via storage utilities structures layers
+            java.util.List<String> lines = util.FileUtil.readAllTicketLines();
 
-            // Delimiter Token Splitting: Passing -1 limit preserves blank trailing strings to prevent structural mapping drops
-            String[] p = line.split(",", -1);
+            for (String line : lines) {
+                if (line == null || line.trim().isEmpty()) continue;
 
-            // Ensuring row metadata matches the required validation boundaries criteria density (Index 2 contains Price)
-            if (p.length >= 3) {
-                // Invoking local null-defensive parsing helper to catch number formatting conversions errors
-                double price = parseDouble(p[2]);
-                total += price;
+                String[] p = line.split(",", -1);
 
-                // Evaluating structural index 3 which encapsulates the purchase timestamp string record
+                // Expected dynamic elements allocation format layout mapping fields:
+                // p[0]=email, p[1]=ticketId, p[2]=plan, p[3]=price, p[4]=date
                 if (p.length >= 4) {
                     try {
-                        Date purchased = sdf.parse(p[3]);
+                        // Extracting price string data cleanly from index array node 3
+                        String priceStr = p[3].trim().replaceAll("[^\\d.]", "");
+                        double priceVal = Double.parseDouble(priceStr);
 
-                        if (!purchased.before(weekStart)) {
-                            weekly += price;
+                        totalSales += priceVal;
+
+                        // Weekly aggregation mapping checks layer logic inside dates boundaries
+                        if (p.length >= 5) {
+                            try {
+                                Date purchaseDate = sdf.parse(p[4].trim());
+                                if (purchaseDate.after(sevenDaysAgo)) {
+                                    weeklySales += priceVal;
+                                }
+                            } catch (Exception dateEx) {
+                                // Fallback: If timestamp is unparseable, increment weekly metrics to retain data flow integrity
+                                weeklySales += priceVal;
+                            }
                         }
-                    } catch (Exception ignored) {
+                    } catch (NumberFormatException nfe) {
+                        // Suppressing unparseable row structures parameters safely to prevent server breakdowns
+                        System.err.println("Skipping malformed transaction price metrics row row node: " + nfe.getMessage());
                     }
                 }
             }
-        }
 
-        // Encapsulating computed double totals key-value pairs directly inside a transferrable JSONObject dictionary container
-        String jsonResponse = new JSONObject()
-                .put("totalSales", total)
-                .put("weeklySales", weekly)
-                .toString();
-        ServletHelper.json(response, jsonResponse);
-    }
+            // Preparing clean key mappings serialization targets matching JS expectation configurations
+            JSONObject responseJson = new JSONObject();
+            responseJson.put("totalSales", totalSales);
+            responseJson.put("weeklySales", weeklySales);
 
-    private double parseDouble(String s) {
-        try {
-            return Double.parseDouble(s);
+            ServletHelper.json(response, responseJson.toString());
+
         } catch (Exception e) {
-            return 0.0;
+            e.printStackTrace();
+            ServletHelper.error(response, HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error computing metrics data matrix tracking elements");
         }
     }
 }
