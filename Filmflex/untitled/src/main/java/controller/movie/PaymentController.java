@@ -1,4 +1,4 @@
-package controller.movie; // Organized under the movie package container structure
+package controller.movie;
 
 import model.Payment;
 import util.FileUtil;
