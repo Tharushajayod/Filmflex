@@ -1,4 +1,4 @@
-package controller.movie; // Organized under the movie package container structure
+package controller.movie;
 
 import util.FileUtil;
 
@@ -8,19 +8,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
 
-/**
- * Utility Controller class responsible for managing core business logic for Movie Tickets.
- * Handles input verification using Regular Expressions (Regex), duplication checks,
- * and persistent storage write routines over flat files (tickets.txt).
- */
 public class TicketController {
 
     // Enforcing strict structural validation boundaries utilizing compiled Pattern Regex constants
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9+_.-]+@(.+)$");
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[A-Za-z0-9_.]+@(.+)$");
     private static final Pattern PRICE_PATTERN = Pattern.compile("^\\d+\\.\\d{2}$");
 
     /**
-     * CREATE Operation: Commits a newly purchased ticket record row onto disk storage (tickets.txt).
+     * CREATE Operation: N  ewly purchased ticket record row onto disk storage (tickets.txt).
      * Validates inputs, checks for active premium limits, appends data formatting tags, and flushes states.
      */
     public static void saveTicket(String email, String ticketId, String price) throws IOException {
@@ -56,10 +51,9 @@ public class TicketController {
             throw new IllegalArgumentException("Email is required");
         }
 
-        // Optimization check: Parsing each row entry iteratively to trace structural matching key tokens
         for (String line : FileUtil.readAllTicketLines()) {
-            // Employs quick index prefix matching boundaries check layout to scale string comparison speeds
-            if (line.startsWith(email.trim() + ",")) return true;
+            if (line.startsWith(email.trim() + ","))
+                return true;
         }
         return false;
     }
@@ -74,7 +68,8 @@ public class TicketController {
         }
 
         for (String line : FileUtil.readAllTicketLines()) {
-            if (line.startsWith(email.trim() + ",")) return line;
+            if (line.startsWith(email.trim() + ","))
+                return line;
         }
         return null;
     }
@@ -85,15 +80,20 @@ public class TicketController {
      */
     private static void validateInput(String email, String ticketId, String price) {
         // Null and Empty space string density verification guard clauses blocks
-        if (email == null || email.trim().isEmpty()) throw new IllegalArgumentException("Email is required");
+        if (email == null || email.trim().isEmpty())
+            throw new IllegalArgumentException("Email is required");
 
         // Regex format matching validation barrier to assert syntactical accuracy standards
-        if (!EMAIL_PATTERN.matcher(email).matches()) throw new IllegalArgumentException("Invalid email format");
+        if (!EMAIL_PATTERN.matcher(email).matches())
+            throw new IllegalArgumentException("Invalid email format");
 
-        if (ticketId == null || ticketId.trim().isEmpty()) throw new IllegalArgumentException("Ticket ID is required");
-        if (price == null || price.trim().isEmpty()) throw new IllegalArgumentException("Price is required");
+        if (ticketId == null || ticketId.trim().isEmpty())
+            throw new IllegalArgumentException("Ticket ID is required");
 
-        // Strict Numeric Constraint: Confirming double values enforce explicit 2-digit decimal precision layout configurations (e.g., "450.00")
+        if (price == null || price.trim().isEmpty())
+            throw new IllegalArgumentException("Price is required");
+
+        // Confirming double values enforce explicit 2-digit decimal precision layout configurations (e.g., "450.00")
         if (!PRICE_PATTERN.matcher(price).matches()) {
             throw new IllegalArgumentException("Price must be in format 0000.00");
         }
