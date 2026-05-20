@@ -9,11 +9,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Service Layer component orchestrating core business workflows for Movie Review Management.
- * Manages automated unique sequence assignment, runtime temporal stamp formatting, and coordinates
- * execution transactions directly with the persistent ReviewRepository layer without framework abstractions.
- */
 public class ReviewService {
 
     // Thread-Safe Configuration: Enforcing uniform corporate timestamp patterns utilizing immutable DateTimeFormatter

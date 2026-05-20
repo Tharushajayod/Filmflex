@@ -11,21 +11,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Controller servlet managing administrative authentication pipelines (Login and Logout).
- * Demonstrates MVC routing architecture by delegating authentication verification
- * directly to the Service Layer and managing HTTP Session state management workflows.
- */
+
 @WebServlet(name = "AdminAuthController", urlPatterns = {"/admin-login", "/admin-logout"})
 public class AdminAuthController extends HttpServlet {
 
     // Dependency Injection of the Service Layer to abstract underlying core verification algorithms
     private final AdminService adminService = new AdminService();
 
-    /**
-     * Overridden standard HTTP POST handler intercepting all incoming write operations.
-     * Implements basic request routing (Polymorphic action behavior) based on the URL servlet pattern match.
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // Dynamic path checking: Deciding whether to process an authentication entry or session termination

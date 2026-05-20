@@ -17,11 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * Enterprise RESTful Controller handling the complete validation and moderation lifecycle of Movie Reviews.
- * Supports standard CRUD actions mapped onto HTTP methods and implements strict Role-Based Access Control (RBAC)
- * to separate basic user submittals from administrative moderation routines.
- */
 @WebServlet(urlPatterns = {"/api/reviews", "/api/reviews/*"})
 public class ReviewController extends HttpServlet {
 
