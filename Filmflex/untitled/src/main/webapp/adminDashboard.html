@@ -196,7 +196,7 @@
         <ul class="sidebar-menu">
             <li><a href="#" class="sb-link active" data-section="dashboard">Dashboard Overview</a></li>
             <li><a href="#" class="sb-link" data-section="users">User Management</a></li>
-            <li><a href="#" class="sb-link" data-section="admins">Admin Management</a></li>
+            <li id="adminMgmtLi"><a href="#" class="sb-link" data-section="admins">Admin Management</a></li>
             <li><a href="movieManagement.html" class="sb-link">Movie Management</a></li>
             <li><a href="reviewManagement.html" class="sb-link">Review Management</a></li>
             <li><a href="paymentManagement.html" class="sb-link">Payment Management</a></li>
@@ -379,6 +379,9 @@
         document.getElementById('logoutBtn').addEventListener('click', logoutAdmin);
         setupSidebarNavigation();
 
+        // Strict Interceptor Rule: Evaluate rank capabilities BEFORE loading lists data metrics
+        checkAdminRoleScope();
+
         fetchDashboardData();
         fetchUsers();
         fetchAdmins();
@@ -407,6 +410,31 @@
                 document.getElementById(sectionId).classList.add('active');
             });
         });
+    }
+
+    function checkAdminRoleScope() {
+        // Fetch active session profile variables from security endpoints mapping layers
+        fetch('get-current-admin-profile', { method: 'GET', credentials: 'include' })
+            .then(res => {
+                if (!res.ok) throw new Error("Unauthorized request boundary");
+                return res.json();
+            })
+            .then(admin => {
+                // Defensive evaluation: If role is NOT superadmin, hard-hide the structural node matrix rules
+                if (admin && admin.role !== 'superadmin') {
+                    const adminMgmtNode = document.getElementById('adminMgmtLi');
+                    if (adminMgmtNode) {
+                        adminMgmtNode.style.setProperty('display', 'none', 'important');
+                    }
+
+                    // Fail-safe protection: Redirection backup if unprivileged ranks try to manually load section state
+                    const activeSection = document.getElementById('admins-section');
+                    if (activeSection && activeSection.classList.contains('active')) {
+                        window.location.href = 'adminDashboard.html';
+                    }
+                }
+            })
+            .catch(err => console.warn("RBAC Interceptor Trace Omission:", err));
     }
 
     function fetchUsers() {
@@ -622,7 +650,6 @@
     }
 
     function fetchDashboardData() {
-        // CORRECTION: Enforcing correct sequence parameters pipeline matching 100% backend mapping rules
         fetch('get-user-count', { method: 'GET', credentials: 'include' })
             .then(response => { if (!response.ok) throw new Error("Users load failed"); return response.json(); })
             .then(userData => {
@@ -636,7 +663,6 @@
             })
             .then(response => { if (!response.ok) throw new Error("Sales data load failed"); return response.json(); })
             .then(salesData => {
-                // FIX: Parsed properties parameters exactly matching TicketSalesServlet JSON metrics
                 const rawTotal = parseFloat(salesData.totalSales) || 0.0;
                 const rawWeekly = parseFloat(salesData.weeklySales) || 0.0;
 
@@ -649,7 +675,6 @@
             })
             .catch((err) => {
                 console.error("Dashboard Aggregation Crash Trace:", err);
-                // Safe boundary fallback markers logic
                 if(!document.getElementById('totalUsers').textContent || document.getElementById('totalUsers').textContent === "Loading...") {
                     document.getElementById('totalUsers').textContent = "0";
                 }
