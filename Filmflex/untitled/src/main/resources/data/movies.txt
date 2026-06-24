@@ -1,3 +1,12 @@
-1|The Witcher|2019|8.2|Fantasy|Fantasy movie|assets/image/default-poster.jpg|assets/Video/Trailer.mp4|assets/Video/Trailer.mp4
-2|Stranger Things|2016|8.7|Sci-Fi|Sci-fi mystery series|assets/image/default-poster.jpg|assets/Video/Trailer2 .mp4|assets/Video/Trailer2 .mp4
-4f5cb65e-0a24-41f6-b47d-6ca6ba3aab67|New add|2002|6.0|Comedy|RDTYGHJKmdggyehkmevyguhei hbjckj|assets/image/default-poster.jpg|assets/Video/Trailer.mp4|assets/Video/Trailer.mp4
+1|The Witcher|2019|8.2|Horror|Fantasy movie|assets/image/the-witcher.jpg|assets/Video/Trailer.mp4|assets/Video/Trailer.mp4
+2|Stranger Things|2016|8.7|Sci-Fi|Sci-fi mystery series|assets/image/1.jpg|assets/Video/Trailer2 .mp4|assets/Video/Trailer2 .mp4
+3|The Witcher|2012|7.2|Comedy|Fantasy movie|assets/image/2.jpg|assets/Video/Trailer3.mp4|assets/Video/Trailer3.mp4
+4|The Witcher|2021|6.5|Fantasy|Fantasy movie|assets/image/3.jpg|assets/Video/Trailer.mp4|assets/Video/Trailer.mp4
+5|The Witcher|2025|8.9|Horror|Fantasy movie|assets/image/5.jpg|assets/Video/Trailer2.mp4|assets/Video/Trailer2.mp4
+6|The Witcher|2022|9.2|Fantasy|Fantasy movie|assets/image/8.jpg|assets/Video/Trailer3.mp4|assets/Video/Trailer3.mp4
+7|The Witcher|2018|7.6|Fantasy|Fantasy movie|assets/image/10.jpg|assets/Video/Trailer.mp4|assets/Video/Trailer.mp4
+8|The Witcher|2019|8.8|Romance|Fantasy movie|assets/image/12.jpg|assets/Video/Trailer2.mp4|assets/Video/Trailer2.mp4
+4f5cb65e-0a24-41f6-b47d-6ca6ba3aab67|New add|2002|6.0|Comedy|RDTYGHJKmdggyehkmevyguhei hbjckj|assets/image/2.jpg|assets/Video/Trailer.mp4|assets/Video/Trailer.mp4
+00849dc6-f9b8-444f-a8e5-cd3f7f5ba9a4|New add 3|2010|10.0|Sci-Fi|EVDVV|assets/image/11.jpg|assets/Video/new-add-3.mp4|assets/Video/new-add-3-trailer.mp4
+359971f9-50a9-4124-8dd2-30cc8b19db53|16|2019|8.2|Thriller|vfvfvf|assets/image/the-witcher.jpg|assets/Video/the-witcher.mp4|assets/Video/the-witcher-trailer.mp4
+01f80d11-5822-4b6c-90dd-c45b33a6da80|5|2026|9.0|Comedy|rextcyguiop|assets/image/5.jpg|assets/Video/5.mp4|assets/Video/5-trailer.mp4

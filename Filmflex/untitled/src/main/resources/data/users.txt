@@ -1,6 +1,16 @@
+user1,user1@gmail.com,user1@123,
+user2,user2@gmail.com,user2@123,
+tharusha,tharushajayod@gmail.com,tharusha@123,
+sanilka,sanilka@gmail.com,sanilka@123,
+yohan,yohan@gmail.com,yohan@123,
+hasandi,hasandi@gmail.com,hasandi@123,
+viraj,viraj@gmail.com,viraj@123,
+thathsara,thathsara@gmail.com,thathsara@123,
 Karcer Laksman jayod,karcer@gmail.com,12345678,0123456688
 Rasith Viranga,rasith.viranga200@gmail.com,0412245720RV,
 Tharusha Jayod,tharushajayod1@gmail.com,87654321,0717526757
 AquaSYNC,waplaksman@gmail.com,12345678,
 admin2ygcwuhjkc,gvcbjnkm@gmai.com,12345678,
-Yohan x,yohan@gmail.com,12345678,
+Yohan x,yohan@gmail.com,12345678,0717526757
+Wap Laksman,waplaksman1@gmail.com,12345678,
+tharusha Jayod,admin@naturesedge.com,12345678,

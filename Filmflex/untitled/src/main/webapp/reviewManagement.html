@@ -269,7 +269,7 @@
 
         document.getElementById('bulkDeleteBtn')?.addEventListener('click', () => {
             const selected = [...document.querySelectorAll('.rev-checkbox:checked')].map(cb => cb.dataset.id);
-            if (selected.length === 0 || !confirm(`Purge selected ${selected.length} review data entries?`)) return;
+            if (selected.length === 0 || !confirm(`Delete selected ${selected.length} review data entries?`)) return;
             let completed = 0;
             selected.forEach(id => {
                 fetch(`api/reviews/${id}`, { method: 'DELETE', credentials: 'include' }).then(() => {
@@ -347,7 +347,7 @@
     }
 
     function deleteReview(id) {
-        if (!confirm('Permanently purge this review entry from reviews.txt file lines?')) return;
+        if (!confirm('Permanently delete this review entry from reviews.txt file lines?')) return;
         fetch(`api/reviews/${id}`, { method: 'DELETE', credentials: 'include' }).then(() => fetchReviewsFromServer());
     }
 

@@ -122,6 +122,28 @@
 
         .pw-eye:hover { color: #e50914 !important; }
 
+        /* ── DANGER ZONE STYLING FOR ACCOUNT DELETION ── */
+        .danger-card {
+            border: 1px solid #e50914 !important;
+            background: rgba(229, 9, 20, 0.02) !important;
+            border-radius: 12px;
+            padding: 24px;
+            text-align: left;
+            margin-top: 20px;
+        }
+        .btn-danger {
+            background: #e50914 !important;
+            color: white !important;
+            border: none !important;
+            padding: 12px 24px !important;
+            border-radius: 6px !important;
+            font-size: 0.92rem !important;
+            font-weight: bold !important;
+            cursor: pointer !important;
+            transition: background 0.3s ease;
+        }
+        .btn-danger:hover { background: #b80710 !important; }
+
         /* ── WATCH HISTORY TILES ── */
         .history-grid-container {
             display: grid;
@@ -231,9 +253,9 @@
         .toast {
             display: none;
             position: fixed !important;
-            top: 100px !important; /* Positions it neatly below the main header line grid */
+            top: 100px !important;
             right: 30px !important;
-            bottom: auto !important; /* Overrides previous full height styles layout */
+            bottom: auto !important;
             width: auto !important;
             max-width: 380px !important;
             z-index: 99999 !important;
@@ -328,6 +350,7 @@
                 </button>
             </div>
         </div>
+
     </div>
 </header>
 
@@ -368,6 +391,7 @@
             <li><button class="sb-link" data-tab="reviews">My Reviews</button></li>
             <li><button class="sb-link" data-tab="wishlist">Wishlist</button></li>
             <li><button class="sb-link" data-tab="security">Security</button></li>
+            <li><button class="sb-link" data-tab="delete-account" style="color: #e50914 !important; font-weight: bold;">🗑️ Delete Account</button></li>
         </ul>
         <div class="sb-divider"></div>
         <div class="sb-label">Quick Links</div>
@@ -456,6 +480,17 @@
                     </div>
                 </div>
                 <div class="form-actions"><button class="btn-primary" id="savePwBtn">Update Password</button></div>
+            </div>
+        </section>
+
+        <section class="tab-panel" id="tab-delete-account">
+            <div class="panel-header"><h2 class="panel-title" style="color: #e50914;">Danger Zone</h2></div>
+            <div class="danger-card">
+                <h3 style="margin-bottom: 10px; font-size: 1.2rem;">Delete Account Permanently</h3>
+                <p style="color: #aaa; font-size: 0.9rem; line-height: 1.6; margin-bottom: 20px;">
+                    Warning: Deleting your account is permanent and cannot be undone. All your watch history, movie wishlist entries, and database metrics stored inside the system files will be completely destroyed.
+                </p>
+                <button class="btn-danger" id="deleteAccountBtn">Permanently Delete My Account</button>
             </div>
         </section>
     </main>
@@ -592,7 +627,6 @@
             if(!currentPw || !newPw || !confirmPw) { showToast("Please fill all password fields!", true); return; }
             if(newPw !== confirmPw) { showToast("New password fields do not match!", true); return; }
 
-            // FIXED SCHEMA PAYLOADS: Mapping with matching controller keys (currentPw, newPw) directly to prevent crashes
             fetch('update-profile', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -608,6 +642,34 @@
                         showToast("Current password verification failed!", true);
                     }
                 }).catch(() => showToast("Security link update error sequence triggered.", true));
+        });
+
+        // ── ADDED: DELETE ACCOUNT PIPELINE LOGIC ──
+        // UserDashboard.html ඇතුළේ තියෙන Delete Account Logic එක මේ විදිහට අලුත් කරන්න:
+        document.getElementById('deleteAccountBtn').addEventListener('click', function() {
+            if (confirm("CRITICAL WARNING:\nAre you absolutely sure you want to completely delete your profile? This action is non-reversible!")) {
+                if (confirm("FINAL VERIFICATION:\nDo you authorize FILMFLEX to completely erase " + GLOBAL_USER_EMAIL + " from data file layers?")) {
+
+                    // FIXED: දැන් කතා කරන්නේ පරිශීලකයාට අවසර තියෙන අලුත් Endpoint එකටයි
+                    fetch('delete-own-account', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ email: GLOBAL_USER_EMAIL })
+                    })
+                        .then(res => {
+                            if (res.ok) {
+                                alert("Account successfully deleted from the database system. Redirecting to home area.");
+                                window.location.href = 'index.html'; // මුල් පිටුවට රීඩිරෙක්ට් කිරීම
+                            } else if(res.status === 401) {
+                                alert("Session expired. Please log in again.");
+                                window.location.href = 'login.html';
+                            } else {
+                                showToast("Failed to process profile delete request.", true);
+                            }
+                        })
+                        .catch(() => showToast("Communication pipeline failure during execution.", true));
+                }
+            }
         });
 
         function loadActiveReviewsFromDatabase() {

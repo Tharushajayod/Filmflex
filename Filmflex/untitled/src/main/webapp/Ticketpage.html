@@ -180,7 +180,7 @@
         <div class="htp-glow"></div>
         <div class="htp-inner">
             <div class="htp-logo">FILM<span>FLEX</span></div>
-            <div class="htp-title">Premium Pass</div>
+            <div class="htp-title" id="heroPassName">Premium Pass</div>
             <div class="htp-barcode">
                 <div class="bc-bar"></div><div class="bc-bar tall"></div><div class="bc-bar"></div>
                 <div class="bc-bar tall"></div><div class="bc-bar short"></div><div class="bc-bar tall"></div>
@@ -189,7 +189,7 @@
                 <div class="bc-bar tall"></div><div class="bc-bar"></div><div class="bc-bar tall"></div>
                 <div class="bc-bar short"></div><div class="bc-bar tall"></div><div class="bc-bar"></div>
             </div>
-            <div class="htp-status">
+            <div class="htp-status" id="heroTicketStatus">
                 <span class="htp-dot"></span> ACTIVE
             </div>
         </div>
@@ -213,7 +213,7 @@
             <div class="sbp-icon">🎟️</div>
             <div class="sbp-info">
                 <div class="sbp-title">FILMFLEX PASS</div>
-                <div class="sbp-status"><span class="sbp-dot"></span>Active</div>
+                <div class="sbp-status" id="sbpStatusText"><span class="sbp-dot"></span>Active</div>
             </div>
         </div>
     </aside>
@@ -229,8 +229,8 @@
             <div class="ticket-card" id="ticketCard">
                 <div class="tc-left">
                     <div class="tc-logo">FILM<span>FLEX</span></div>
-                    <div class="tc-plan-name">Premium Pass</div>
-                    <div class="tc-badge-active"><span class="tc-live-dot"></span>ACTIVE</div>
+                    <div class="tc-plan-name" id="tcPlanName">Premium Pass</div>
+                    <div class="tc-badge-active" id="tcBadgeStatus"><span class="tc-live-dot"></span>ACTIVE</div>
                     <div class="tc-qr" id="tcQr"></div>
                     <div class="tc-scan-hint">Scan to verify</div>
                 </div>
@@ -245,9 +245,9 @@
                     <div class="tc-shine"></div>
                     <div class="tc-field"><span class="tc-label">Ticket ID</span><span class="tc-value mono" id="tcTicketId">#FF-000000</span></div>
                     <div class="tc-field"><span class="tc-label">Holder</span><span class="tc-value" id="tcHolder">—</span></div>
-                    <div class="tc-field"><span class="tc-label">Plan</span><span class="tc-value">Premium Lifetime</span></div>
+                    <div class="tc-field"><span class="tc-label">Plan</span><span class="tc-value" id="tcPlanDetails">Premium Lifetime</span></div>
                     <div class="tc-field"><span class="tc-label">Amount Paid</span><span class="tc-value" id="tcAmount">Rs. 5,000.00</span></div>
-                    <div class="tc-field"><span class="tc-label">Valid Until</span><span class="tc-value">♾️ Lifetime</span></div>
+                    <div class="tc-field"><span class="tc-label">Valid Until</span><span class="tc-value" id="tcValidUntil">♾️ Lifetime</span></div>
                     <div class="tc-field"><span class="tc-label">Issued</span><span class="tc-value" id="tcIssued">—</span></div>
                 </div>
             </div>
@@ -260,13 +260,15 @@
 
             <div class="ticket-actions" style="margin-top:20px; display:flex; gap:10px;">
                 <a href="movie.html" class="btn-primary">Browse Movies</a>
+                <button class="btn-ghost" id="changePlanBtn">Change Plan</button>
+                <button class="btn-ghost" id="cancelTicketBtn" style="border-color: #e50914; color: #e50914;">Cancel Ticket</button>
                 <button class="btn-ghost" onclick="window.print()">Print Ticket</button>
             </div>
         </section>
 
         <section id="purchaseSection">
             <div class="section-header">
-                <h2 class="section-title">Choose Your Plan</h2>
+                <h2 class="section-title" id="purchaseSectionTitle">Choose Your Plan</h2>
                 <p class="section-sub">One-time payment · Lifetime access · No hidden fees · No subscription</p>
             </div>
 
@@ -347,7 +349,7 @@
         <button class="pay-modal-x" id="cancelBtn" style="position:absolute; top:15px; right:15px; background:transparent; border:none; color:white; font-size:1.2rem; cursor:pointer;">✕</button>
         <div class="pm-header" style="margin-bottom:20px;">
             <div class="pm-logo" style="font-size:1.5rem; font-weight:bold; margin-bottom:5px;">FILM<span style="color:#e50914;">FLEX</span></div>
-            <h2 class="pm-title" style="font-size:1.3rem; color:white;">Complete Purchase</h2>
+            <h2 class="pm-title" id="pmModalTitle" style="font-size:1.3rem; color:white;">Complete Purchase</h2>
             <div class="pm-plan-tag" id="selectedPlanLabel" style="color:#e50914; font-weight:bold; margin-top:5px;">Premium Plan</div>
         </div>
         <div id="paymentDetails" style="margin-bottom:20px;"></div>
@@ -369,8 +371,8 @@
 <div class="success-overlay" id="successOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:4000; align-items:center; justify-content:center; text-align:center;">
     <div class="success-box" style="background:#141414; padding:40px; border-radius:16px; border:1px solid #222; max-width:480px; width:90%;">
         <div style="font-size:3.5rem; margin-bottom:15px;">✓</div>
-        <h2 class="success-title" style="font-size:1.8rem; color:white; margin-bottom:10px;">Payment Successful!</h2>
-        <p style="color:#aaa; font-size:0.95rem; margin-bottom:20px;">Your pass is now active. Enjoy unlimited access to Filmflex!</p>
+        <h2 class="success-title" id="successOverlayTitle" style="font-size:1.8rem; color:white; margin-bottom:10px;">Payment Successful!</h2>
+        <p id="successOverlayDesc" style="color:#aaa; font-size:0.95rem; margin-bottom:20px;">Your pass is now active. Enjoy unlimited access to Filmflex!</p>
         <div class="success-tid" id="successTicketId" style="font-family:monospace; font-size:1.2rem; color:#e50914; background:#1c1c1c; padding:10px; border-radius:6px; margin-bottom:25px;">#FF-000000</div>
         <button class="btn-primary" onclick="window.location.reload()">Go to My Ticket</button>
     </div>
@@ -385,9 +387,9 @@
     let selectedPlan = 'Premium';
     let selectedAmt = '5000.00';
     let billingMode = 'lifetime';
+    let hasExistingTicket = false;
 
     document.addEventListener('DOMContentLoaded', () => {
-        // FIXED REGISTRATION SELECTOR: Perfectly mapped to id="avatarBtn" match properties safely
         const avatarBtn = document.getElementById('avatarBtn');
         const dropdown = document.getElementById('dropdown');
         if(avatarBtn && dropdown) {
@@ -397,6 +399,7 @@
 
         const searchToggle = document.getElementById('searchToggle');
         const searchBox = document.getElementById('searchBox');
+
         if(searchToggle && searchBox) {
             searchToggle.addEventListener('click', e => { e.stopPropagation(); searchBox.classList.add('active'); });
             document.getElementById('searchClose').addEventListener('click', () => searchBox.classList.remove('active'));
@@ -404,10 +407,13 @@
 
         document.getElementById('cancelBtn').addEventListener('click', closeModal);
         document.getElementById('cancelBtn2').addEventListener('click', closeModal);
-        document.getElementById('confirmBtn').addEventListener('click', purchaseTicket);
+        document.getElementById('confirmBtn').addEventListener('click', executeTicketTransaction);
 
         document.getElementById('btMonthly').addEventListener('click', () => setBilling('monthly'));
         document.getElementById('btLifetime').addEventListener('click', () => setBilling('lifetime'));
+
+        document.getElementById('changePlanBtn').addEventListener('click', triggerChangePlanWorkflow);
+        document.getElementById('cancelTicketBtn').addEventListener('click', triggerCancelTicketWorkflow);
 
         loadUserData();
         generateQR('tcQr');
@@ -447,27 +453,90 @@
     function checkExistingTicket() {
         fetch('purchase-ticket?email=' + encodeURIComponent(userEmail), { method: 'GET', credentials: 'include' })
             .then(r => r.ok ? r.json() : null)
-            .then(t => { if(t && t.ticketId) showExistingTicket(t); })
+            .then(t => {
+                if(t && t.ticketId) {
+                    hasExistingTicket = true;
+                    showExistingTicket(t);
+                } else {
+                    hasExistingTicket = false;
+                    document.getElementById('purchaseSection').style.display = 'block';
+                    document.getElementById('existingTicketSection').style.display = 'none';
+                }
+            })
             .catch(() => {});
     }
 
     function showExistingTicket(t) {
         document.getElementById('purchaseSection').style.display = 'none';
         document.getElementById('existingTicketSection').style.display = 'block';
+
+        const isExpired = t.status === "Expired";
+
+        const statusBadge = document.getElementById('tcBadgeStatus');
+        const heroStatus = document.getElementById('heroTicketStatus');
+        const sidebarStatus = document.getElementById('sbpStatusText');
+
+        if(isExpired) {
+            if(statusBadge) { statusBadge.innerHTML = `<span class="tc-live-dot" style="background:#e50914; box-shadow:0 0 8px #e50914;"></span>EXPIRED`; statusBadge.style.background = 'rgba(229,9,20,0.15)'; }
+            if(heroStatus) { heroStatus.innerHTML = `<span class="htp-dot" style="background:#e50914; box-shadow:0 0 8px #e50914;"></span> EXPIRED`; }
+            if(sidebarStatus) { sidebarStatus.innerHTML = `<span class="sbp-dot" style="background:#e50914;"></span>Expired`; }
+            document.getElementById('tcValidUntil').textContent = "❌ Ended";
+        } else {
+            if(statusBadge) { statusBadge.innerHTML = `<span class="tc-live-dot"></span>ACTIVE`; statusBadge.style.background = ''; }
+            if(heroStatus) { heroStatus.innerHTML = `<span class="htp-dot"></span> ACTIVE`; }
+            if(sidebarStatus) { sidebarStatus.innerHTML = `<span class="sbp-dot"></span>Active`; }
+
+            // DYNAMIC EXPIRES VALIDATION LOOKUP
+            if(t.plan.includes("Lifetime")) {
+                document.getElementById('tcValidUntil').textContent = "♾️ Lifetime";
+            } else {
+                document.getElementById('tcValidUntil').textContent = "30 Days Validity";
+            }
+        }
+
+        // FIXED ENFORCEMENT: Correctly updates all components dynamic strings parameters mapping layouts
+        document.getElementById('tcPlanName').textContent = t.plan + ' Pass';
+        document.getElementById('heroPassName').textContent = t.plan + ' Pass';
+        document.getElementById('tcPlanDetails').textContent = t.plan;
         document.getElementById('tcTicketId').textContent = '#FF-' + t.ticketId;
-        document.getElementById('tcIssued').textContent = t.timestamp ? new Date(t.timestamp).toLocaleDateString('en-GB') : '—';
+
+        // CORRECTION: Mapped exactly onto backend field "purchaseDate" mapping metrics
+        document.getElementById('tcIssued').textContent = t.purchaseDate ? new Date(t.purchaseDate).toLocaleDateString('en-GB') : '—';
         document.getElementById('tcAmount').textContent = 'Rs. ' + parseFloat(t.price).toLocaleString('en-IN', { minimumFractionDigits: 2 });
+        document.getElementById('sbPassBadge').style.display = 'flex';
+    }
+
+    function triggerChangePlanWorkflow() {
+        document.getElementById('existingTicketSection').style.display = 'none';
+        document.getElementById('purchaseSection').style.display = 'block';
+        document.getElementById('purchaseSectionTitle').textContent = "Modify Your Current Plan Upgrade";
+        document.getElementById('pmModalTitle').textContent = "Confirm Plan Modification";
+    }
+
+    function triggerCancelTicketWorkflow() {
+        if (confirm("Are you absolutely sure you want to cancel and delete your current FILMFLEX Ticket? This process cannot be undone.")) {
+            fetch('purchase-ticket?email=' + encodeURIComponent(userEmail), {
+                method: 'DELETE',
+                credentials: 'include'
+            })
+                .then(r => r.json())
+                .then(res => {
+                    showToast("Ticket cancelled and deleted successfully", false);
+                    setTimeout(() => window.location.reload(), 1500);
+                })
+                .catch(() => showToast("Error occurred while processing cancellation", true));
+        }
     }
 
     function selectPlan(plan, amount) {
-        selectedPlan = plan;
+        selectedPlan = plan + (billingMode === 'monthly' ? ' Monthly' : ' Lifetime');
         if (billingMode === 'monthly') {
             const map = { Basic:'299.00', Premium:'499.00', Cinematic:'799.00' };
             amount = map[plan] || amount;
         }
         selectedAmt = amount;
-        document.getElementById('selectedPlanLabel').textContent = plan + ' Plan';
-        document.getElementById('summaryPlan').textContent = plan;
+        document.getElementById('selectedPlanLabel').textContent = selectedPlan;
+        document.getElementById('summaryPlan').textContent = selectedPlan;
         document.getElementById('summaryTotal').textContent = 'Rs. ' + parseFloat(amount).toLocaleString('en-IN', { minimumFractionDigits: 2 });
 
         fetch('payment-methods?email=' + encodeURIComponent(userEmail), { method: 'GET', credentials: 'include' })
@@ -482,17 +551,37 @@
             });
     }
 
-    function purchaseTicket() {
-        const ticketId = Math.floor(10000000 + Math.random() * 90000000);
+    function executeTicketTransaction() {
+        const HTTP_VERB = hasExistingTicket ? 'PUT' : 'POST';
+        const targetTicketId = Math.floor(10000000 + Math.random() * 90000000);
+
         fetch('purchase-ticket', {
-            method: 'POST',
+            method: HTTP_VERB,
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email: userEmail, ticketId: ticketId.toString(), plan: selectedPlan, price: selectedAmt, timestamp: new Date().toISOString() })
-        }).then(() => {
-            closeModal();
-            document.getElementById('successTicketId').textContent = '#FF-' + ticketId;
-            document.getElementById('successOverlay').style.display = 'flex';
-        });
+            body: JSON.stringify({
+                email: userEmail,
+                ticketId: targetTicketId.toString(),
+                plan: selectedPlan,
+                price: selectedAmt
+            })
+        })
+            .then(r => {
+                if (!r.ok) throw new Error("Transaction rejected");
+                return r.json();
+            })
+            .then(() => {
+                closeModal();
+                if (hasExistingTicket) {
+                    document.getElementById('successOverlayTitle').textContent = "Plan Updated Successfully!";
+                    document.getElementById('successOverlayDesc').textContent = "Your pass configuration has been mutated onto your new selected tier profiles matrix rules.";
+                }
+                document.getElementById('successTicketId').textContent = '#FF-' + targetTicketId;
+                document.getElementById('successOverlay').style.display = 'flex';
+            })
+            .catch(() => {
+                closeModal();
+                showToast("Transaction failed. Double subscription bounds error or dirty properties parameters configurations detected.", true);
+            });
     }
 
     function openModal() { document.getElementById('paymentModal').style.display = 'flex'; }

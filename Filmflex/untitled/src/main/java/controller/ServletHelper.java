@@ -11,38 +11,48 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 public class ServletHelper {
+
     public static JSONObject readJson(HttpServletRequest request) throws IOException {
         StringBuilder body = new StringBuilder();
+
         try (BufferedReader reader = request.getReader()) {
             String line;
-            while ((line = reader.readLine()) != null) body.append(line);
+            while ((line = reader.readLine()) != null) {
+                body.append(line);
+            }
         }
+
         return body.length() == 0 ? new JSONObject() : new JSONObject(body.toString());
     }
 
     public static void json(HttpServletResponse response, Object payload) throws IOException {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+
         response.getWriter().write(String.valueOf(payload));
     }
 
     public static void error(HttpServletResponse response, int status, String message) throws IOException {
         response.setStatus(status);
+
         JSONObject obj = new JSONObject();
         obj.put("error", message);
         obj.put("message", message);
+
         json(response, obj.toString());
     }
 
     public static User currentUser(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Object user = session == null ? null : session.getAttribute("user");
+
         return user instanceof User ? (User) user : null;
     }
 
     public static Admin currentAdmin(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         Object admin = session == null ? null : session.getAttribute("admin");
+
         return admin instanceof Admin ? (Admin) admin : null;
     }
 

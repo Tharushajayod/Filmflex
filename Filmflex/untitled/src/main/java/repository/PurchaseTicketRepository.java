@@ -7,13 +7,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PurchaseTicketRepository {
+
     public List<Ticket> getAllPurchasedTickets() throws IOException {
+
+        System.out.println("Reading tickets from: " + FileUtil.getTicketsFilePath());
+
+        List<String> lines = FileUtil.readAllTicketLines();
+
+        System.out.println("Lines found: " + lines.size());
+
         List<Ticket> tickets = new ArrayList<>();
-        // FileUtil මගින් tickets.txt එක කියවන්න
+
         for (String line : FileUtil.readAllTicketLines()) {
+
             Ticket t = Ticket.fromFileString(line);
-            if (t != null) tickets.add(t);
+
+            if (t != null) {
+                tickets.add(t);
+            }
         }
+
         return tickets;
     }
 }

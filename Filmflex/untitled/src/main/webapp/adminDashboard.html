@@ -196,7 +196,7 @@
         <ul class="sidebar-menu">
             <li><a href="#" class="sb-link active" data-section="dashboard">Dashboard Overview</a></li>
             <li><a href="#" class="sb-link" data-section="users">User Management</a></li>
-            <li><a href="#" class="sb-link" data-section="admins">Admin Management</a></li>
+            <li id="adminMgmtLi"><a href="#" class="sb-link" data-section="admins">Admin Management</a></li>
             <li><a href="movieManagement.html" class="sb-link">Movie Management</a></li>
             <li><a href="reviewManagement.html" class="sb-link">Review Management</a></li>
             <li><a href="paymentManagement.html" class="sb-link">Payment Management</a></li>
@@ -224,8 +224,8 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">Ticket Sales Income</div>
-                    <div class="stat-value" id="ticketIncome">Rs.24,580</div>
-                    <div class="stat-label" style="color:#2ecc71;">+$2,450 this week</div>
+                    <div class="stat-value" id="ticketIncome">Rs. 0.00</div>
+                    <div class="stat-label" style="color:#2ecc71;" id="weeklyIncomeText">+ Rs. 0.00 this week</div>
                 </div>
             </div>
 
@@ -379,6 +379,9 @@
         document.getElementById('logoutBtn').addEventListener('click', logoutAdmin);
         setupSidebarNavigation();
 
+        // Strict Interceptor Rule: Evaluate rank capabilities BEFORE loading lists data metrics
+        checkAdminRoleScope();
+
         fetchDashboardData();
         fetchUsers();
         fetchAdmins();
@@ -407,6 +410,31 @@
                 document.getElementById(sectionId).classList.add('active');
             });
         });
+    }
+
+    function checkAdminRoleScope() {
+        // Fetch active session profile variables from security endpoints mapping layers
+        fetch('get-current-admin-profile', { method: 'GET', credentials: 'include' })
+            .then(res => {
+                if (!res.ok) throw new Error("Unauthorized request boundary");
+                return res.json();
+            })
+            .then(admin => {
+                // Defensive evaluation: If role is NOT superadmin, hard-hide the structural node matrix rules
+                if (admin && admin.role !== 'superadmin') {
+                    const adminMgmtNode = document.getElementById('adminMgmtLi');
+                    if (adminMgmtNode) {
+                        adminMgmtNode.style.setProperty('display', 'none', 'important');
+                    }
+
+                    // Fail-safe protection: Redirection backup if unprivileged ranks try to manually load section state
+                    const activeSection = document.getElementById('admins-section');
+                    if (activeSection && activeSection.classList.contains('active')) {
+                        window.location.href = 'adminDashboard.html';
+                    }
+                }
+            })
+            .catch(err => console.warn("RBAC Interceptor Trace Omission:", err));
     }
 
     function fetchUsers() {
@@ -623,26 +651,37 @@
 
     function fetchDashboardData() {
         fetch('get-user-count', { method: 'GET', credentials: 'include' })
-            .then(response => { if (!response.ok) throw new Error(); return response.json(); })
+            .then(response => { if (!response.ok) throw new Error("Users load failed"); return response.json(); })
             .then(userData => {
                 document.getElementById('totalUsers').textContent = userData.userCount.toLocaleString();
                 return fetch('get-admin-count', { method: 'GET', credentials: 'include' });
             })
-            .then(response => { if (!response.ok) throw new Error(); return response.json(); })
+            .then(response => { if (!response.ok) throw new Error("Admins load failed"); return response.json(); })
             .then(adminData => {
                 document.getElementById('totalAdmins').textContent = adminData.adminCount.toLocaleString();
                 return fetch('get-ticket-sales', { method: 'GET', credentials: 'include' });
             })
-            .then(response => { if (!response.ok) throw new Error(); return response.json(); })
+            .then(response => { if (!response.ok) throw new Error("Sales data load failed"); return response.json(); })
             .then(salesData => {
-                document.getElementById('ticketIncome').textContent = `Rs.${salesData.totalSales.toFixed(2)}`;
-                const weeklyDisplay = document.getElementById('ticketIncome').parentElement.querySelector('.stat-label:last-child');
-                if (weeklyDisplay) weeklyDisplay.textContent = `+ Rs.${salesData.weeklySales.toFixed(2)} this week`;
+                const rawTotal = parseFloat(salesData.totalSales) || 0.0;
+                const rawWeekly = parseFloat(salesData.weeklySales) || 0.0;
+
+                document.getElementById('ticketIncome').textContent = `Rs. ${rawTotal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+                const weeklyDisplay = document.getElementById('weeklyIncomeText');
+                if (weeklyDisplay) {
+                    weeklyDisplay.textContent = `+ Rs. ${rawWeekly.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} this week`;
+                }
             })
-            .catch(() => {
-                document.getElementById('totalUsers').textContent = "0";
-                document.getElementById('totalAdmins').textContent = "0";
-                document.getElementById('ticketIncome').textContent = "Rs.0.00";
+            .catch((err) => {
+                console.error("Dashboard Aggregation Crash Trace:", err);
+                if(!document.getElementById('totalUsers').textContent || document.getElementById('totalUsers').textContent === "Loading...") {
+                    document.getElementById('totalUsers').textContent = "0";
+                }
+                if(!document.getElementById('totalAdmins').textContent || document.getElementById('totalAdmins').textContent === "Loading...") {
+                    document.getElementById('totalAdmins').textContent = "0";
+                }
+                document.getElementById('ticketIncome').textContent = "Rs. 0.00";
             });
     }
 

@@ -211,15 +211,26 @@
                 </div>
                 <div class="form-field form-field-full"><label>Movie Overview Description*</label><textarea id="movieDescription" rows="3" required></textarea></div>
                 <div class="form-field">
-                    <label>Poster Asset File Path*</label><input type="text" id="moviePoster" placeholder="assets/image/poster.jpg" required>
-                    <small>Example: assets/image/default-poster.jpg</small>
+                    <label>Poster Asset File Path*</label>
+                    <input type="hidden" id="moviePoster" required>
+                    <input type="file" id="posterFileChoice" accept="image/*" style="padding: 8px !important;">
+                    <small id="posterPathDisplay" style="color: #2ecc71 !important; font-weight: bold; margin-top: 5px;"></small>
                     <div class="image-preview" id="posterPreview"></div>
                 </div>
+
                 <div class="form-field">
-                    <label>Movie Source Stream Path*</label><input type="text" id="movieFile" placeholder="assets/Video/movie.mp4" required>
-                    <small>Example: assets/Video/Trailer.mp4</small>
+                    <label>Movie Source Stream Path*</label>
+                    <input type="hidden" id="movieFile" required>
+                    <input type="file" id="videoFileChoice" accept="video/mp4,video/mkv" style="padding: 8px !important;">
+                    <small id="videoPathDisplay" style="color: #2ecc71 !important; font-weight: bold; margin-top: 5px;"></small>
                 </div>
-                <div class="form-field form-field-full"><label>Trailer Teaser Path</label><input type="text" id="movieTrailer" placeholder="assets/Video/trailer.mp4"></div>
+
+                <div class="form-field form-field-full">
+                    <label>Trailer Teaser Path</label>
+                    <input type="hidden" id="movieTrailer">
+                    <input type="file" id="trailerFileChoice" accept="video/mp4" style="padding: 8px !important;">
+                    <small id="trailerPathDisplay" style="color: #2ecc71 !important; font-weight: bold; margin-top: 5px;"></small>
+                </div>
             </div>
             <div class="form-actions" style="margin-top:25px;">
                 <button type="button" class="btn-ghost" id="cancelMovieBtn">Cancel</button>
@@ -235,7 +246,7 @@
         <p id="confirmMessage" style="color:#aaa; margin:15px 0;">Are you sure you want to proceed with purging this record?</p>
         <div class="form-actions" style="justify-content:center; gap:10px; margin-top:20px;">
             <button class="btn-ghost" id="confirmNo">No</button>
-            <button class="btn-primary" id="confirmYes" style="background:#e74c3c;">Yes, Purge</button>
+            <button class="btn-primary" id="confirmYes" style="background:#e74c3c;">Yes, Delete</button>
         </div>
     </div>
 </div>
@@ -267,6 +278,16 @@
         fetchMovies();
         setupEventListeners();
 
+        // Helper Function to Clear File Choice Elements
+        function clearFileChoiceSelectors() {
+            document.getElementById('posterPathDisplay').textContent = '';
+            document.getElementById('videoPathDisplay').textContent = '';
+            document.getElementById('trailerPathDisplay').textContent = '';
+            document.getElementById('posterFileChoice').value = '';
+            document.getElementById('videoFileChoice').value = '';
+            document.getElementById('trailerFileChoice').value = '';
+        }
+
         function setupEventListeners() {
             addMovieBtn.addEventListener('click', () => showMovieModal('add'));
             closeBtn.addEventListener('click', () => movieModal.style.display = 'none');
@@ -283,6 +304,64 @@
             searchBtn.addEventListener('click', fetchMovies);
             movieSearch.addEventListener('keypress', e => { if (e.key === 'Enter') fetchMovies(); });
             document.getElementById('logoutBtn').addEventListener('click', logoutAdmin);
+
+            const movieTitleInput = document.getElementById('movieTitle');
+
+            // Helper Function: Movie Title එක අනුව File Name එක පිරිසිදු කරගන්න (e.g., "The Witcher" -> "the-witcher")
+            function getFormattedMovieName() {
+                const title = movieTitleInput.value.trim().toLowerCase();
+                return title ? title.replace(/[^a-z0-9]/g, '-') : 'movie';
+            }
+
+            // 1. Poster File Selector Listener
+            document.getElementById('posterFileChoice').addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const fileName = this.files[0].name;
+                    const extension = fileName.substring(fileName.lastIndexOf('.')); // .jpg / .png
+                    const formattedName = getFormattedMovieName();
+
+                    // Auto Rename to path structure
+                    const finalPath = `assets/image/${formattedName}${extension}`;
+
+                    document.getElementById('moviePoster').value = finalPath;
+                    document.getElementById('posterPathDisplay').textContent = `Auto Mapped: ${finalPath}`;
+
+                    // Image Preview Grid Configuration
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        document.getElementById('posterPreview').innerHTML = `<img src="${e.target.result}" style="height: 80px; border-radius: 6px; border: 1px solid #333; object-fit: cover;">`;
+                    };
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+
+            // 2. Movie Video File Selector Listener
+            document.getElementById('videoFileChoice').addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const fileName = this.files[0].name;
+                    const extension = fileName.substring(fileName.lastIndexOf('.')); // .mp4
+                    const formattedName = getFormattedMovieName();
+
+                    const finalPath = `assets/Video/${formattedName}${extension}`;
+
+                    document.getElementById('movieFile').value = finalPath;
+                    document.getElementById('videoPathDisplay').textContent = `Auto Mapped: ${finalPath}`;
+                }
+            });
+
+            // 3. Trailer Video File Selector Listener
+            document.getElementById('trailerFileChoice').addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const fileName = this.files[0].name;
+                    const extension = fileName.substring(fileName.lastIndexOf('.')); // .mp4
+                    const formattedName = getFormattedMovieName();
+
+                    const finalPath = `assets/Video/${formattedName}-trailer${extension}`;
+
+                    document.getElementById('movieTrailer').value = finalPath;
+                    document.getElementById('trailerPathDisplay').textContent = `Auto Mapped: ${finalPath}`;
+                }
+            });
         }
 
         function fetchMovies() {
@@ -323,19 +402,36 @@
         function showMovieModal(action, movieId = null) {
             currentAction = action;
             const modalTitle = document.getElementById('modalTitle');
+
+            // First clear old tracking selectors status indicators
+            clearFileChoiceSelectors();
+
             if (action === 'add') {
-                modalTitle.textContent = 'Add New Movie'; movieForm.reset(); posterPreview.innerHTML = ''; document.getElementById('movieId').value = '';
+                modalTitle.textContent = 'Add New Movie';
+                movieForm.reset();
+                posterPreview.innerHTML = '';
+                document.getElementById('movieId').value = '';
                 movieModal.style.display = 'flex';
             } else if (action === 'edit') {
                 modalTitle.textContent = 'Edit Movie Parameters';
-                const m = movies.find(movie => movie.id === movieId);
+                const m = movies.find(movie => String(movie.id) === String(movieId));
                 if (m) {
-                    document.getElementById('movieId').value = m.id; document.getElementById('movieTitle').value = m.title;
-                    document.getElementById('movieYear').value = m.year; document.getElementById('movieRating').value = m.rating;
-                    document.getElementById('movieGenre').value = m.genre; document.getElementById('movieDescription').value = m.description;
-                    document.getElementById('moviePoster').value = m.posterPath; document.getElementById('movieFile').value = m.filePath;
+                    document.getElementById('movieId').value = m.id;
+                    document.getElementById('movieTitle').value = m.title;
+                    document.getElementById('movieYear').value = m.year;
+                    document.getElementById('movieRating').value = m.rating;
+                    document.getElementById('movieGenre').value = m.genre;
+                    document.getElementById('movieDescription').value = m.description;
+                    document.getElementById('moviePoster').value = m.posterPath;
+                    document.getElementById('movieFile').value = m.filePath;
                     document.getElementById('movieTrailer').value = m.trailerPath || '';
-                    posterPreview.innerHTML = m.posterPath ? `<img src="${m.posterPath}">` : '';
+
+                    // Injects active parameters context references directly below file selector buttons layout
+                    document.getElementById('posterPathDisplay').textContent = m.posterPath ? `Current: ${m.posterPath}` : '';
+                    document.getElementById('videoPathDisplay').textContent = m.filePath ? `Current: ${m.filePath}` : '';
+                    document.getElementById('trailerPathDisplay').textContent = m.trailerPath ? `Current: ${m.trailerPath}` : '';
+
+                    posterPreview.innerHTML = m.posterPath ? `<img src="${m.posterPath}" style="height: 80px; border-radius: 6px; border: 1px solid #333; object-fit: cover;">` : '';
                     movieModal.style.display = 'flex';
                 }
             }
@@ -362,7 +458,7 @@
         function showDeleteConfirm(id) {
             currentAction = 'delete'; movieToDelete = id;
             const m = movies.find(movie => movie.id === id);
-            if (m) { document.getElementById('confirmMessage').textContent = `Completely purge "${m.title}" from catalog streams?`; confirmModal.style.display = 'flex'; }
+            if (m) { document.getElementById('confirmMessage').textContent = `Completely delete "${m.title}" from catalog streams?`; confirmModal.style.display = 'flex'; }
         }
 
         function confirmAction() {
