@@ -1,21 +1,82 @@
-# 🎬 FilmFLEX - Enterprise Movie Rental & Review Platform
+# 🎬 FILMFLEX 2.2 - Enterprise Movie Rental & Review Platform
 
-MOVIEFLEX is a comprehensive Java-based Web Application designed as an advanced Movie Rental and Review Management System. Built upon the strict **Model-View-Controller (MVC) Architectural Pattern**, the system achieves dynamic data persistence without a traditional SQL relational engine by executing optimized file-stream I/O transactions across isolated flat-text database structures.
+FILMFLEX 2.2 is an advanced Java-based Web Application engineered as an enterprise-grade Movie Rental, Ticket Sales, and Review Management System. Built strictly upon the **Model-View-Controller (MVC) Architectural Pattern**, the system partitions logical boundaries into robust sub-packages to enforce optimal modularity and clean-code practices.
 
-The frontend is completely standardized on a modern, ultra-premium **Glassmorphic Dark Theme** engineered with responsive Bootstrap grids, integrated CSS core variables, and dynamic context control parameters.
+Data persistence is achieved dynamically without a traditional SQL relational engine by utilizing optimized file-stream I/O transactions across isolated flat-text database structures (.txt). The user experience features a premium **Glassmorphic Dark Interface** embedded with dynamic context parameters.
 
 ---
 
-## 🏗️ Architecture & Package Topography
+## 🏗️ Technical Architecture & Package Topography
 
-The system enforces complete separation of concerns by partitioning application layers into three distinct logical boundaries under the master source container:
+The platform separates application lifecycle boundaries into specialized modular sub-packages within the core container framework (`src/main/java`):
 
-*   **`controller` (Application Control Layer):** Houses specialized `HttpServlet` implementations that bind runtime endpoints, parse multipart user payloads, check credentials, and dispatch session outcomes.
-*   **`service` (Business Core Logic):** Implements system algorithms, data processing streams, unique identity generation loops, late fine evaluation formulas, and concurrent text-file database file synchronization.
-*   **`model` (Data Encapsulation State):** Contains fully encapsulated POJO structures mapped with private attributes, designated class constructors, and standard getter/setter property boundaries.
+*   **`controller` (Application Request Handlers):** Parses client payloads, maps route contexts, manages dynamic cookies/sessions, and delegates processing loads.
+    *   `controller.admin`: High-privilege access control, tracking system analytics and dashboards.
+    *   `controller.auth`: Core session handshake routines and authorization logic.
+    *   `controller.movie`: Handles catalogs, media rentals, ticket checkout configurations, and live user feedback updates.
+    *   `controller.user`: Enforces user identity profile loops, metrics management, and profile termination hooks.
+*   **`filter` (Security Layer):** Intercepts system endpoints via `AdminAuthFilter` to block unauthorized access to core modules.
+*   **`service` (Core Business Logic Layer):** Houses the transactional engines (`AdminService`, `MovieService`, `ReviewService`, `UserService`) managing structural checks.
+*   **`repository` (Data Mapping Layer):** Bridges services and database utilities through streamlined access providers like `PurchaseTicketRepository` and `ReviewRepository`.
+*   **`model` (Data Encapsulation State):** Contains encapsulated state objects (Admin, Movie, Payment, Review, Ticket, User) mapped securely with restricted getters and setters.
+*   **`util` (Infrastructure Utilities):** Features low-level transaction tools (`FileUtil`) that handle concurrent record reading/writing safely.
 
-```text
-src/main/java/
-├── controller/            # Servlets (AddMovie, Login, RentMovie, Payment, etc.)
-├── service/               # Managers (MovieManager, RentalManager, UserManager, etc.)
-└── model/                 # Data Models (Movie, Rental, User, Payment, Review)
+---
+
+## 👥 Engineering Team & Core Responsibilities
+
+The compilation and code distribution across the enterprise stack are assigned precisely below:
+
+| Student IT Number & Name | Component Specialization | Package Core Deliverables |
+| :--- | :--- | :--- |
+| **IT25102205** - Hewamana Y.C.K | **Admin Core Management** | `controller.admin.*`, `adminAuthFilter.java`, `adminDashboard.html` |
+| **IT25100021** - Weerasinghe V.C.S | **Movie Catalog Core** | `controller.movie.MovieServlet`, `MovieService.java`, `movieManagement.html` |
+| **IT25100393** - Pathirannehelage T.J.T | **Rental Lifecycle State** | `controller.movie.ReviewController`, `ReviewRepository.java`, `home.html` |
+| **IT25102224** - Punsara P.S | **Invoice & Payment Engine** | `controller.movie.PaymentServlet`, `PaymentController.java`, `PaymentMethods.html` |
+| **IT25101879** - Thenuja H.R.H | **Review & Moderation Loop** | `ReviewService.java`, `reviewManagement.html`, `movie.html` |
+| **IT25104007** - Induwara P.G.T | **Identity Access Module** | `controller.user.*`, `UserService.java`, `UserDashboard.html` |
+
+---
+
+## ⚙️ Data Persistence Topology (.txt Database Mappings)
+
+System memory tables are maintained dynamically inside flat-text arrays under `src/main/resources/data/`. Records are tokenized and updated concurrently via the `FileUtil` asset broker layer:
+
+*   📂 `admins.txt` - Protected administration profile hashes.
+*   📂 `movies.txt` - Centralized production catalogue indexes and streaming attributes.
+*   📂 `payments.txt` - Serialized credit invoice transaction nodes.
+*   📂 `reviews.txt` - Public opinion streams, rating pointers, and moderation status strings.
+*   📂 `tickets.txt` - Active premium purchase access ticket licenses.
+*   📂 `users.txt` - Encrypted profile datasets for authenticated platform handles.
+
+---
+
+## 🚀 Installation & Deployment Runbook
+
+### System Prerequisites
+* **Java Development Kit (JDK 17 or higher)**
+* **Apache Tomcat Server (v9.0.x / v10.x)**
+* **Apache Maven Core System**
+* **IntelliJ IDEA Ultimate / Community**
+
+### Execution Steps
+1. Open your terminal cluster and download the source matrix locally:
+```bash
+   git clone [https://github.com/Tharushajayod/Filmflex.git](https://github.com/Tharushajayod/Filmflex.git)
+
+1. Launch the framework folder context securely inside IntelliJ IDEA.
+
+2. Spin up your localized Smart Tomcat Server Configuration referencing the bundled deployment context paths.
+
+3. Execute Maven source assembly cleanups and packages:
+
+      mvn clean package
+
+Initiate your Tomcat deployment routine and load the interface matrix using:
+
+      http://localhost:8080/index.html
+
+📄 Academic Standard & Licensing
+This source release is developed strictly for the academic verification requirements of SLIIT Software Engineering Guidelines. All visual styles, database logic loops, file stream lock implementations, and endpoint routines remain private under verified development authorization terms.
+
+Synchronized and compiled cleanly under Version 2.2 by Tharusha.
