@@ -27,14 +27,14 @@ The platform separates application lifecycle boundaries into specialized modular
 
 The compilation and code distribution across the enterprise stack are assigned precisely below:
 
-| Student IT Number & Name | Component Specialization | Package Core Deliverables |
-| :--- | :--- | :--- |
-| **IT25102205** - Hewamana Y.C.K | **Admin Core Management** | `controller.admin.*`, `adminAuthFilter.java`, `adminDashboard.html` |
-| **IT25100021** - Weerasinghe V.C.S | **Movie Catalog Core** | `controller.movie.MovieServlet`, `MovieService.java`, `movieManagement.html` |
-| **IT25100393** - Pathirannehelage T.J.T | **Rental Lifecycle State** | `controller.movie.ReviewController`, `ReviewRepository.java`, `home.html` |
-| **IT25102224** - Punsara P.S | **Invoice & Payment Engine** | `controller.movie.PaymentServlet`, `PaymentController.java`, `PaymentMethods.html` |
-| **IT25101879** - Thenuja H.R.H | **Review & Moderation Loop** | `ReviewService.java`, `reviewManagement.html`, `movie.html` |
-| **IT25104007** - Induwara P.G.T | **Identity Access Module** | `controller.user.*`, `UserService.java`, `UserDashboard.html` |
+| Student IT Number & Name | Component Specialization           | Package Core Deliverables |
+| :--- |:-----------------------------------| :--- |
+| **IT25102205** - Hewamana Y.C.K | **Admin Core Management**          | `controller.admin.*`, `adminAuthFilter.java`, `adminDashboard.html` |
+| **IT25100021** - Weerasinghe V.C.S | **Movie Management**               | `controller.movie.MovieServlet`, `MovieService.java`, `movieManagement.html` |
+| **IT25100393** - Pathirannehelage T.J.T | **Rental Management**              | `controller.movie.ReviewController`, `ReviewRepository.java`, `home.html` |
+| **IT25102224** - Punsara P.S | **Invoice & Payment Management**   | `controller.movie.PaymentServlet`, `PaymentController.java`, `PaymentMethods.html` |
+| **IT25101879** - Thenuja H.R.H | **Review & Moderation Management** | `ReviewService.java`, `reviewManagement.html`, `movie.html` |
+| **IT25104007** - Induwara P.G.T | **User Management**                | `controller.user.*`, `UserService.java`, `UserDashboard.html` |
 
 ---
 
@@ -61,18 +61,18 @@ System memory tables are maintained dynamically inside flat-text arrays under `s
 
 ### Execution Steps
 1. Open your terminal cluster and download the source matrix locally:
-```bash
-   git clone [https://github.com/Tharushajayod/Filmflex.git](https://github.com/Tharushajayod/Filmflex.git)
+   
+     git clone [https://github.com/Tharushajayod/Filmflex.git](https://github.com/Tharushajayod/Filmflex.git) 
 
-1. Launch the framework folder context securely inside IntelliJ IDEA.
+2. Launch the framework folder context securely inside IntelliJ IDEA.
 
-2. Spin up your localized Smart Tomcat Server Configuration referencing the bundled deployment context paths.
+3. Spin up your localized Smart Tomcat Server Configuration referencing the bundled deployment context paths.
 
-3. Execute Maven source assembly cleanups and packages:
+4. Execute Maven source assembly cleanups and packages:
 
       mvn clean package
 
-Initiate your Tomcat deployment routine and load the interface matrix using:
+5. Initiate your Tomcat deployment routine and load the interface matrix using:
 
       http://localhost:8080/index.html
 
